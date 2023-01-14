@@ -113,6 +113,12 @@ namespace BackToTheFutureV
             {
                 timeMachine = TimeMachineHandler.GetTimeMachineFromVehicle(FusionUtils.PlayerVehicle);
 
+                if (timeMachine == null && FusionUtils.PlayerVehicle != null && FusionUtils.PlayerVehicle.Model == ModelHandler.DMC12)
+                {
+                    FusionUtils.PlayerVehicle.Delete();
+                    return;
+                }
+                
                 if (timeMachine == null)
                 {
                     TextHandler.Me.ShowNotification("NotSeated");
