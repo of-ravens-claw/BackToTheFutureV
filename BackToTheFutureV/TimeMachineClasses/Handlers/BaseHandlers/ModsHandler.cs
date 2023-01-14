@@ -267,7 +267,7 @@ namespace BackToTheFutureV
 
             set
             {
-                if (!IsDMC12 && HoverUnderbody == ModState.On && value != WheelType.Railroad && value != WheelType.Red && value != WheelType.RedInvisible)
+                if (!IsDMC12 && HoverUnderbody == ModState.On && value != WheelType.RailroadInvisible && value != WheelType.Railroad && value != WheelType.Red && value != WheelType.RedInvisible)
                 {
                     HoverUnderbody = ModState.Off;
                 }
