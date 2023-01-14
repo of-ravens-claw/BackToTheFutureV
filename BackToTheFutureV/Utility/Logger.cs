@@ -32,11 +32,11 @@ namespace BackToTheFutureV
 
 		public static void InitSystem()
 		{
-			LogR($"Machine Name: {Environment.MachineName}\n" +
+			/*LogR($"Machine Name: {Environment.MachineName}\n" +
 			        $"CPU Type: {Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER")}\n" +
 			        $"CPU Count: {Environment.ProcessorCount}\n" +
 			        $"TBD\n" +
-			        $"TBD\n");
+			        $"TBD\n");*/
 		}
 	}
 }
