@@ -90,7 +90,7 @@ namespace BackToTheFutureV
 
             if (DoorHandler.GetDoorState(GarageDoor) == DoorState.Unknown || DoorHandler.GetDoorPendingState(GarageDoor) == DoorState.Unknown)
             {
-                if ((IsPlayerNear && GarageHandler.Status != GarageStatus.Idle && GarageHandler.Status != GarageStatus.Opening) || RemoteTimeMachineHandler.IsRemoteOn)
+                if (IsPlayerNear && GarageHandler.Status != GarageStatus.Idle && GarageHandler.Status != GarageStatus.Opening)
                 {
                     DoorHandler.SetDoorState(GarageDoor, DoorState.Locked);
                 }
@@ -170,7 +170,7 @@ namespace BackToTheFutureV
 
         public static void Tick()
         {
-            if (Game.IsMissionActive || !Vehicle.NotNullAndExists() || RemoteTimeMachineHandler.IsRemoteOn)
+            if (Game.IsMissionActive || !Vehicle.NotNullAndExists())
             {
                 if (Status != GarageStatus.Idle)
                 {

@@ -50,14 +50,14 @@ namespace BackToTheFutureV
                 case WormholeType.BTTF2:
                     Reactor = ReactorType.MrFusion;
                     Exhaust = ExhaustType.None;
-                    Plate = PlateType.BTTF2;
+                    Plate = PlateType.Futuristic;
                     Bulova = ModState.On;
                     HoverUnderbody = ModState.On;
                     break;
                 case WormholeType.BTTF3:
                     Reactor = ReactorType.MrFusion;
                     Exhaust = ExhaustType.BTTF;
-                    Plate = PlateType.BTTF2;
+                    Plate = PlateType.Futuristic;
 
                     Hoodbox = ModState.On;
                     Wheel = WheelType.Red;
@@ -267,17 +267,14 @@ namespace BackToTheFutureV
 
             set
             {
-                if (!IsDMC12 && HoverUnderbody == ModState.On && value != WheelType.DMC && value != WheelType.Red && value != WheelType.DMCInvisible && value != WheelType.RedInvisible)
+                if (!IsDMC12 && HoverUnderbody == ModState.On && value != WheelType.RailroadInvisible && value != WheelType.Red && value != WheelType.RedInvisible)
                 {
                     HoverUnderbody = ModState.Off;
                 }
 
                 base.Wheel = value;
 
-                if (TimeMachine.Properties == null)
-                {
-                    return;
-                }
+                if (TimeMachine.Properties == null) return;
 
                 if (value == WheelType.RailroadInvisible)
                 {
@@ -287,15 +284,7 @@ namespace BackToTheFutureV
                         Wheels.Burst = true;
                     }
 
-                    if (!IsDMC12)
-                    {
-                        return;
-                    }
-
-                    if (HoverUnderbody == ModState.On)
-                    {
-                        HoverUnderbody = ModState.Off;
-                    }
+                    if (!IsDMC12) return;
 
                     if (SuspensionsType != SuspensionsType.Stock)
                     {
@@ -310,7 +299,6 @@ namespace BackToTheFutureV
                 else
                 {
                     TimeMachine.Props?.RRWheels?.Delete();
-
                     Wheels.Burst = false;
                 }
             }
@@ -324,36 +312,20 @@ namespace BackToTheFutureV
             {
                 if (IsDMC12)
                 {
-                    if (TimeMachine.Properties != null && TimeMachine.Properties.IsFlying)
-                    {
-                        return;
-                    }
+                    if (TimeMachine.Properties != null && TimeMachine.Properties.IsFlying) return;
                 }
 
-                bool newSuspension = false;
-
-                if (TimeMachine.Mods != null && TimeMachine.Mods.SuspensionsType != value)
-                {
-                    newSuspension = true;
-                }
+                bool newSuspension = TimeMachine.Mods != null && TimeMachine.Mods.SuspensionsType != value;
 
                 base.SuspensionsType = value;
 
-                if (!IsDMC12)
-                {
-                    return;
-                }
+                if (!IsDMC12) return;
 
                 if (value != SuspensionsType.Stock)
                 {
                     if (HoverUnderbody == ModState.On)
                     {
                         HoverUnderbody = ModState.Off;
-                    }
-
-                    if (Wheel == WheelType.RailroadInvisible)
-                    {
-                        Wheel = WheelType.Stock;
                     }
                 }
                 else
@@ -377,35 +349,22 @@ namespace BackToTheFutureV
 
             set
             {
-                if (TimeMachine.Properties != null && TimeMachine.Properties.IsFlying)
-                {
-                    return;
-                }
-
+                if (TimeMachine.Properties != null && TimeMachine.Properties.IsFlying) return;
+                
                 base.HoverUnderbody = value;
 
                 bool reload = false;
 
                 if (value == ModState.On)
                 {
-                    if (Wheel == WheelType.RailroadInvisible)
-                    {
-                        Wheel = WheelType.Stock;
-                    }
-
-                    if (TimeMachine.Vehicle.Model == ModelHandler.Deluxo /*|| TimeMachine.Vehicle.Model == "dproto"*/ && Wheel != WheelType.DMC && Wheel != WheelType.Red)
-                    {
-                        Wheel = WheelType.DMC;
-                    }
-
                     reload = SuspensionsType != SuspensionsType.Stock;
 
                     if (SuspensionsType != SuspensionsType.Stock)
                     {
-                        SuspensionsType = SuspensionsType.Stock;
+                        SuspensionsType = SuspensionsType.Stock; // Works fine without this.
                     }
 
-                    Exhaust = ExhaustType.None;
+                    Exhaust = ExhaustType.None; // misc_x gets offset during hover.
                 }
 
                 TimeMachine.DMC12?.SetStockSuspensions?.Invoke(value == ModState.Off);
@@ -471,29 +430,19 @@ namespace BackToTheFutureV
 
                 if (value == ModState.On)
                 {
-                    if (TimeMachine.Properties == null)
-                    {
-                        return;
-                    }
+                    if (TimeMachine.Properties == null) return;
 
                     if (TimeMachine.Properties.AreTimeCircuitsOn)
-                    {
                         TimeMachine.Events?.SetTimeCircuits?.Invoke(false);
-                    }
 
-                    if (!TimeMachine.Properties.AreTimeCircuitsBroken)
-                    {
-                        return;
-                    }
-
+                    if (!TimeMachine.Properties.AreTimeCircuitsBroken) return;
+                    
                     WormholeType = WormholeType.BTTF3;
                 }
                 else
                 {
                     if (TimeMachine.Properties.AreTimeCircuitsOn)
-                    {
                         TimeMachine.Events.SetTimeCircuits?.Invoke(false);
-                    }
                 }
             }
         }

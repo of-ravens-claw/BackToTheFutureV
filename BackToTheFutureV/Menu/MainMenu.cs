@@ -13,11 +13,6 @@ namespace BackToTheFutureV
     internal class MainMenu : BTTFVMenu
     {
         private readonly NativeListItem<string> spawnBTTF;
-        private readonly NativeItem convertIntoTimeMachine;
-
-        private readonly NativeSubmenuItem rcMenu;
-        private readonly NativeSubmenuItem outatimeMenu;
-        private readonly NativeSubmenuItem doorsMenu;
 
         private readonly NativeItem deleteCurrent;
         private readonly NativeItem deleteOthers;
@@ -29,16 +24,10 @@ namespace BackToTheFutureV
             spawnBTTF.ItemChanged += SpawnBTTF_ItemChanged;
             spawnBTTF.Description = GetItemValueDescription("Spawn", "DMC12");
 
-            convertIntoTimeMachine = NewItem("Convert");
-
-            rcMenu = NewSubmenu(MenuHandler.RCMenu);
-            outatimeMenu = NewSubmenu(MenuHandler.OutatimeMenu);
-            doorsMenu = NewSubmenu(MenuHandler.DoorsMenu);
-            NewSubmenu(MenuHandler.SettingsMenu);
-
             deleteCurrent = NewItem("Remove");
             deleteOthers = NewItem("RemoveOther");
             deleteAll = NewItem("RemoveAll");
+            NewSubmenu(MenuHandler.SettingsMenu);
         }
 
         private void SpawnBTTF_ItemChanged(object sender, ItemChangedEventArgs<string> e)
@@ -68,15 +57,6 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
-            spawnBTTF.Enabled = !Game.IsMissionActive;
-
-            convertIntoTimeMachine.Enabled = FusionUtils.PlayerVehicle.IsFunctioning() && !FusionUtils.PlayerVehicle.IsTimeMachine() && !Game.IsMissionActive;
-
-            doorsMenu.Enabled = FusionUtils.PlayerPed?.GetClosestVehicle(5f)?.Model == ModelHandler.DMC12 && !FusionUtils.PlayerPed.GetClosestVehicle(5f).IsConsideredDestroyed;
-
-            outatimeMenu.Enabled = RemoteTimeMachineHandler.RemoteTimeMachines.Count > 0 && !Game.IsMissionActive;
-
-            rcMenu.Enabled = FusionUtils.PlayerVehicle == null && TimeMachineHandler.TimeMachineCount > 0 && !Game.IsMissionActive;
         }
 
         public override void Menu_OnItemActivated(NativeItem sender, EventArgs e)
@@ -129,11 +109,6 @@ namespace BackToTheFutureV
                 }
             }
 
-            if (sender == convertIntoTimeMachine)
-            {
-                FusionUtils.PlayerVehicle.TransformIntoTimeMachine();
-            }
-
             if (sender == deleteCurrent)
             {
                 timeMachine = TimeMachineHandler.GetTimeMachineFromVehicle(FusionUtils.PlayerVehicle);
@@ -150,14 +125,12 @@ namespace BackToTheFutureV
             if (sender == deleteOthers)
             {
                 TimeMachineHandler.RemoveAllTimeMachines(true);
-                RemoteTimeMachineHandler.DeleteAll();
                 TextHandler.Me.ShowNotification("RemovedOtherTimeMachines");
             }
 
             if (sender == deleteAll)
             {
                 TimeMachineHandler.RemoveAllTimeMachines();
-                RemoteTimeMachineHandler.DeleteAll();
                 TextHandler.Me.ShowNotification("RemovedAllTimeMachines");
             }
 

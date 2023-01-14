@@ -68,8 +68,7 @@ namespace BackToTheFutureV
         public OnWormholeTypeChanged OnWormholeTypeChanged;
         public OnReactorTypeChanged OnReactorTypeChanged;
         public OnVehicleSpawned OnVehicleSpawned;
-
-        public SetRCMode SetRCMode;
+        
         public SetTimeCircuits SetTimeCircuits;
         public SetTimeCircuitsBroken SetTimeCircuitsBroken;
         public SetCutsceneMode SetCutsceneMode;
@@ -81,7 +80,6 @@ namespace BackToTheFutureV
         public StartFuelBlink StartFuelBlink;
         public SetStopTracks SetStopTracks;
         public SetReactorState SetReactorState;
-        public SetPedAI StartDriverAI;
         public SetEngineStall SetEngineStall;
         public StartLightningStrike StartLightningStrike;
         public SimulateInputDate SimulateInputDate;

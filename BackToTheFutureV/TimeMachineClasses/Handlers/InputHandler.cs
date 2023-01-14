@@ -41,10 +41,8 @@ namespace BackToTheFutureV
 
         public override void KeyDown(KeyEventArgs e)
         {
-            if (!Properties.AreTimeCircuitsOn || TcdEditer.IsEditing || RCGUIEditer.IsEditing || Properties.IsRemoteControlled || !Vehicle.IsVisible || CustomNativeMenu.ObjectPool.AreAnyVisible)
-            {
-                return;
-            }
+            if (!Properties.AreTimeCircuitsOn || TcdEditer.IsEditing || RCGUIEditer.IsEditing || !Vehicle.IsVisible || CustomNativeMenu.ObjectPool.AreAnyVisible)  return;
+            
 
             if (ModSettings.UseInputToggle && e.KeyCode == ModControls.InputToggle)
             {

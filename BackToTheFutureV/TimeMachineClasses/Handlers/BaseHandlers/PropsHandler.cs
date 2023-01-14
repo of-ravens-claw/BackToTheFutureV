@@ -129,10 +129,7 @@ namespace BackToTheFutureV
                 });
             }
 
-            if (!Mods.IsDMC12)
-            {
-                return;
-            }
+            if (!Mods.IsDMC12) return;
 
             BTTFDecals = new AnimateProp(ModelHandler.BTTFDecals, Vehicle);
             BTTFDecals.SpawnProp();
@@ -261,24 +258,14 @@ namespace BackToTheFutureV
 
         public override void KeyDown(KeyEventArgs e)
         {
-            //if (key == Keys.L)
-            //{
-            //    Sounds.Plate.Play();
-            //    LicensePlate.Play(false, true);
-            //}
-
-            //if (key == Keys.O)
-            //    LicensePlate.Delete();
         }
 
         public override void Tick()
         {
-
         }
 
         public override void Stop()
         {
-
         }
     }
 }

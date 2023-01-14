@@ -13,21 +13,18 @@ namespace BackToTheFutureV
         public static EventsSettingsMenu EventsSettingsMenu { get; } = new EventsSettingsMenu();
         public static TCDMenu TCDMenu { get; } = new TCDMenu();
         public static SettingsMenu SettingsMenu { get; } = new SettingsMenu();
-        public static RCMenu RCMenu { get; } = new RCMenu();
         public static OverrideMenu OverrideMenu { get; } = new OverrideMenu();
         public static PhotoMenu PhotoMenu { get; } = new PhotoMenu();
-        public static DoorsMenu DoorsMenu { get; } = new DoorsMenu();
         public static CustomMenu CustomMenu { get; } = new CustomMenu();
         public static CustomMenu2 CustomMenu2 { get; } = new CustomMenu2();
         public static GarageMenu GarageMenu { get; } = new GarageMenu();
-        public static OutatimeMenu OutatimeMenu { get; } = new OutatimeMenu();
         public static MainMenu MainMenu { get; } = new MainMenu();
         public static TimeMachineMenu TimeMachineMenu { get; } = new TimeMachineMenu();
         public static int closingTime;
 
         public static bool IsAnyMenuOpen()
         {
-            if (ControlsMenu.Visible || SoundsSettingsMenu.Visible || EventsSettingsMenu.Visible || TCDMenu.Visible || SettingsMenu.Visible || RCMenu.Visible || OverrideMenu.Visible || PhotoMenu.Visible || DoorsMenu.Visible || CustomMenu.Visible || GarageMenu.Visible || OutatimeMenu.Visible || MainMenu.Visible || TimeMachineMenu.Visible)
+            if (ControlsMenu.Visible || SoundsSettingsMenu.Visible || EventsSettingsMenu.Visible || TCDMenu.Visible || SettingsMenu.Visible || CustomMenu2.Visible || OverrideMenu.Visible || PhotoMenu.Visible || CustomMenu.Visible || GarageMenu.Visible || MainMenu.Visible || TimeMachineMenu.Visible)
             {
                 return true;
             }
@@ -56,13 +53,7 @@ namespace BackToTheFutureV
                         FusionUtils.PlayerPed.Task.StandStill(1);
                     }
 
-                    if (RemoteTimeMachineHandler.IsRemoteOn)
-                    {
-                        TimeMachineMenu.Visible = true;
-
-                        return;
-                    }
-                    else if (CustomNativeMenu.ObjectPool.AreAnyVisible)
+                    if (CustomNativeMenu.ObjectPool.AreAnyVisible)
                     {
                         return;
                     }

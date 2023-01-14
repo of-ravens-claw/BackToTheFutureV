@@ -194,15 +194,10 @@ namespace BackToTheFutureV
 
             Ped ped = FusionUtils.PlayerPed;
 
-            if (RemoteTimeMachineHandler.IsRemoteOn)
-            {
-                ped = RemoteTimeMachineHandler.RemoteControlling.OriginalPed;
-            }
-
             Vehicle veh = null;
             Vector3 spawnPos;
 
-            if (FusionUtils.PlayerVehicle != null && !RemoteTimeMachineHandler.IsRemoteOn)
+            if (FusionUtils.PlayerVehicle != null)
             {
                 spawnPos = ped.Position.Around(5f);
             }
@@ -241,7 +236,7 @@ namespace BackToTheFutureV
                 veh = vehicle;
             }
 
-            if (timeMachineClone != default && timeMachineClone.Properties.TimeTravelType == TimeTravelType.RC)
+            if (timeMachineClone != default)
             {
                 spawnFlags |= SpawnFlags.NoDriver;
             }
@@ -277,11 +272,6 @@ namespace BackToTheFutureV
 
             if (spawnFlags.HasFlag(SpawnFlags.WarpPlayer) && !spawnFlags.HasFlag(SpawnFlags.ForceReentry))
             {
-                if (RemoteTimeMachineHandler.IsRemoteOn)
-                {
-                    RemoteTimeMachineHandler.StopRemoteControl(true);
-                }
-
                 FusionUtils.PlayerPed.SetIntoVehicle(timeMachine, VehicleSeat.Driver);
             }
 

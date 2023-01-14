@@ -25,7 +25,7 @@ namespace BackToTheFutureV
             _wormholeType = NewListItem("Wormhole", TextHandler.Me.GetLocalizedText("BTTF1", "BTTF2", "BTTF3"));
             _wormholeType.ItemChanged += ModList_ItemChanged;
 
-            _wheelsType = NewLocalizedListItem("Wheel", "Stock", "Red", "Rail", "DMC");
+            _wheelsType = NewLocalizedListItem("Wheel", "Stock", "Red", "Rail");
             _wheelsType.ItemChanged += ModList_ItemChanged;
 
             _hook = NewCheckboxItem("Hook");
@@ -65,51 +65,14 @@ namespace BackToTheFutureV
                 switch (newIndex)
                 {
                     case 0:
-                        if (!CurrentTimeMachine.Mods.IsDMC12 && CurrentTimeMachine.Mods.HoverUnderbody == ModState.On)
-                        {
-                            CurrentTimeMachine.Mods.Wheel = WheelType.Stock;
-                            break;
-                        }
-
                         CurrentTimeMachine.Mods.Wheel = WheelType.Stock;
                         break;
+                    
                     case 1:
                         CurrentTimeMachine.Mods.Wheel = WheelType.Red;
                         break;
                     case 2:
-                        if (CurrentTimeMachine.Mods.HoverUnderbody == ModState.On && !CurrentTimeMachine.Properties.AreFlyingCircuitsBroken)
-                        {
-                            if (CurrentTimeMachine.Mods.Wheel == WheelType.Red)
-                            {
-                                if (CurrentTimeMachine.Mods.IsDMC12)
-                                {
-                                    CurrentTimeMachine.Mods.Wheel = WheelType.Stock;
-                                }
-                                else
-                                {
-                                    CurrentTimeMachine.Mods.Wheel = WheelType.DMC;
-                                }
-                            }
-                            else
-                            {
-                                CurrentTimeMachine.Mods.Wheel = WheelType.Red;
-                            }
-
-                            break;
-                        }
-
                         CurrentTimeMachine.Mods.Wheel = WheelType.RailroadInvisible;
-                        break;
-                    case 3:
-                        if (CurrentTimeMachine.Mods.IsDMC12)
-                        {
-                            CurrentTimeMachine.Mods.Wheel = WheelType.Stock;
-                        }
-                        else
-                        {
-                            CurrentTimeMachine.Mods.Wheel = WheelType.DMC;
-                        }
-
                         break;
                 }
             }
@@ -168,10 +131,6 @@ namespace BackToTheFutureV
                     break;
                 case WheelType.RailroadInvisible:
                     _wheelsType.SelectedIndex = 2;
-                    break;
-                case WheelType.DMC:
-                case WheelType.DMCInvisible:
-                    _wheelsType.SelectedIndex = 3;
                     break;
             }
         }

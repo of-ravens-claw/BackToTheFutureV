@@ -14,7 +14,6 @@ namespace BackToTheFutureV
         public NativeCheckboxItem CutsceneMode { get; }
         public NativeCheckboxItem FlyMode { get; }
         public NativeCheckboxItem AltitudeHold { get; }
-        public NativeCheckboxItem RemoteControl { get; }
         public NativeSubmenuItem PhotoMenu { get; }
 
         public TimeMachineMenu() : base("TimeMachine")
@@ -23,11 +22,9 @@ namespace BackToTheFutureV
             CutsceneMode = NewCheckboxItem("Cutscene");
             FlyMode = NewCheckboxItem("Hover");
             AltitudeHold = NewCheckboxItem("Altitude");
-            RemoteControl = NewCheckboxItem("RC");
 
             PhotoMenu = NewSubmenu(MenuHandler.PhotoMenu);
             NewSubmenu(MenuHandler.CustomMenu2);
-
             NewSubmenu(MenuHandler.MainMenu);
         }
 
@@ -46,9 +43,7 @@ namespace BackToTheFutureV
 
             FlyMode.Enabled = CurrentTimeMachine.Mods.HoverUnderbody == ModState.On && !CurrentTimeMachine.Properties.AreFlyingCircuitsBroken;
             AltitudeHold.Enabled = FlyMode.Enabled;
-            RemoteControl.Enabled = CurrentTimeMachine.Properties.IsRemoteControlled;
-            TimeCircuitsOn.Enabled = !RemoteControl.Enabled && !Game.IsMissionActive;
-            CutsceneMode.Enabled = !RemoteControl.Enabled;
+            TimeCircuitsOn.Enabled = !Game.IsMissionActive;
         }
 
         public override void Menu_OnItemCheckboxChanged(NativeCheckboxItem sender, EventArgs e, bool Checked)
@@ -67,9 +62,6 @@ namespace BackToTheFutureV
                 case NativeCheckboxItem item when item == AltitudeHold:
                     CurrentTimeMachine.Events.SetAltitudeHold?.Invoke(Checked);
                     break;
-                case NativeCheckboxItem item when item == RemoteControl && !Checked && CurrentTimeMachine.Properties.IsRemoteControlled:
-                    RemoteTimeMachineHandler.StopRemoteControl();
-                    break;
             }
         }
 
@@ -85,8 +77,7 @@ namespace BackToTheFutureV
             CutsceneMode.Checked = CurrentTimeMachine.Properties.CutsceneMode;
             FlyMode.Checked = CurrentTimeMachine.Properties.IsFlying;
             AltitudeHold.Checked = CurrentTimeMachine.Properties.IsAltitudeHolding;
-            RemoteControl.Checked = CurrentTimeMachine.Properties.IsRemoteControlled;
-            PhotoMenu.Enabled = !CurrentTimeMachine.Constants.FullDamaged && !CurrentTimeMachine.Properties.IsRemoteControlled && !Game.IsMissionActive;
+            PhotoMenu.Enabled = !CurrentTimeMachine.Constants.FullDamaged && !Game.IsMissionActive;
         }
 
         public override void Menu_OnItemValueChanged(NativeSliderItem sender, EventArgs e)

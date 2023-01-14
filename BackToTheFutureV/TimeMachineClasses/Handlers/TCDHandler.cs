@@ -273,7 +273,7 @@ namespace BackToTheFutureV
 
         public override void KeyDown(KeyEventArgs e)
         {
-            if (e.KeyCode == ModControls.TCToggle && !Properties.IsRemoteControlled && !Game.IsMissionActive)
+            if (e.KeyCode == ModControls.TCToggle && !Game.IsMissionActive)
             {
                 SetTimeCircuitsOn(!Properties.AreTimeCircuitsOn);
             }
@@ -395,7 +395,7 @@ namespace BackToTheFutureV
 
         private void DrawGUI()
         {
-            if (FusionUtils.HideGUI || FusionUtils.PlayerVehicle != Vehicle || (FusionUtils.IsCameraInFirstPerson() && Mods.IsDMC12) || TcdEditer.IsEditing || RCGUIEditer.IsEditing || Properties.IsRemoteControlled || MenuHandler.GarageMenu.Visible)
+            if (FusionUtils.HideGUI || FusionUtils.PlayerVehicle != Vehicle || (FusionUtils.IsCameraInFirstPerson() && Mods.IsDMC12) || TcdEditer.IsEditing || RCGUIEditer.IsEditing || MenuHandler.GarageMenu.Visible)
             {
                 return;
             }

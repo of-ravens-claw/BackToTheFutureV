@@ -103,10 +103,7 @@ namespace BackToTheFutureV
 
         public void OnAnimationCompleted(AnimationStep animationStep)
         {
-            if (!IsPlaying)
-            {
-                return;
-            }
+            if (!IsPlaying) return;
 
             if (AreWheelsOpen)
             {
@@ -163,7 +160,7 @@ namespace BackToTheFutureV
             {
                 AllProps.Play(AnimationStep.Second, true, true);
 
-                if (Constants.RoadWheel == WheelType.Stock || Constants.RoadWheel == WheelType.DMC)
+                if (Constants.RoadWheel == WheelType.Stock)
                 {
                     for (int i = 0; i < Mods.Wheels.Count; i++)
                     {

@@ -1,9 +1,9 @@
-﻿namespace BackToTheFutureV
+﻿using System;
+
+namespace BackToTheFutureV
 {
     internal static class InternalEnums
     {
-        public static string[] MeleeAttacks = new string[] { "walking_punch", "running_punch", "long_0_punch", "heavy_punch_a", "heavy_punch_b", "heavy_punch_b_var_1", "short_0_punch" };
-
         internal enum EmptyType
         {
             Hide,
@@ -22,34 +22,8 @@
             public const string TimeCircuitsOn = "BTTFV_TCOn";
             public const string CutsceneMode = "BTTFV_TimeTravelType";
             public const string TorqueMultiplier = "BTTFV_TorqueMultiplier";
-
-            public const string AllowHoverMode = "BTTFV_AllowHoverMode";
-            public const string IsInHoverMode = "BTTFV_IsInHoverMode";
-            public const string IsHoverBoosting = "BTTFV_IsHoverBoosting";
-            public const string IsVerticalBoosting = "BTTFV_IsVerticalBoosting";
-            public const string IsHoverLanding = "BTTFV_IsHoverLanding";
-            public const string IsWaitForLanding = "BTTFV_IsWaitForLanding";
-            public const string IsAltitudeHolding = "BTTFV_IsAltitudeHolding";
         }
-
-        internal enum WaybackStatus
-        {
-            Idle,
-            Recording,
-            Playing
-        }
-
-        internal enum WaybackPedEvent
-        {
-            None,
-            Walking,
-            EnteringVehicle,
-            LeavingVehicle,
-            DrivingVehicle,
-            Jump,
-            MeleeAttack,
-            Climb
-        }
+        
 
         internal enum GarageStatus
         {
@@ -77,22 +51,6 @@
             BTTF1, BTTF3, Transparent
         }
 
-        internal enum DriverTaskType
-        {
-            Off,
-            LeaveVehicle,
-            ParkAndLeave,
-            DriveAround,
-            DriveAroundAndTimeTravel,
-            TimeTravel
-        }
-
-        internal enum RcModes
-        {
-            FromCarCamera,
-            FromPlayerCamera
-        }
-
         internal enum TimeTravelPhase
         {
             Completed = 0,
@@ -110,8 +68,7 @@
         internal enum TimeTravelType
         {
             Cutscene,
-            Instant,
-            RC
+            Instant
         }
 
         internal enum MissionType
@@ -124,20 +81,7 @@
         internal enum TimeMachineCamera
         {
             Default = -1,
-            DestinationDate,
-            DriverSeat,
             DigitalSpeedo,
-            AnalogSpeedo,
-            FrontPassengerWheelLookAtRear,
-            TrainApproaching,
-            RightSide,
-            FrontToBack,
-            FrontOnRail,
-            FrontToBackRightSide,
-            LicensePlate,
-            TimeTravelOnTracks,
-            DigitalSpeedoTowardsFront,
-            RearCarTowardsFront,
             PlateCustom,
             ReactorCustom,
             RimCustom,
@@ -146,7 +90,6 @@
             HookCustom,
             SuspensionsCustom,
             HoverUnderbodyCustom,
-            SpeedoWithDestZoom,
             BulovaSetup
         }
 
@@ -178,12 +121,12 @@
         {
             Empty = -1,
             Outatime = 0,
-            BTTF2 = 1,
-            NOTIME = 2,
-            TIMELESS = 3,
-            TIMELESS2 = 4,
-            DMCFACTORY = 5,
-            DMCFACTORY2 = 6
+            Futuristic = 1,
+            Notime = 2,
+            Timeless = 3,
+            Timeless2 = 4,
+            Dmcfactory = 5,
+            Dmcfactory2 = 6
         }
 
         internal enum ReactorType
@@ -207,8 +150,9 @@
             RailroadInvisible = 211,
             RedInvisible = 212,
             Red = 213,
-            DMC = 214,
-            DMCInvisible = 215
+            [Obsolete]
+            Dmc = 214,
+            DmcInvisible = 215
         }
 
         internal enum SuspensionsType

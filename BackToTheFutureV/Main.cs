@@ -37,13 +37,9 @@ namespace BackToTheFutureV
             World.RenderingCamera = null;
 
             Screen.FadeIn(1000);
-
-            if (RemoteTimeMachineHandler.IsRemoteOn) RemoteTimeMachineHandler.StopRemoteControl(true);
-
             GarageHandler.Abort();
             MissionHandler.Abort();
             StoryTimeMachineHandler.Abort();
-            RemoteTimeMachineHandler.Abort();
             TimeMachineHandler.Abort();
             FireTrailsHandler.Abort();
             CustomTrainHandler.Abort();
@@ -80,7 +76,6 @@ namespace BackToTheFutureV
             CustomTrainHandler.Tick();
             DMC12Handler.Tick();
             TimeMachineHandler.Tick();
-            RemoteTimeMachineHandler.Tick();
             FireTrailsHandler.Tick();
             TcdEditer.Tick();
             RCGUIEditer.Tick();

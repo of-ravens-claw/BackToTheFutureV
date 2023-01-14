@@ -39,7 +39,6 @@ namespace BackToTheFutureV
         }
 
         public TimeMachineClone LastDisplacementClone { get; set; }
-        public Ped OriginalPed;
 
         private readonly Dictionary<string, HandlerPrimitive> registeredHandlers = new Dictionary<string, HandlerPrimitive>();
 
@@ -87,7 +86,6 @@ namespace BackToTheFutureV
             registeredHandlers.Add("TimeTravelHandler", new TimeTravelHandler(this));
             registeredHandlers.Add("TCDHandler", new TCDHandler(this));
             registeredHandlers.Add("InputHandler", new InputHandler(this));
-            registeredHandlers.Add("RcHandler", new RcHandler(this));
             registeredHandlers.Add("ReentryHandler", new ReentryHandler(this));
             registeredHandlers.Add("SparksHandler", new SparksHandler(this));
 
@@ -237,9 +235,6 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (TimeMachineHandler.CurrentTimeMachine == this && Properties.IsWayback)
-                Properties.IsWayback = false;
-
             //After reentry, story time machines spawn in an odd state. This code fixes the inability for player to enter the time machine from the mineshaft
             if (!TimeMachineHandler.ClosestTimeMachine.IsFunctioning() && Vehicle.IsFunctioning() && FusionUtils.PlayerPed.DistanceToSquared2D(Vehicle, 4.47f) && Constants.FullDamaged && Game.IsControlJustPressed(GTA.Control.Enter))
             {
@@ -264,7 +259,7 @@ namespace BackToTheFutureV
                 VehicleControl.SetDeluxoTransformation(Vehicle, 0f);
             }
 
-            if (Properties.TimeTravelPhase > TimeTravelPhase.OpeningWormhole | Properties.IsRemoteControlled)
+            if (Properties.TimeTravelPhase > TimeTravelPhase.OpeningWormhole)
             {
                 Vehicle.LockStatus = VehicleLockStatus.PlayerCannotLeaveCanBeBrokenIntoPersist;
             }

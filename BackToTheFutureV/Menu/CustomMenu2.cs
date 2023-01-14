@@ -34,7 +34,7 @@ namespace BackToTheFutureV
             _reactorType = NewLocalizedListItem("Reactor", "MrFusion", "Nuclear");
             _reactorType.ItemChanged += ModList_ItemChanged;
 
-            _wheelsType = NewLocalizedListItem("Wheel", "Stock", "Red", "Rail", "DMC");
+            _wheelsType = NewLocalizedListItem("Wheel", "Stock", "Red", "Rail");
             _wheelsType.ItemChanged += ModList_ItemChanged;
 
             _hoverUnderbody = NewCheckboxItem("Hover");
@@ -104,17 +104,6 @@ namespace BackToTheFutureV
                     case 2:
                         CurrentTimeMachine.Mods.Wheel = WheelType.RailroadInvisible;
                         break;
-                    case 3:
-                        /*if (CurrentTimeMachine.Mods.IsDMC12)
-                        {
-                            CurrentTimeMachine.Mods.Wheel = WheelType.Stock;
-                        }
-                        else*/
-                        {
-                            CurrentTimeMachine.Mods.Wheel = WheelType.DMC;
-                        }
-
-                        break;
                 }
             }
             else if (sender == _plate)
@@ -169,10 +158,6 @@ namespace BackToTheFutureV
                     break;
                 case WheelType.RailroadInvisible:
                     _wheelsType.SelectedIndex = 2;
-                    break;
-                case WheelType.DMC:
-                case WheelType.DMCInvisible:
-                    _wheelsType.SelectedIndex = 3;
                     break;
             }
         }

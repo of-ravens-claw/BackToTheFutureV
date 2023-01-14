@@ -43,7 +43,6 @@ namespace BackToTheFutureV
         public static void TimeChanged(DateTime time)
         {
             TimeMachineHandler.ExistenceCheck(time);
-            RemoteTimeMachineHandler.ExistenceCheck(time);
         }
 
         public void SetCutsceneMode(bool cutsceneOn)
@@ -68,10 +67,10 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (FusionUtils.PlayerVehicle == Vehicle && !Properties.IsRemoteControlled && !FusionUtils.HideGUI)
+            if (FusionUtils.PlayerVehicle == Vehicle && !FusionUtils.HideGUI)
             {
                 FusionUtils.HideGUI = true;
-                Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
+                Game.DisableAllControlsThisFrame();
             }
 
             if (FusionUtils.PlayerPed.IsInVehicle(Vehicle))
@@ -88,28 +87,13 @@ namespace BackToTheFutureV
             switch (_currentStep)
             {
                 case 0:
-
-                    if (Properties.IsRemoteControlled)
+                    if (!Properties.CutsceneMode || FusionUtils.IsCameraInFirstPerson())
                     {
-                        Properties.TimeTravelType = TimeTravelType.RC;
+                        Properties.TimeTravelType = TimeTravelType.Instant;
                     }
                     else
                     {
-                        if (Vehicle.GetPedOnSeat(VehicleSeat.Driver) != FusionUtils.PlayerPed)
-                        {
-                            Properties.TimeTravelType = TimeTravelType.RC;
-                        }
-                        else
-                        {
-                            if (!Properties.CutsceneMode || FusionUtils.IsCameraInFirstPerson())
-                            {
-                                Properties.TimeTravelType = TimeTravelType.Instant;
-                            }
-                            else
-                            {
-                                Properties.TimeTravelType = TimeTravelType.Cutscene;
-                            }
-                        }
+                        Properties.TimeTravelType = TimeTravelType.Cutscene;
                     }
 
                     Properties.LastVelocity = Vehicle.Velocity;
@@ -176,34 +160,6 @@ namespace BackToTheFutureV
 
                     trails = FireTrailsHandler.SpawnForTimeMachine(TimeMachine);
 
-                    // If the Vehicle is remote controlled or the player is not the one in the driver seat
-                    if (Properties.TimeTravelType == TimeTravelType.RC)
-                    {
-                        if (Mods.IsDMC12 && !Properties.IsFlying && !Properties.IsOnTracks && Mods.Plate == PlateType.Outatime)
-                        {
-                            Sounds.Plate?.Play();
-                            Props.LicensePlate?.Play(false, true);
-                        }
-
-                        Vehicle.SetMPHSpeed(0);
-
-                        // Add to time travelled list
-                        if (Properties.TimeTravelType == TimeTravelType.RC && !Properties.IsWayback)
-                        {
-                            RemoteTimeMachineHandler.AddRemote(TimeMachine.Clone());
-                        }
-
-                        Vehicle.SetVisible(false);
-
-                        // Invoke delegate
-                        Events.OnTimeTravelEnded?.Invoke();
-
-                        gameTimer = Game.GameTime + 300;
-
-                        _currentStep++;
-                        return;
-                    }
-
                     // Create a copy of the current status of the time machine
                     TimeMachine.LastDisplacementClone = TimeMachine.Clone();
 
@@ -220,9 +176,6 @@ namespace BackToTheFutureV
 
                     if (Mods.IsDMC12 && !Properties.IsFlying && !Properties.IsOnTracks && Mods.Plate == PlateType.Outatime)
                     {
-                        //if (Properties.TimeTravelType == TimeTravelType.Cutscene)
-                        //    TimeMachine.CustomCamera = TimeMachineCamera.LicensePlate;
-
                         Sounds.Plate?.Play();
                         Props.LicensePlate?.Play(false, true);
                     }
@@ -235,19 +188,6 @@ namespace BackToTheFutureV
                 case 1:
 
                     Particles.TimeTravelEffect?.Stop();
-
-                    if (Properties.TimeTravelType == TimeTravelType.RC)
-                    {
-                        // Stop remote controlling
-                        if (Properties.IsRemoteControlled)
-                        {
-                            RemoteTimeMachineHandler.StopRemoteControl();
-                        }
-
-                        TimeMachineHandler.RemoveTimeMachine(TimeMachine, true, true);
-
-                        return;
-                    }
 
                     gameTimer = Game.GameTime + 3700;
 

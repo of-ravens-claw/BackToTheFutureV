@@ -7,6 +7,7 @@ using System;
 using System.Windows.Forms;
 using static BackToTheFutureV.InternalEnums;
 using static FusionLibrary.FusionEnums;
+using Control = GTA.Control;
 
 namespace BackToTheFutureV
 {
@@ -49,28 +50,19 @@ namespace BackToTheFutureV
         {
             Properties.WasOnTracks = Properties.IsOnTracks;
 
-            if (!Properties.IsOnTracks)
-            {
-                return;
-            }
-
+            if (!Properties.IsOnTracks) return;
+            
             switch (Properties.TimeTravelType)
             {
                 case TimeTravelType.Cutscene:
                     customTrain.SpeedMPH = 0;
-                    break;
-                case TimeTravelType.RC:
-                    Stop();
                     break;
             }
         }
 
         public void OnReenterEnded()
         {
-            if (!Properties.WasOnTracks)
-            {
-                return;
-            }
+            if (!Properties.WasOnTracks) return;
 
             _isReentryOn = true;
 
@@ -83,26 +75,18 @@ namespace BackToTheFutureV
             {
                 case TimeTravelType.Instant:
                     if (customTrain.SpeedMPH == 0)
-                    {
                         customTrain.SpeedMPH = 88;
-                    }
-
                     break;
+                
                 case TimeTravelType.Cutscene:
                     customTrain.SpeedMPH = 88;
-                    break;
-                case TimeTravelType.RC:
-                    Start(true);
                     break;
             }
         }
 
         public void Start(bool force = false)
         {
-            if ((!force && !Vehicle.IsOnAllWheels) || (Vehicle == FusionUtils.PlayerVehicle?.TowedVehicle))
-            {
-                return;
-            }
+            if ((!force && !Vehicle.IsOnAllWheels) || Vehicle == FusionUtils.PlayerVehicle?.TowedVehicle) return;
 
             _speed = Vehicle.Speed;
 
@@ -158,14 +142,11 @@ namespace BackToTheFutureV
             if (_isReentryOn)
             {
                 if (customTrain.SpeedMPH == 0)
-                {
                     customTrain.SpeedMPH = 88;
-                }
             }
             else
-            {
                 customTrain.Speed = Vehicle.RunningDirection() == RunningDirection.Forward ? _speed : -_speed;
-            }
+            
         }
 
         public override void Dispose()
@@ -175,7 +156,6 @@ namespace BackToTheFutureV
 
         public override void KeyDown(KeyEventArgs e)
         {
-
         }
 
         public override void Tick()
@@ -183,17 +163,14 @@ namespace BackToTheFutureV
             if (Mods.Wheel != WheelType.RailroadInvisible)
             {
                 if (Properties.IsOnTracks)
-                {
                     Stop();
-                }
-
+                
                 return;
             }
 
-            if (Properties.IsOnTracks && ((customTrain == null) || (FusionUtils.PlayerVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle == Vehicle && !Vehicle.IsOnAllWheels)))
-            {
+            if (Properties.IsOnTracks && (customTrain == null || (FusionUtils.PlayerVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle == Vehicle && !Vehicle.IsOnAllWheels)))
                 Stop();
-            }
+            
 
             if (Properties.IsOnTracks)
             {
@@ -201,7 +178,7 @@ namespace BackToTheFutureV
 
                 if (FusionUtils.PlayerVehicle == Vehicle)
                 {
-                    Function.Call(Hash.DISABLE_CONTROL_ACTION, 27, 59, true);
+                    Game.DisableControlThisFrame(Control.VehicleMoveLeftRight);
                 }
 
                 if (_isReentryOn && customTrain.AttachedToTarget && customTrain.SpeedMPH == 0)
@@ -229,10 +206,6 @@ namespace BackToTheFutureV
 
                     if (Math.Abs(_train.GetMPHSpeed() - Vehicle.GetMPHSpeed()) > 33 && !_exploded)
                     {
-                        if (TimeMachine.Properties.IsRemoteControlled)
-                        {
-                            RemoteTimeMachineHandler.StopRemoteControl();
-                        }
                         Vehicle.Explode();
                         _exploded = true;
                     }

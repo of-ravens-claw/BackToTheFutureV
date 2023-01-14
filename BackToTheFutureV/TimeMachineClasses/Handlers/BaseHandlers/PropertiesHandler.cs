@@ -16,7 +16,7 @@ namespace BackToTheFutureV
         public bool SyncWithCurTime { get; set; } = true;
         public DateTime ClockTime { get; set; } = FusionUtils.CurrentTime;
         public DateTime DestinationTime { get; set; } = BTTFImportantDates.GetRandom();
-        public DateTime PreviousTime { get; set; } = new DateTime(1985, 10, 26, 1, 20, 00);
+        public DateTime PreviousTime { get; set; } = BTTFImportantDates.GetRandom();
         public Vector3 LastVelocity { get; set; }
         public TimeTravelType TimeTravelType { get; set; } = TimeTravelType.Cutscene;
         public bool AreTimeCircuitsBroken { get; set; }
@@ -63,7 +63,6 @@ namespace BackToTheFutureV
         public bool IsFluxDoingOrangeAnim { get; set; }
         public bool IsEngineStalling { get; set; }
         public bool BlockEngineRecover { get; set; }
-        public bool IsRemoteControlled { get; set; }
         public bool IsLanding { get; set; }
         public bool IsAltitudeHolding { get; set; }
         public bool IsHoverBoosting { get; set; }
@@ -82,8 +81,6 @@ namespace BackToTheFutureV
         public bool PlayerUsed { get; set; }
         public bool StruckByLightning { get; set; }
         public bool StruckByLightningInstant { get; set; }
-        public bool IsWayback { get; set; }
-
         public HUDProperties HUDProperties { get; set; } = new HUDProperties();
         public bool ForceSIDMax { get; set; }
         public int[] CurrentHeight { get; set; } = new int[10];
@@ -191,66 +188,6 @@ namespace BackToTheFutureV
             }
 
             timeMachine.Events.SetReactorState?.Invoke(ReactorState);
-        }
-
-        public void ApplyToWayback(TimeMachine timeMachine)
-        {
-            timeMachine.Properties.IsWayback = true;
-
-            if (ReactorCharge != timeMachine.Properties.ReactorCharge)
-            {
-                timeMachine.Properties.ReactorCharge = ReactorCharge;
-            }
-
-            if (PreviousTime != timeMachine.Properties.PreviousTime)
-            {
-                timeMachine.Properties.PreviousTime = PreviousTime;
-            }
-
-            if (AreHoodboxCircuitsReady != timeMachine.Properties.AreHoodboxCircuitsReady)
-            {
-                timeMachine.Properties.AreHoodboxCircuitsReady = AreHoodboxCircuitsReady;
-            }
-
-            if (AreTimeCircuitsOn != timeMachine.Properties.AreTimeCircuitsOn)
-            {
-                timeMachine.Events.SetTimeCircuits?.Invoke(AreTimeCircuitsOn);
-            }
-
-            if (DestinationTime != timeMachine.Properties.DestinationTime)
-            {
-                timeMachine.Events.SimulateInputDate?.Invoke(DestinationTime);
-            }
-
-            if (IsFlying != timeMachine.Properties.IsFlying)
-            {
-                timeMachine.Events.SetFlyMode?.Invoke(IsFlying);
-            }
-
-            if (IsHoverBoosting != timeMachine.Properties.IsHoverBoosting)
-            {
-                timeMachine.Events.SimulateHoverBoost?.Invoke(IsHoverBoosting);
-            }
-
-            if (IsHoverGoingUpDown != timeMachine.Properties.IsHoverGoingUpDown)
-            {
-                timeMachine.Events.SimulateHoverGoingUpDown?.Invoke(IsHoverGoingUpDown);
-            }
-
-            if (ReactorState != timeMachine.Properties.ReactorState)
-            {
-                timeMachine.Events.SetReactorState?.Invoke(ReactorState);
-            }
-
-            if (StruckByLightning && StruckByLightning != timeMachine.Properties.StruckByLightning)
-            {
-                timeMachine.Events.StartLightningStrike?.Invoke(0);
-            }
-
-            if (StruckByLightningInstant && StruckByLightningInstant != timeMachine.Properties.StruckByLightningInstant)
-            {
-                timeMachine.Events.StartLightningStrike?.Invoke(-1);
-            }
         }
     }
 }

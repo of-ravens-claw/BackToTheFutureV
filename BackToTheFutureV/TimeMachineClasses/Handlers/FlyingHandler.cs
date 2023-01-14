@@ -164,7 +164,7 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (Mods.Wheel != WheelType.RedInvisible && Props.HoverModeWheelsGlow != null && !Props.HoverModeWheelsGlow.IsSpawned)
+            if (Mods.Wheel == WheelType.StockInvisible && Props.HoverModeWheelsGlow != null && !Props.HoverModeWheelsGlow.IsSpawned)
             {
                 Props.HoverModeWheelsGlow?.SpawnProp();
             }

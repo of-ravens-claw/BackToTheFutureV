@@ -136,11 +136,6 @@ namespace BackToTheFutureV
 
         private void OnReenterEnded()
         {
-            if (Driver == FusionUtils.PlayerPed)
-            {
-                RemoteTimeMachineHandler.AddRemote(TimeMachine.LastDisplacementClone);
-            }
-
             Vehicle.SetVisible(true);
 
             DMC12?.SetVoltValue?.Invoke(50);

@@ -46,21 +46,14 @@ namespace BackToTheFutureV
             return new TimeMachineClone(timeMachine);
         }
 
-        public static TimeMachine TransformIntoTimeMachine(this Vehicle vehicle, WormholeType wormholeType = WormholeType.BTTF1)
-        {
-            return TimeMachineHandler.Create(vehicle, SpawnFlags.Default, wormholeType);
-        }
-
         public static ModState ConvertFromBool(bool value)
         {
             if (value)
             {
                 return ModState.On;
             }
-            else
-            {
-                return ModState.Off;
-            }
+            
+            return ModState.Off;
         }
 
         public static bool ConvertFromModState(ModState value)
@@ -85,10 +78,10 @@ namespace BackToTheFutureV
                     return WheelType.RedInvisible;
                 case WheelType.RedInvisible:
                     return WheelType.Red;
-                case WheelType.DMC:
-                    return WheelType.DMCInvisible;
-                case WheelType.DMCInvisible:
-                    return WheelType.DMC;
+                case WheelType.RailroadInvisible:
+                    return WheelType.DmcInvisible;
+                case WheelType.DmcInvisible:
+                    return WheelType.RailroadInvisible;
                 default:
                     return WheelType.Stock;
             }

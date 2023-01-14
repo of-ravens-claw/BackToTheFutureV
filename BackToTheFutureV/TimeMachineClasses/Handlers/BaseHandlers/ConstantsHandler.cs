@@ -197,7 +197,7 @@ namespace BackToTheFutureV
 
         public string LowerWormholeType => Mods.WormholeType.ToString().ToLower();
 
-        public bool IsStockWheel => Mods.Wheel == WheelType.Stock || Mods.Wheel == WheelType.StockInvisible || Mods.Wheel == WheelType.DMC || Mods.Wheel == WheelType.DMCInvisible;
+        public bool IsStockWheel => Mods.Wheel == WheelType.Stock || Mods.Wheel == WheelType.StockInvisible;
 
         public bool FullDamaged => Mods.Wheel == WheelType.Stock && Mods.Wheels.Burst && Vehicle.EngineHealth <= 0 && Properties.AreFlyingCircuitsBroken && Properties.AreTimeCircuitsBroken;
 
@@ -205,31 +205,57 @@ namespace BackToTheFutureV
         {
             get
             {
-                if (IsStockWheel)
+                switch (Mods.Wheel)
                 {
-                    if (Mods.Wheel == WheelType.Stock || Mods.Wheel == WheelType.StockInvisible)
-                    {
+                    case WheelType.Red:
+                    case WheelType.RedInvisible:
+                        return WheelType.Red;
+                    case WheelType.RailroadInvisible:
+                        return WheelType.RailroadInvisible;
+                    case WheelType.Stock:
+                    case WheelType.StockInvisible:
+                    default:
                         return WheelType.Stock;
-                    }
-                    else
-                    {
-                        return WheelType.DMC;
-                    }
-                }
-                else
-                {
-                    return WheelType.Red;
                 }
             }
         }
 
-        public CustomModel WheelModel => IsStockWheel ? ModelHandler.WheelProp : ModelHandler.RedWheelProp;
-
-        public CustomModel WheelRearModel => IsStockWheel ? ModelHandler.RearWheelProp : ModelHandler.RedWheelProp;
-
+        public CustomModel WheelModel
+        {
+            get
+            {
+                switch (Mods.Wheel)
+                {
+                    case WheelType.Red:
+                    case WheelType.RedInvisible:
+                        return ModelHandler.RedWheelProp;
+                    case WheelType.RailroadInvisible:
+                        return ModelHandler.RRWheelProp;
+                    case WheelType.Stock:
+                    case WheelType.StockInvisible:
+                    default:
+                        return ModelHandler.WheelProp;
+                }
+            }
+        }
+        public CustomModel WheelRearModel{
+            get
+            {
+                switch (Mods.Wheel)
+                {
+                    case WheelType.Red:
+                    case WheelType.RedInvisible:
+                        return ModelHandler.RedWheelProp;
+                    case WheelType.RailroadInvisible:
+                        return ModelHandler.RRWheelProp;
+                    case WheelType.Stock:
+                    case WheelType.StockInvisible:
+                    default:
+                        return ModelHandler.RearWheelProp;
+                }
+            }
+        }
         public bool ReadyForLightningRun => FusionUtils.CurrentTime.Between(new DateTime(1955, 11, 12, 22, 3, 0), new DateTime(1955, 11, 12, 22, 4, 10)) && !Properties.IsFlying && (Vehicle.GetStreetInfo().Street == LightningRun.LightningRunStreet || Vehicle.GetStreetInfo().Crossing == LightningRun.LightningRunStreet);
-
-        //public bool DeluxoProto => Main.DeluxoProtoSupport && Vehicle.Model == "dproto";
 
         public ConstantsHandler(TimeMachine timeMachine) : base(timeMachine)
         {

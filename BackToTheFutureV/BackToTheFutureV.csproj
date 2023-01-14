@@ -84,7 +84,6 @@
     <Compile Include="GUI\SIDScaleform.cs" />
     <Compile Include="Menu\BTTFVMenu.cs" />
     <Compile Include="Menu\CustomMenu2.cs" />
-    <Compile Include="Menu\DoorsMenu.cs" />
     <Compile Include="Menu\CustomMenu.cs" />
     <Compile Include="Menu\GarageMenu.cs" />
     <Compile Include="Menu\OverrideMenu.cs" />
@@ -115,13 +114,11 @@
     <Compile Include="GUI\TCD3DRowScaleform.cs" />
     <Compile Include="GUI\TCD2DScaleform.cs" />
     <Compile Include="Menu\ControlsMenu.cs" />
-    <Compile Include="Menu\OutatimeMenu.cs" />
     <Compile Include="Menu\TCDMenu.cs" />
     <Compile Include="Menu\MainMenu.cs" />
     <Compile Include="Menu\MenuHandler.cs" />
     <Compile Include="Menu\PhotoMenu.cs" />
     <Compile Include="Menu\EventsSettingsMenu.cs" />
-    <Compile Include="Menu\RCMenu.cs" />
     <Compile Include="Menu\SoundsSettingsMenu.cs" />
     <Compile Include="Menu\SettingsMenu.cs" />
     <Compile Include="Menu\TimeMachineMenu.cs" />
@@ -136,7 +133,6 @@
     <Compile Include="TimeMachineClasses\Handlers\BaseHandlers\PlayersHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\BaseHandlers\ParticlesHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\BaseHandlers\ScaleformsHandler.cs" />
-    <Compile Include="TimeMachineClasses\Handlers\DriverAIHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\EngineHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\FluxCapacitorHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\FlyingHandler.cs" />
@@ -147,7 +143,6 @@
     <Compile Include="TimeMachineClasses\Handlers\InputHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\LightningStrikeHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\RailroadHandler.cs" />
-    <Compile Include="TimeMachineClasses\Handlers\RCHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\ReentryHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\SparksHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\SpeedoHandler.cs" />
@@ -155,8 +150,6 @@
     <Compile Include="TimeMachineClasses\Handlers\TCDHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\TFCHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\TimeTravelHandler.cs" />
-    <Compile Include="TimeMachineClasses\RC\RemoteTimeMachine.cs" />
-    <Compile Include="TimeMachineClasses\RC\RemoteTimeMachineHandler.cs" />
     <Compile Include="TimeMachineClasses\Story\StoryTimeMachine.cs" />
     <Compile Include="TimeMachineClasses\TimeMachineClone.cs" />
     <Compile Include="TimeMachineClasses\TimeMachineHandler.cs" />
