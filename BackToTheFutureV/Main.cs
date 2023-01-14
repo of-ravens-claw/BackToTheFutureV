@@ -72,7 +72,6 @@ namespace BackToTheFutureV
                 Function.Call(Hash.SET_CAR_HIGH_SPEED_BUMP_SEVERITY_MULTIPLIER, 0.0f);
 
                 FusionUtils.RandomTrains = ModSettings.RandomTrains;
-                TimeHandler.RealTime = ModSettings.RealTime;
 
                 DecoratorsHandler.Register();
                 WeatherHandler.Register();
@@ -91,8 +90,6 @@ namespace BackToTheFutureV
             TrashHandler.Tick();
             GarageHandler.Tick();
             WeatherHandler.Tick();
-
-            WaybackSystem.Tick();
             if (FirstTick) FirstTick = false;
         }
     }

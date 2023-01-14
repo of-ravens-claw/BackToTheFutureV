@@ -151,7 +151,6 @@ namespace BackToTheFutureV
             {
                 TimeMachineHandler.RemoveAllTimeMachines(true);
                 RemoteTimeMachineHandler.DeleteAll();
-                WaybackSystem.Abort();
                 TextHandler.Me.ShowNotification("RemovedOtherTimeMachines");
             }
 
@@ -159,7 +158,6 @@ namespace BackToTheFutureV
             {
                 TimeMachineHandler.RemoveAllTimeMachines();
                 RemoteTimeMachineHandler.DeleteAll();
-                WaybackSystem.Abort();
                 TextHandler.Me.ShowNotification("RemovedAllTimeMachines");
             }
 

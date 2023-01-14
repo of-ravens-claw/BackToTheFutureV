@@ -35,8 +35,8 @@ namespace BackToTheFutureV
 			LogR($"Machine Name: {Environment.MachineName}\n" +
 			        $"CPU Type: {Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER")}\n" +
 			        $"CPU Count: {Environment.ProcessorCount}\n" +
-			        $"\n" +
-			        $"\n");
+			        $"TBD\n" +
+			        $"TBD\n");
 		}
 	}
 }

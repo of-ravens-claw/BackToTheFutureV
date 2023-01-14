@@ -38,10 +38,6 @@ namespace BackToTheFutureV
         public static bool TrainEvent { get; set; } = true;
         public static bool LandingSystem { get; set; } = true;
         public static bool RandomTrains { get; set; } = true;
-        public static bool WaybackSystem { get; set; } = false;
-        public static bool RealTime { get; set; } = false;
-        public static bool YearTraffic { get; set; } = false;
-        public static bool TimeParadox { get; set; } = false;
         public static int MaxRecordedMachines { get; set; } = 10;
 
         private static ScriptSettings settings;
@@ -101,11 +97,7 @@ namespace BackToTheFutureV
 
             CinematicSpawn = settings.GetValue("General", "CinematicSpawn", CinematicSpawn);
             InfiniteFuel = settings.GetValue("General", "InfiniteFuel", InfiniteFuel);
-            WaybackSystem = settings.GetValue("General", "WaybackSystem", WaybackSystem);
-            TimeParadox = settings.GetValue("General", "TimeParadox", TimeParadox);
             RandomTrains = settings.GetValue("General", "RandomTrains", RandomTrains);
-            RealTime = settings.GetValue("General", "RealTime", RealTime);
-            YearTraffic = settings.GetValue("General", "YearTraffic", YearTraffic);
             MaxRecordedMachines = settings.GetValue("General", "MaxRemote", MaxRecordedMachines);
             LandingSystem = settings.GetValue("Hover", "LandingSystem", LandingSystem);
             LightningStrikeEvent = settings.GetValue("Events", "LightningStrike", LightningStrikeEvent);
@@ -145,14 +137,10 @@ namespace BackToTheFutureV
             settings.SetValue("Sounds", "DiodeBeep", PlayDiodeBeep);
             settings.SetValue("Sounds", "CustomEngine", PlayEngineSounds);
             settings.SetValue("Sounds", "SpeedoBeep", PlaySpeedoBeep);
-
-            settings.SetValue("General", "WaybackSystem", WaybackSystem);
-            settings.SetValue("General", "TimeParadox", TimeParadox);
+            
             settings.SetValue("General", "InfiniteFuel", InfiniteFuel);
             settings.SetValue("General", "CinematicSpawn", CinematicSpawn);
             settings.SetValue("General", "RandomTrains", RandomTrains);
-            settings.SetValue("General", "RealTime", RealTime);
-            settings.SetValue("General", "YearTraffic", YearTraffic);
             settings.SetValue("General", "MaxRemote", MaxRecordedMachines);
 
             settings.SetValue("Hover", "LandingSystem", LandingSystem);

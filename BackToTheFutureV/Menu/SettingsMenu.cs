@@ -11,11 +11,7 @@ namespace BackToTheFutureV
         private readonly NativeCheckboxItem useInputToggle;
         private readonly NativeCheckboxItem LandingSystem;
         private readonly NativeCheckboxItem InfiniteFuel;
-        private readonly NativeCheckboxItem WaybackSystem;
-        private readonly NativeCheckboxItem TimeParadox;
         private readonly NativeCheckboxItem RandomTrains;
-        private readonly NativeCheckboxItem RealTime;
-        private readonly NativeCheckboxItem YearTraffic;
         private readonly NativeCheckboxItem GlowingWormholeEmitter;
         private readonly NativeCheckboxItem GlowingPlutoniumReactor;
 
@@ -25,11 +21,7 @@ namespace BackToTheFutureV
             useInputToggle = NewCheckboxItem("InputToggle", ModSettings.UseInputToggle);
             LandingSystem = NewCheckboxItem("LandingSystem", ModSettings.LandingSystem);
             InfiniteFuel = NewCheckboxItem("InfinityReactor", ModSettings.InfiniteFuel);
-            WaybackSystem = NewCheckboxItem("Wayback", ModSettings.WaybackSystem);
-            TimeParadox = NewCheckboxItem("TimeParadox", ModSettings.TimeParadox);
             RandomTrains = NewCheckboxItem("RandomTrains", ModSettings.RandomTrains);
-            RealTime = NewCheckboxItem("RealTime", ModSettings.RealTime);
-            YearTraffic = NewCheckboxItem("YearTraffic", ModSettings.YearTraffic);
             GlowingWormholeEmitter = NewCheckboxItem("GlowingWormhole", ModSettings.GlowingWormholeEmitter);
             GlowingPlutoniumReactor = NewCheckboxItem("GlowingReactor", ModSettings.GlowingPlutoniumReactor);
 
@@ -70,17 +62,6 @@ namespace BackToTheFutureV
                     ModSettings.RandomTrains = Checked;
                     FusionUtils.RandomTrains = Checked;
                     break;
-                case NativeCheckboxItem _ when sender == RealTime:
-                    ModSettings.RealTime = Checked;
-                    TimeHandler.RealTime = Checked;
-                    break;
-                case NativeCheckboxItem _ when sender == YearTraffic:
-                    ModSettings.YearTraffic = Checked;
-                    TimeHandler.TrafficVolumeYearBased = Checked;
-                    break;
-                case NativeCheckboxItem _ when sender == TimeParadox:
-                    ModSettings.TimeParadox = Checked;
-                    break;
                 case NativeCheckboxItem _ when sender == GlowingWormholeEmitter:
                     ModSettings.GlowingWormholeEmitter = Checked;
                     break;
@@ -90,13 +71,6 @@ namespace BackToTheFutureV
                 case NativeCheckboxItem _ when sender == InfiniteFuel:
                     ModSettings.InfiniteFuel = Checked;
                     break;
-                case NativeCheckboxItem _ when sender == WaybackSystem:
-                    ModSettings.WaybackSystem = Checked;
-                    if (!Checked)
-                    {
-                        BackToTheFutureV.WaybackSystem.Abort();
-                    }
-                    break;
             }
 
             ModSettings.SaveSettings();
@@ -104,27 +78,22 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
-            TimeParadox.Enabled = WaybackSystem.Checked;
         }
 
         public override void Menu_OnItemValueChanged(NativeSliderItem sender, EventArgs e)
         {
-
         }
 
         public override void Menu_OnItemSelected(NativeItem sender, SelectedEventArgs e)
         {
-
         }
 
         public override void Menu_OnItemActivated(NativeItem sender, EventArgs e)
         {
-
         }
 
         public override void Menu_Closing(object sender, CancelEventArgs e)
         {
-
         }
     }
 }
