@@ -21,10 +21,11 @@ namespace BackToTheFutureV
         public Main()
         {
             LogCheck();
-            DateTime buildDate = new DateTime(2000, 1, 1).AddDays(Version.Build).AddSeconds(Version.Revision * 2);
+            DateTime buildDate = new DateTime(2000, 1, 1).AddDays(Version.Build).AddSeconds(Version.Revision * 2).ToUniversalTime();
 
-            Log($"INIT SUCCESSFUL - BUILT ON: {buildDate}, VERSION: {Version})");
-            InitSystem();
+            LogI($"Initialisation was successful! - Built on: {buildDate} (UTC), Version №: v{Version}.");
+            LogI("This is an *unofficial* build. Do not ask for support whilst using it. It is intentionally missing features, hence 'stripped'.");
+            //InitSystem();
             ModSettings.LoadSettings();
 
             Tick += Main_Tick;
