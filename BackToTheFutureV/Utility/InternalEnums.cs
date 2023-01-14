@@ -147,12 +147,10 @@ namespace BackToTheFutureV
         {
             Stock = -1,
             StockInvisible = 210,
-            RailroadInvisible = 211,
             RedInvisible = 212,
             Red = 213,
-            [Obsolete]
-            Dmc = 214,
-            DmcInvisible = 215
+            Railroad = 211,
+            RailroadInvisible = 215
         }
 
         internal enum SuspensionsType

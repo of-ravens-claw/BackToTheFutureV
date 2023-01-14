@@ -160,7 +160,7 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
-            if (Mods.Wheel != WheelType.RailroadInvisible)
+            if (Mods.Wheel != WheelType.Railroad)
             {
                 if (Properties.IsOnTracks)
                     Stop();
@@ -216,7 +216,7 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (_attachDelay < Game.GameTime && Mods.Wheel == WheelType.RailroadInvisible && !Properties.IsFlying)
+            if (_attachDelay < Game.GameTime && Mods.Wheel == WheelType.Railroad && !Properties.IsFlying)
             {
                 if (Vehicle.IsOnTracks())
                 {
@@ -236,7 +236,7 @@ namespace BackToTheFutureV
             _isReentryOn = false;
             Properties.IsOnTracks = false;
 
-            if (Mods.Wheel == WheelType.RailroadInvisible)
+            if (Mods.Wheel == WheelType.Railroad)
             {
                 Mods.Wheels.Burst = true;
             }

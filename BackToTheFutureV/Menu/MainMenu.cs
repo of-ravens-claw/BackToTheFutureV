@@ -105,7 +105,7 @@ namespace BackToTheFutureV
 
                 if (spawnBTTF.SelectedIndex == 5)
                 {
-                    timeMachine.Mods.Wheel = WheelType.RailroadInvisible;
+                    timeMachine.Mods.Wheel = WheelType.Railroad;
                 }
             }
 

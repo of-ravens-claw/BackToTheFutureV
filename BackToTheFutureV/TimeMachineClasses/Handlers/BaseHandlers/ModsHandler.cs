@@ -88,7 +88,7 @@ namespace BackToTheFutureV
                 Wheel = wheelType;
             }
 
-            if (Wheel == WheelType.RailroadInvisible && Vehicle.IsVisible && !TimeMachine.Props.RRWheels.IsSpawned)
+            if (Wheel == WheelType.Railroad && Vehicle.IsVisible && !TimeMachine.Props.RRWheels.IsSpawned)
             {
                 TimeMachine.Props?.RRWheels?.SpawnProp();
             }
@@ -267,7 +267,7 @@ namespace BackToTheFutureV
 
             set
             {
-                if (!IsDMC12 && HoverUnderbody == ModState.On && value != WheelType.RailroadInvisible && value != WheelType.Red && value != WheelType.RedInvisible)
+                if (!IsDMC12 && HoverUnderbody == ModState.On && value != WheelType.Railroad && value != WheelType.Red && value != WheelType.RedInvisible)
                 {
                     HoverUnderbody = ModState.Off;
                 }
@@ -276,7 +276,7 @@ namespace BackToTheFutureV
 
                 if (TimeMachine.Properties == null) return;
 
-                if (value == WheelType.RailroadInvisible)
+                if (value == WheelType.Railroad)
                 {
                     if (Vehicle.IsVisible)
                     {

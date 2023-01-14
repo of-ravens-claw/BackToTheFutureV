@@ -72,7 +72,7 @@ namespace BackToTheFutureV
                         CurrentTimeMachine.Mods.Wheel = WheelType.Red;
                         break;
                     case 2:
-                        CurrentTimeMachine.Mods.Wheel = WheelType.RailroadInvisible;
+                        CurrentTimeMachine.Mods.Wheel = WheelType.Railroad;
                         break;
                 }
             }
@@ -129,7 +129,7 @@ namespace BackToTheFutureV
                 case WheelType.RedInvisible:
                     _wheelsType.SelectedIndex = 1;
                     break;
-                case WheelType.RailroadInvisible:
+                case WheelType.Railroad:
                     _wheelsType.SelectedIndex = 2;
                     break;
             }

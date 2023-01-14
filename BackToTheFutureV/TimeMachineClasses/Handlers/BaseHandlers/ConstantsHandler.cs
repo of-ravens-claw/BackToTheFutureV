@@ -210,8 +210,8 @@ namespace BackToTheFutureV
                     case WheelType.Red:
                     case WheelType.RedInvisible:
                         return WheelType.Red;
-                    case WheelType.RailroadInvisible:
-                        return WheelType.RailroadInvisible;
+                    case WheelType.Railroad:
+                        return WheelType.Railroad;
                     case WheelType.Stock:
                     case WheelType.StockInvisible:
                     default:
@@ -229,7 +229,7 @@ namespace BackToTheFutureV
                     case WheelType.Red:
                     case WheelType.RedInvisible:
                         return ModelHandler.RedWheelProp;
-                    case WheelType.RailroadInvisible:
+                    case WheelType.Railroad:
                         return ModelHandler.RRWheelProp;
                     case WheelType.Stock:
                     case WheelType.StockInvisible:
@@ -246,7 +246,7 @@ namespace BackToTheFutureV
                     case WheelType.Red:
                     case WheelType.RedInvisible:
                         return ModelHandler.RedWheelProp;
-                    case WheelType.RailroadInvisible:
+                    case WheelType.Railroad:
                         return ModelHandler.RRWheelProp;
                     case WheelType.Stock:
                     case WheelType.StockInvisible:

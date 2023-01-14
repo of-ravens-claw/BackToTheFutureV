@@ -54,7 +54,7 @@ namespace BackToTheFutureV
 
             if (IsOnTracks)
             {
-                TimeMachine.Mods.Wheel = WheelType.RailroadInvisible;
+                TimeMachine.Mods.Wheel = WheelType.Railroad;
             }
 
             if (DestinationTime != default)

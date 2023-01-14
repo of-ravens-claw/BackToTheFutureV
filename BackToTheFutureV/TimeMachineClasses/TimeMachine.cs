@@ -401,7 +401,7 @@ namespace BackToTheFutureV
                             break;
 
                         case WormholeType.BTTF3:
-                            if (Mods.Wheel == WheelType.RailroadInvisible)
+                            if (Mods.Wheel == WheelType.Railroad)
                             {
                                 Blip.Name = TextHandler.Me.GetLocalizedText("BTTF3RR");
                                 Blip.Color = BlipColor.Orange;
