@@ -13,13 +13,11 @@ namespace BackToTheFutureV
     {
         private static readonly Version LastCompatibleVersion = new Version(2, 4, 0, 0);
         public static OnGUIChange OnGUIChange { get; set; }
-
         public static PointF RCGUIPosition { get; set; } = new PointF(0.901f, 0.879f);
         public static float RCGUIScale { get; set; } = 0.15f;
-
         public static PointF SIDPosition { get; set; } = new PointF(0.947f, 0.437f);
         public static float SIDScale { get; set; } = 0.3f;
-        public static bool HideSID { get; set; } = false;
+        public static bool HideSID { get; set; } = true;
         public static PointF TCDPosition { get; set; } = new PointF(0.88f, 0.75f);
         public static float TCDScale { get; set; } = 0.3f;
         public static TCDBackground TCDBackground { get; set; } = TCDBackground.BTTF1;
@@ -41,19 +39,17 @@ namespace BackToTheFutureV
         public static bool LandingSystem { get; set; } = true;
         public static bool RandomTrains { get; set; } = true;
         public static bool WaybackSystem { get; set; } = false;
-        public static bool RealTime { get; set; } = true;
+        public static bool RealTime { get; set; } = false;
         public static bool YearTraffic { get; set; } = false;
         public static bool TimeParadox { get; set; } = false;
-        //public static bool DeluxoProto { get; set; } = true;
         public static int MaxRecordedMachines { get; set; } = 10;
-        public static bool Potato { get; set; } = false;
 
         private static ScriptSettings settings;
         private static readonly CultureInfo info = CultureInfo.CreateSpecificCulture("en-US");
 
         public static void LoadSettings()
         {
-            string path = "./scripts/BackToTheFutureV/settings.ini";
+            string path = "scripts/BackToTheFutureV/settings.ini";
 
             settings = ScriptSettings.Load(path);
 
@@ -110,12 +106,8 @@ namespace BackToTheFutureV
             RandomTrains = settings.GetValue("General", "RandomTrains", RandomTrains);
             RealTime = settings.GetValue("General", "RealTime", RealTime);
             YearTraffic = settings.GetValue("General", "YearTraffic", YearTraffic);
-            //DeluxoProto = settings.GetValue("General", "DeluxoProto", DeluxoProto);
             MaxRecordedMachines = settings.GetValue("General", "MaxRemote", MaxRecordedMachines);
-            Potato = settings.GetValue("General", "Potato", Potato);
-
             LandingSystem = settings.GetValue("Hover", "LandingSystem", LandingSystem);
-
             LightningStrikeEvent = settings.GetValue("Events", "LightningStrike", LightningStrikeEvent);
             EngineStallEvent = settings.GetValue("Events", "EngineStall", EngineStallEvent);
             TurbulenceEvent = settings.GetValue("Events", "Turbulence", TurbulenceEvent);
@@ -161,9 +153,7 @@ namespace BackToTheFutureV
             settings.SetValue("General", "RandomTrains", RandomTrains);
             settings.SetValue("General", "RealTime", RealTime);
             settings.SetValue("General", "YearTraffic", YearTraffic);
-            //settings.SetValue("General", "DeluxoProto", DeluxoProto);
             settings.SetValue("General", "MaxRemote", MaxRecordedMachines);
-            settings.SetValue("General", "Potato", Potato);
 
             settings.SetValue("Hover", "LandingSystem", LandingSystem);
 

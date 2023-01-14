@@ -26,11 +26,6 @@ namespace BackToTheFutureV
             return timeMachine != null && timeMachine.Vehicle.NotNullAndExists();
         }
 
-        public static bool IsFunctioning(this HoverVehicle hoverVehicle)
-        {
-            return hoverVehicle != null && hoverVehicle.Vehicle.IsFunctioning();
-        }
-
         public static bool IsFunctioning(this TimeMachine timeMachine)
         {
             return timeMachine != null && timeMachine.Vehicle.IsFunctioning();

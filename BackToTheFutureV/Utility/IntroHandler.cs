@@ -23,7 +23,7 @@ namespace BackToTheFutureV
         private readonly AudioPlayer timeParadoxShort = Main.CommonAudioEngine.Create("story/bttf_subtitle2short.wav", Presets.No3D);
 
         private readonly string FirstBlock = $"BTTF V TEAM\nPresents";
-        private readonly string SecondBlock = $"A\nBACK TO THE FUTURE\nMod";
+        private readonly string SecondBlock = $"A\nBACK TO THE FUTURE\nmod";
 
         private DateTime date;
         private string DayBlock => date.ToString("dddd", dateFormat);
