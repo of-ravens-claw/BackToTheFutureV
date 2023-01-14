@@ -18,6 +18,7 @@ namespace BackToTheFutureV
         public static PhotoMenu PhotoMenu { get; } = new PhotoMenu();
         public static DoorsMenu DoorsMenu { get; } = new DoorsMenu();
         public static CustomMenu CustomMenu { get; } = new CustomMenu();
+        public static CustomMenu2 CustomMenu2 { get; } = new CustomMenu2();
         public static GarageMenu GarageMenu { get; } = new GarageMenu();
         public static OutatimeMenu OutatimeMenu { get; } = new OutatimeMenu();
         public static MainMenu MainMenu { get; } = new MainMenu();

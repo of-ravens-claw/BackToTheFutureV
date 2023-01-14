@@ -26,6 +26,7 @@ namespace BackToTheFutureV
             RemoteControl = NewCheckboxItem("RC");
 
             PhotoMenu = NewSubmenu(MenuHandler.PhotoMenu);
+            NewSubmenu(MenuHandler.CustomMenu2);
 
             NewSubmenu(MenuHandler.MainMenu);
         }

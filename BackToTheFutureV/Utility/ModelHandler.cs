@@ -50,8 +50,6 @@ namespace BackToTheFutureV
         public static Dictionary<string, CustomModel> TCDPMModels = new Dictionary<string, CustomModel>();
         public static CustomModel WhiteSphere = new CustomModel("tm_flash");
         public static CustomModel Compass = new CustomModel("bttf_compass");
-        public static CustomModel CoilsIndicatorLeft = new CustomModel("indicator_left");
-        public static CustomModel CoilsIndicatorRight = new CustomModel("indicator_right");
         public static CustomModel InvisibleProp = new CustomModel("prop_dummy");
         public static List<CustomModel> Lightnings = new List<CustomModel>() { new CustomModel("bolt_m0"), new CustomModel("bolt_m1"), new CustomModel("bolt_m2") };
         public static List<CustomModel> LightningsOnCar = new List<CustomModel>();
@@ -83,9 +81,6 @@ namespace BackToTheFutureV
         public static List<CustomModel> CoilSeparated = new List<CustomModel>();
         public static CustomModel RedWheelProp = new CustomModel("bttf3_redwheel_prop");
         public static CustomModel RRWheelProp = new CustomModel("wheel_rr_prop");
-        public static CustomModel GreenPrestoLogProp = new CustomModel("presto_log1");
-        public static CustomModel YellowPrestoLogProp = new CustomModel("presto_log3");
-        public static CustomModel RedPrestoLogProp = new CustomModel("presto_log2");
         public static CustomModel SparkRedModel = new CustomModel("bttf_spark_red");
         public static CustomModel SparkRedNightModel = new CustomModel("bttf_spark_red_night");
         public static CustomModel WormholeRed = new CustomModel("bttf_wormhole_red");
@@ -97,9 +92,7 @@ namespace BackToTheFutureV
         public static CustomModel FreightModel = new CustomModel("freight");
         public static CustomModel FreightCarModel = new CustomModel("freightcar");
         public static CustomModel TankerCarModel = new CustomModel("tankercar");
-
-        public static CustomModel Deluxo = new CustomModel("deluxo");
-
+        
         private static readonly string[] tcdTypes = new string[3]
         {
             "red",
@@ -137,7 +130,6 @@ namespace BackToTheFutureV
             }
 
             GetAllModels(typeof(ModelHandler)).ForEach(x => x.Request());
-
             return true;
         }
     }

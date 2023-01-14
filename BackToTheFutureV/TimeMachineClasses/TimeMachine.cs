@@ -122,7 +122,7 @@ namespace BackToTheFutureV
 
             Events.OnWormholeTypeChanged += UpdateBlip;
 
-            if (Vehicle.Model == ModelHandler.Deluxo /*|| (Main.DeluxoProtoSupport && vehicle.Model == "dproto")*/)
+            if (vehicle.Model == "deluxo")
             {
                 Mods.HoverUnderbody = ModState.On;
             }
