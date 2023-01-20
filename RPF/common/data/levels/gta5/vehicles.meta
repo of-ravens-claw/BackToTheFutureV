@@ -49,8 +49,8 @@
 			<AllowJoyriding value="true"/>
 			<AllowSundayDriving value="true"/>
 			<AllowBodyColorMapping value="true"/>
-			<wheelScale value="0.202500"/>
-			<wheelScaleRear value="0.230500"/>
+			<wheelScale value="0.207000"/> <!-- front wheels -->
+			<wheelScaleRear value="0.228400"/> <!-- rear wheels -->
 			<dirtLevelMin value="0.000000"/>
 			<dirtLevelMax value="0.700000"/>
 			<envEffScaleMin value="0.000000"/>
@@ -62,7 +62,7 @@
 			<diffuseTint value="0x00FFFFFF"/>
 			<steerWheelMult value="1.000000"/>
 			<HDTextureDist value="5.000000"/>
-			<lodDistances content="float_array">50.000000 90.000000 120.000000 300.000000 500.000000 500.000000</lodDistances>
+			<lodDistances content="float_array">25.0000000 50.0000000 120.000000 300.000000 500.000000 500.000000</lodDistances>
 			<minSeatHeight value="0.852"/>
 			<identicalModelSpawnDistance value="20"/>
 			<maxNumOfSameColor value="10"/>
@@ -109,7 +109,7 @@
 			<modelName>dmc_debug</modelName>
 			<txdName>dmc_debug</txdName>
 			<handlingId>FREIGHTCAR</handlingId>
-			<gameName>FREIGHT</gameName>
+			<gameName>876e5bb4_7artvoe</gameName> <!-- PLACEHOLDER -->	
 			<vehicleMakeName/>
 			<expressionDictName>null</expressionDictName>
 			<expressionName>null</expressionName>
@@ -170,7 +170,7 @@
 			<trackerPathWidth value="2.000000"/>
 			<weaponForceMult value="1.000000"/>
 			<frequency value="100"/>
-			<swankness>SWANKNESS_2</swankness>
+			<swankness>SWANKNESS_1</swankness>
 			<maxNum value="999"/>
 			<flags>FLAG_NO_BOOT FLAG_PEDS_CAN_STAND_ON_TOP FLAG_GEN_NAVMESH FLAG_DONT_SPAWN_AS_AMBIENT</flags>
 			<type>VEHICLE_TYPE_TRAIN</type>
@@ -196,6 +196,10 @@
 		</Item>
 	</InitDatas>
 	<txdRelationships>
+		<Item>
+			<parent>vehshare</parent> <!-- possibly the worst hack in history, but it works. -->
+			<child>bttf1_textures</child>
+		</Item>
 		<Item>
 			<parent>bttf1_textures</parent>
 			<child>dmc12_tire</child>
@@ -225,12 +229,12 @@
 			<child>bttf_extra</child>
 		</Item>
 		<Item>
-			<parent>bttf_extra</parent>
-			<child>bttf_plates</child>
-		</Item>
-		<Item>
-			<parent>bttf_plates</parent>
-			<child>dmc12</child>
-		</Item>
+            <parent>bttf_extra</parent>
+            <child>bttf_plates</child>
+        </Item>
+        <Item>
+            <parent>bttf_plates</parent>
+            <child>dmc12</child>
+        </Item>
 	</txdRelationships>
 </CVehicleModelInfo__InitDataList>

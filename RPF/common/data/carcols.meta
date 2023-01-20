@@ -14,7 +14,8 @@
 		<Item/> <!-- VWT_SUPERMOD3 -->
 		<Item/>	<!-- VWT_SUPERMOD4 -->
 		<Item>  <!-- VWT_SUPERMOD5 -->
-			<Item> <!-- Transparent wheel used for BTTF2 hover mode -->
+			<!-- Transparent wheel used for BTTF2 hover mode -->
+			<Item>
 				<wheelName>wheel_trans</wheelName>
 				<wheelVariation/>
 				<modShopLabel>MNU_BUMF1</modShopLabel>
@@ -37,21 +38,24 @@
 				<rimRadius value="0.23"/>
 				<rear value="false"/>
 			</Item>
-			<Item> <!-- 50's White Walls used in the BTTF3 Offroader -->
+			<!-- 50's White Walls used in the BTTF3 Offroader -->
+			<Item>
 				<wheelName>bttf3_redwheel</wheelName>
 				<wheelVariation/>
 				<modShopLabel>BTTFV_Menu_Custom_Item_Wheel_Value_Red_Title</modShopLabel>
-				<rimRadius value="0.2"/>
+				<rimRadius value="0.2"/> <!-- *supposedly* like wheelScale, for tuning wheels; but it didn't work for me at all. -->
 				<rear value="false"/>
 			</Item>
-			<Item> <!-- Wheel used when enabling hover mode with cars other than the DeLorean -->
+			<!-- Wheel used when enabling hover mode with cars other than the DeLorean -->
+			<Item>
 				<wheelName>dmc12_stockwheel</wheelName>
 				<wheelVariation/>
 				<modShopLabel>BTTFV_Menu_Custom_Item_Wheel_Value_DMC_Title</modShopLabel>
-				<rimRadius value="0.2"/>
+				<rimRadius value="0.207"/>
 				<rear value="false"/>
 			</Item>
-			<Item> <!-- Transparent wheel used for dmc12_stockwheels hover -->
+			<!-- Transparent wheel used for dmc12_stockwheels hover -->
+			<Item>
 				<wheelName>wheel_trans4</wheelName>
 				<wheelVariation/>
 				<modShopLabel>MNU_BUMF1</modShopLabel>
@@ -63,12 +67,12 @@
 	<Kits>
 		<Item>
 			<kitName>2228_bttf1_modkit</kitName>
-			<id value="2228"/>
+			<id value="2228"/> <!-- We *may* want to change this, GTA's default modkit limit is 1024 (0-1023), it's overflowing right now. (probably replacing customization on some GTA car.), that Zolika guy has a patch to expand it to 32767, perhaps do something similar to it. -->
 			<kitType>MKT_SPECIAL</kitType>
 			<visibleMods>
 				<Item>
 					<modelName>bttf_bulova_clock</modelName>
-					<modShopLabel>VMT_WING_R</modShopLabel>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Bulova_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_WING_R</type>
@@ -82,8 +86,8 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<modelName>bttf_interior_speedo_cover</modelName>
-					<modShopLabel>VMT_INTERIOR3</modShopLabel>
+					<modelName>dummy_mod_frag_model</modelName> <!-- Because loading a drawable here is the same as not loading anything. Besides, the code still spawns the prop, it never worked as a tuning part. -->
+					<modShopLabel>BTTFV_Menu_Custom_Item_Speedo_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_INTERIOR3</type>
@@ -286,7 +290,7 @@
 				</Item>
 				<Item>
 					<modelName>dmc12_seats</modelName>
-					<modShopLabel>SMOD_VPLT12</modShopLabel>
+					<modShopLabel>CMOD_SEAT_3</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_PLTVANITY</type>
@@ -497,7 +501,7 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<modelName>bttf_exhaust2</modelName>
+					<modelName>dummy_mod_frag_model</modelName>
 					<modShopLabel>BTTFV_Menu_Custom_Item_Exhaust_Value_None_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones>
@@ -530,10 +534,11 @@
 					<disableBonnetCamera value="true"/>
 					<allowBonnetSlide value="false"/>
 				</Item>
+				<!-- ScriptDetector (Wormhole) -->
 				<Item>
 					<!-- DMC12 -->
-					<modelName>scriptDetector</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Text_DMC12</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_INTERIOR1</type>
@@ -548,8 +553,8 @@
 				</Item>
 				<Item>
 					<!-- BTTF 1 -->
-					<modelName>scriptDetector1</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Text_BTTF1</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_INTERIOR1</type>
@@ -564,8 +569,8 @@
 				</Item>
 				<Item>
 					<!-- BTTF 2 -->
-					<modelName>scriptDetector2</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Text_BTTF2</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_INTERIOR1</type>
@@ -580,8 +585,8 @@
 				</Item>
 				<Item>
 					<!-- BTTF 3 -->
-					<modelName>scriptDetector3</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Text_BTTF3</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_INTERIOR1</type>
@@ -595,9 +600,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF RR -->
-					<modelName>scriptDetector4</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- BTTF RR, displays BTTF1 wormhole, I don't think it's used anymore -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Text_BTTF3RR</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_INTERIOR1</type>
@@ -610,10 +615,11 @@
 					<disableBonnetCamera value="false"/>
 					<allowBonnetSlide value="true"/>
 				</Item>
+				<!-- HydroDetector (Suspension) -->
 				<Item>
-					<!-- DMC12 -->
-					<modelName>hydroDetector</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- Stock -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_Stock_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -627,9 +633,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 1 -->
-					<modelName>hydroDetector1</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↑ Front ↓ Rear -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LiftFrontLowerRear_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -643,9 +649,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 2 -->
-					<modelName>hydroDetector2</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↑ Front -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LiftFront_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -659,9 +665,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 3 -->
-					<modelName>hydroDetector3</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↑ Rear -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LiftRear_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -675,9 +681,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF RR -->
-					<modelName>hydroDetector4</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↑ Front ↑ Rear -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LiftFrontAndRear_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -691,9 +697,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 1 -->
-					<modelName>hydroDetector5</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↓ Front ↑ Rear -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LowerFrontLiftRear_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -707,9 +713,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 2 -->
-					<modelName>hydroDetector6</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↓ Front -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LowerFront_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -723,9 +729,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 3 -->
-					<modelName>hydroDetector7</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↓ Rear -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LowerRear_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -739,9 +745,9 @@
 					<allowBonnetSlide value="true"/>
 				</Item>
 				<Item>
-					<!-- BTTF 3 -->
-					<modelName>hydroDetector8</modelName>
-					<modShopLabel>MASS_WNGVNT</modShopLabel>
+					<!-- ↓ Front ↓ Rear -->
+					<modelName>dummy_mod_frag_model</modelName>
+					<modShopLabel>BTTFV_Menu_Custom_Item_Suspensions_Value_LowerFrontAndRear_Title</modShopLabel>
 					<linkedModels/>
 					<turnOffBones/>
 					<type>VMT_HYDRO</type>
@@ -754,6 +760,7 @@
 					<disableBonnetCamera value="false"/>
 					<allowBonnetSlide value="true"/>
 				</Item>
+				<!-- Hoods -->
 				<Item>
 					<modelName>dmc12_hood1983</modelName>
 					<modShopLabel>BTTFV_Menu_Custom_Item_Hood_Value_1983_Title</modShopLabel>
@@ -791,6 +798,7 @@
 			</visibleMods>
 			<linkMods/>
 			<statMods>
+				<!-- Suspension tuning was disabled, because otherwise it breaks scaleform positioning. -->
 				<Item>
 					<identifier/>
 					<modifier value="25"/>
@@ -903,11 +911,12 @@
 					<weight value="0"/>
 					<type>VMT_HORN</type>
 				</Item>
+				<!-- Horns. I hate them, so much space wasted. -->
 				<Item>
 					<identifier>HORN_COP</identifier>
-					<modifier value="2904189469"/>
+					<modifier value="2904189469"/> <!-- unknown -->
 					<audioApply value="1.000000"/>
-					<weight value="0"/>
+					<weight value="0"/> <!-- weight in kg -->
 					<type>VMT_HORN</type>
 				</Item>
 				<Item>
@@ -1121,6 +1130,7 @@
 					<type>VMT_HORN</type>
 				</Item>
 				<!-- QUI -->
+				<!-- Related to hydraulics, if I had to guess. What "QUI" means, I do not know. -->
 				<Item>
 					<identifier/>
 					<modifier value="50"/>
@@ -1150,6 +1160,7 @@
 					<type>VMT_WHEELS_REAR_OR_HYDRAULICS</type>
 				</Item>
 			</statMods>
+			<!-- We might want to add slot names at some point. -->
 			<slotNames/>
 			<liveryNames/>
 		</Item>

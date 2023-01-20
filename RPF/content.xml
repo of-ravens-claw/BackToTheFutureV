@@ -259,10 +259,13 @@
             <Item>dlc_bttf:/%PLATFORM%/props/tcd_props.ityp</Item>
             <!-- scaleform -->
             <Item>dlc_bttf:/%PLATFORM%/scaleform/scaleform.rpf</Item>
+			<!-- bttf1 wormhole -->
             <Item>dlc_bttf:/%PLATFORM%/scaleform/wormhole_bttf1.rpf</Item>
             <Item>dlc_bttf:/%PLATFORM%/scaleform/wormhole_bttf1.ityp</Item>
+			<!-- bttf2 wormhole -->
             <Item>dlc_bttf:/%PLATFORM%/scaleform/wormhole_bttf2.rpf</Item>
             <Item>dlc_bttf:/%PLATFORM%/scaleform/wormhole_bttf2.ityp</Item>
+			<!-- bttf3 wormhole -->
             <Item>dlc_bttf:/%PLATFORM%/scaleform/wormhole_bttf3.rpf</Item>
             <Item>dlc_bttf:/%PLATFORM%/scaleform/wormhole_bttf3.ityp</Item>
             <!-- data -->
