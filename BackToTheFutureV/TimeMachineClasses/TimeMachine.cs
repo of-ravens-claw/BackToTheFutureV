@@ -17,6 +17,7 @@ namespace BackToTheFutureV
     {
         public Vehicle Vehicle { get; }
         public DMC12 DMC12 { get; }
+        public HoverVehicle HoverVehicle { get; }
 
         public EventsHandler Events { get; private set; }
         public PropertiesHandler Properties { get; private set; }
@@ -52,6 +53,9 @@ namespace BackToTheFutureV
         public TimeMachine(Vehicle vehicle, WormholeType wormholeType)
         {
             Vehicle = vehicle;
+            HoverVehicle = HoverVehicle.GetFromVehicle(vehicle);
+
+            HoverVehicle.SoftLock = true;
 
             if (vehicle.Model == ModelHandler.DMC12)
             {
@@ -73,7 +77,7 @@ namespace BackToTheFutureV
 
             Events = new EventsHandler(this);
             Mods = new ModsHandler(this, wormholeType);
-            Properties = new PropertiesHandler(Guid.NewGuid());
+            Properties = new PropertiesHandler();
 
             registeredHandlers.Add("ConstantsHandler", Constants = new ConstantsHandler(this));
             registeredHandlers.Add("SoundsHandler", Sounds = new SoundsHandler(this));
@@ -93,14 +97,10 @@ namespace BackToTheFutureV
 
             registeredHandlers.Add("RailroadHandler", new RailroadHandler(this));
 
-            if (Mods.IsDMC12 || Vehicle.CanHoverTransform())
+            if (Mods.IsDMC12)
             {
                 registeredHandlers.Add("FlyingHandler", new FlyingHandler(this));
                 registeredHandlers.Add("LightningStrikeHandler", new LightningStrikeHandler(this));
-            }
-
-            if (Mods.IsDMC12)
-            {
                 registeredHandlers.Add("FuelHandler", new FuelHandler(this));
                 registeredHandlers.Add("SIDHandler", new SIDHandler(this));
                 registeredHandlers.Add("FluxCapacitorHandler", new FluxCapacitorHandler(this));
@@ -126,7 +126,7 @@ namespace BackToTheFutureV
 
             Events.OnWormholeTypeChanged += UpdateBlip;
 
-            if (Vehicle.Model == ModelHandler.DeluxoModel)
+            if (Vehicle.Model == ModelHandler.Deluxo /*|| (Main.DeluxoProtoSupport && vehicle.Model == "dproto")*/)
             {
                 Mods.HoverUnderbody = ModState.On;
             }
@@ -241,6 +241,9 @@ namespace BackToTheFutureV
                 return;
             }
 
+            if (TimeMachineHandler.CurrentTimeMachine == this && Properties.IsWayback)
+                Properties.IsWayback = false;
+
             //After reentry, story time machines spawn in an odd state. This code fixes the inability for player to enter the time machine from the mineshaft
             if (!TimeMachineHandler.ClosestTimeMachine.IsFunctioning() && Vehicle.IsFunctioning() && FusionUtils.PlayerPed.DistanceToSquared2D(Vehicle, 4.47f) && Constants.FullDamaged && Game.IsControlJustPressed(GTA.Control.Enter))
             {
@@ -251,7 +254,7 @@ namespace BackToTheFutureV
             {
                 Properties.HasScaleformPriority = Constants.HasScaleformPriority;
                 Events.OnScaleformPriority?.Invoke();
-                if (Mods.SuspensionsType != SuspensionsType.Stock)
+                if (Mods.SuspensionsType != SuspensionsType.Stock || Mods.Wheel == WheelType.Red)
                 {
                     Vehicle.Velocity += Vector3.UnitY * 0.3f;
                 }
@@ -260,11 +263,6 @@ namespace BackToTheFutureV
             if (!Vehicle.IsVisible)
             {
                 Vehicle.IsEngineRunning = false;
-            }
-
-            if (Properties.IsWayback && TimeMachineHandler.CurrentTimeMachine == this)
-            {
-                Properties.IsWayback = false;
             }
 
             Function.Call(Hash.SET_VEHICLE_CHEAT_POWER_INCREASE, Vehicle, Decorators.TorqueMultiplier);
@@ -331,12 +329,6 @@ namespace BackToTheFutureV
 
             /*if (Constants.DeluxoProto)
             {
-                if (Mods.HoverUnderbody != ModState.On)
-                {
-                    Mods.HoverUnderbody = ModState.On;
-                    Mods.Wheel = WheelType.DMC;
-                }
-
                 if (Vehicle.IsExtraOn(1) && Properties.ReactorCharge != 0)
                 {
                     Properties.ReactorCharge = 0;
@@ -360,9 +352,8 @@ namespace BackToTheFutureV
                 }
             }*/
 
-            if (FusionUtils.PlayerVehicle != Vehicle && Vehicle.Exists() && !Properties.Story)
+            if (FusionUtils.PlayerVehicle != Vehicle && Vehicle.Exists() && !Properties.Story && Vehicle.IsVisible)
             {
-                Decorators.TorqueMultiplier = 1f;
                 if (Blip == null || !Blip.Exists())
                 {
                     Blip = Vehicle.AddBlip();
@@ -375,9 +366,6 @@ namespace BackToTheFutureV
             {
                 Blip.Delete();
             }
-
-            //if (TimeMachineHandler.CurrentTimeMachine == this)
-            //    Main.CustomStopwatch.StartNewRecord();
 
             foreach (KeyValuePair<string, HandlerPrimitive> entry in registeredHandlers)
             {

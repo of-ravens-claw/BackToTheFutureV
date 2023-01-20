@@ -63,7 +63,6 @@ namespace BackToTheFutureV
         public static CustomModel BulovaClockHour = new CustomModel("clock_hour");
         public static CustomModel BulovaClockMinute = new CustomModel("clock_minute");
         public static CustomModel BulovaClockRing = new CustomModel("clock_ring");
-        public static CustomModel HookProp = new CustomModel("bttf_hook_prop");
 
         // BTTF2 CustomModels
         public static CustomModel Strut = new CustomModel("bttf2_strut");
@@ -84,9 +83,6 @@ namespace BackToTheFutureV
         public static List<CustomModel> CoilSeparated = new List<CustomModel>();
         public static CustomModel RedWheelProp = new CustomModel("bttf3_redwheel_prop");
         public static CustomModel RRWheelProp = new CustomModel("wheel_rr_prop");
-        public static CustomModel GreenPrestoLogProp = new CustomModel("presto_log1");
-        public static CustomModel YellowPrestoLogProp = new CustomModel("presto_log3");
-        public static CustomModel RedPrestoLogProp = new CustomModel("presto_log2");
         public static CustomModel SparkRedModel = new CustomModel("bttf_spark_red");
         public static CustomModel SparkRedNightModel = new CustomModel("bttf_spark_red_night");
         public static CustomModel WormholeRed = new CustomModel("bttf_wormhole_red");
@@ -99,7 +95,7 @@ namespace BackToTheFutureV
         public static CustomModel FreightCarModel = new CustomModel("freightcar");
         public static CustomModel TankerCarModel = new CustomModel("tankercar");
 
-        public static CustomModel DeluxoModel = new CustomModel("deluxo");
+        public static CustomModel Deluxo = new CustomModel("deluxo");
 
         private static readonly string[] tcdTypes = new string[3]
         {

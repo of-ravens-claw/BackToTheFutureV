@@ -13,9 +13,7 @@ namespace BackToTheFutureV
     internal class MainMenu : BTTFVMenu
     {
         private readonly NativeListItem<string> spawnBTTF;
-        private readonly NativeSubmenuItem presetsMenu;
         private readonly NativeItem convertIntoTimeMachine;
-        private readonly NativeSubmenuItem customMenu;
 
         private readonly NativeSubmenuItem rcMenu;
         private readonly NativeSubmenuItem outatimeMenu;
@@ -31,11 +29,7 @@ namespace BackToTheFutureV
             spawnBTTF.ItemChanged += SpawnBTTF_ItemChanged;
             spawnBTTF.Description = GetItemValueDescription("Spawn", "DMC12");
 
-            presetsMenu = NewSubmenu(MenuHandler.PresetsMenu);
-
             convertIntoTimeMachine = NewItem("Convert");
-
-            customMenu = NewSubmenu(MenuHandler.CustomMenuMain);
 
             rcMenu = NewSubmenu(MenuHandler.RCMenu);
             outatimeMenu = NewSubmenu(MenuHandler.OutatimeMenu);
@@ -74,11 +68,13 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
+            spawnBTTF.Enabled = !Game.IsMissionActive;
+
             convertIntoTimeMachine.Enabled = FusionUtils.PlayerVehicle.IsFunctioning() && !FusionUtils.PlayerVehicle.IsTimeMachine() && !Game.IsMissionActive;
 
             doorsMenu.Enabled = FusionUtils.PlayerPed?.GetClosestVehicle(5f)?.Model == ModelHandler.DMC12 && !FusionUtils.PlayerPed.GetClosestVehicle(5f).IsConsideredDestroyed;
 
-            outatimeMenu.Enabled = RemoteTimeMachineHandler.RemoteTimeMachineCount > 0 && !Game.IsMissionActive;
+            outatimeMenu.Enabled = RemoteTimeMachineHandler.RemoteTimeMachines.Count > 0 && !Game.IsMissionActive;
 
             rcMenu.Enabled = FusionUtils.PlayerVehicle == null && TimeMachineHandler.TimeMachineCount > 0 && !Game.IsMissionActive;
         }
@@ -155,6 +151,7 @@ namespace BackToTheFutureV
             {
                 TimeMachineHandler.RemoveAllTimeMachines(true);
                 RemoteTimeMachineHandler.DeleteAll();
+                WaybackSystem.Abort();
                 TextHandler.Me.ShowNotification("RemovedOtherTimeMachines");
             }
 
@@ -162,6 +159,7 @@ namespace BackToTheFutureV
             {
                 TimeMachineHandler.RemoveAllTimeMachines();
                 RemoteTimeMachineHandler.DeleteAll();
+                WaybackSystem.Abort();
                 TextHandler.Me.ShowNotification("RemovedAllTimeMachines");
             }
 
@@ -185,39 +183,7 @@ namespace BackToTheFutureV
 
         public override void Menu_Shown(object sender, EventArgs e)
         {
-            if (RemoteTimeMachineHandler.IsRemoteOn && Items.Contains(deleteAll))
-            {
-                Remove(deleteCurrent);
-                Remove(deleteOthers);
-                Remove(deleteAll);
-            }
-            else if (!Items.Contains(deleteAll) && !Items.Contains(spawnBTTF))
-            {
-                Add(4, deleteCurrent);
-                Add(5, deleteOthers);
-                Add(6, deleteAll);
-            }
-            else if (!Items.Contains(deleteAll) && Items.Contains(spawnBTTF))
-            {
-                Add(8, deleteCurrent);
-                Add(9, deleteOthers);
-                Add(10, deleteAll);
-            }
 
-            if (!MenuHandler.UnlockSpawnMenu || Game.IsMissionActive)
-            {
-                Remove(spawnBTTF);
-                Remove(presetsMenu);
-                Remove(customMenu);
-                Remove(convertIntoTimeMachine);
-            }
-            else if (!Items.Contains(spawnBTTF))
-            {
-                Add(0, spawnBTTF);
-                Add(1, presetsMenu);
-                Add(2, customMenu);
-                Add(3, convertIntoTimeMachine);
-            }
         }
 
         public override void Menu_OnItemValueChanged(NativeSliderItem sender, EventArgs e)

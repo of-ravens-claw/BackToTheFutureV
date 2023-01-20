@@ -13,7 +13,7 @@ using static FusionLibrary.FusionEnums;
 
 namespace BackToTheFutureV
 {
-    internal class TimeMachineHandler
+    internal static class TimeMachineHandler
     {
         public static TimeMachine ClosestTimeMachine { get; private set; }
         public static TimeMachine CurrentTimeMachine { get; private set; }
@@ -165,7 +165,7 @@ namespace BackToTheFutureV
 
         public static TimeMachine Create(Vehicle vehicle, SpawnFlags spawnFlags = SpawnFlags.Default, WormholeType wormholeType = WormholeType.BTTF1)
         {
-            return Create(spawnFlags, wormholeType, default, default, default, default, vehicle);
+            return Create(spawnFlags, wormholeType, default, default, default, vehicle);
         }
 
         public static TimeMachine Create(TimeMachineClone timeMachineClone, SpawnFlags spawnFlags = SpawnFlags.Default)
@@ -173,12 +173,7 @@ namespace BackToTheFutureV
             return Create(spawnFlags, WormholeType.BTTF1, default, default, timeMachineClone);
         }
 
-        public static TimeMachine Create(string presetName, SpawnFlags spawnFlags = SpawnFlags.Default)
-        {
-            return Create(spawnFlags, WormholeType.BTTF1, default, default, default, presetName);
-        }
-
-        public static TimeMachine Create(SpawnFlags spawnFlags = SpawnFlags.Default, WormholeType wormholeType = WormholeType.BTTF1, Vector3 position = default, float heading = default, TimeMachineClone timeMachineClone = default, string presetName = default, Vehicle vehicle = default)
+        public static TimeMachine Create(SpawnFlags spawnFlags = SpawnFlags.Default, WormholeType wormholeType = WormholeType.BTTF1, Vector3 position = default, float heading = default, TimeMachineClone timeMachineClone = default, Vehicle vehicle = default)
         {
             TimeMachine timeMachine = null;
 
@@ -211,7 +206,7 @@ namespace BackToTheFutureV
                 spawnPos = ped.Position;
             }
 
-            if (spawnFlags.HasFlag(SpawnFlags.NoPosition) && presetName == default)
+            if (spawnFlags.HasFlag(SpawnFlags.NoPosition))
             {
                 spawnPos = position;
             }
@@ -226,11 +221,6 @@ namespace BackToTheFutureV
                 heading = ped.Heading + 180;
             }
 
-            if (presetName != default)
-            {
-                timeMachineClone = TimeMachineClone.Load(presetName);
-            }
-
             if (spawnFlags.HasFlag(SpawnFlags.CheckExists) && timeMachineClone != default)
             {
                 veh = World.GetClosestVehicle(timeMachineClone.Vehicle.Position, 5f, timeMachineClone.Vehicle.Model);
@@ -243,7 +233,7 @@ namespace BackToTheFutureV
 
             if (timeMachineClone != default && timeMachineClone.Properties.TimeTravelType == TimeTravelType.RC)
             {
-                spawnFlags |= SpawnFlags.NoOccupants;
+                spawnFlags |= SpawnFlags.NoDriver;
             }
 
             if (veh == null)
@@ -295,18 +285,21 @@ namespace BackToTheFutureV
                 timeMachine.Vehicle.SetVisible(false);
 
                 timeMachine.Properties.DestinationTime = FusionUtils.CurrentTime.AddSeconds(-FusionUtils.CurrentTime.Second);
-                if (timeMachine.Mods.WormholeType == WormholeType.BTTF2 && spawnFlags.HasFlag(SpawnFlags.New))
+
+                if (timeMachine.Mods.WormholeType == WormholeType.BTTF2 && spawnFlags.HasFlag(SpawnFlags.ForceReentry | SpawnFlags.New))
                 {
                     timeMachine.Properties.PreviousTime = new DateTime(2015, 10, 22, 19, 45, 0);
                 }
-                if (timeMachine.Mods.WormholeType == WormholeType.BTTF3 && spawnFlags.HasFlag(SpawnFlags.New))
+
+                if (timeMachine.Mods.WormholeType == WormholeType.BTTF3 && spawnFlags.HasFlag(SpawnFlags.ForceReentry | SpawnFlags.New))
                 {
+                    timeMachine.Properties.AreHoodboxCircuitsReady = true;
                     timeMachine.Properties.PreviousTime = new DateTime(1955, 11, 16, 10, 20, 0);
                 }
-                timeMachine.Properties.AreTimeCircuitsOn = true;
+
                 timeMachine.Events.SetTimeCircuits?.Invoke(true);
 
-                if (ModSettings.WaybackSystem && spawnFlags.HasFlag(SpawnFlags.New))
+                if (ModSettings.WaybackSystem && spawnFlags.HasFlag(SpawnFlags.ForceReentry | SpawnFlags.New))
                 {
                     TimeMachineClone _new = timeMachine.Clone();
                     _new.Properties.IsWayback = true;
@@ -316,7 +309,7 @@ namespace BackToTheFutureV
                 timeMachine.Events.OnReenterStarted?.Invoke();
             }
 
-            if (spawnFlags.HasFlag(SpawnFlags.NoOccupants) && timeMachine.Properties.IsFlying)
+            if (timeMachine.Vehicle.Occupants.Length == 0 && timeMachine.Properties.IsFlying)
             {
                 timeMachine.Events.SetFlyMode.Invoke(false);
             }
@@ -406,13 +399,13 @@ namespace BackToTheFutureV
             return timeMachine;
         }
 
-        public static TimeMachine GetTimeMachineFromReplicaGUID(Guid guid)
+        public static TimeMachine GetTimeMachineFromGUID(Guid guid)
         {
-            TimeMachine timeMachine = AllTimeMachines.SingleOrDefault(x => x.Properties.ReplicaGUID == guid);
+            TimeMachine timeMachine = AllTimeMachines.SingleOrDefault(x => x.Properties.GUID == guid);
 
             if (timeMachine == default)
             {
-                timeMachine = _timeMachinesToAdd.SingleOrDefault(x => x.Properties.ReplicaGUID == guid);
+                timeMachine = _timeMachinesToAdd.SingleOrDefault(x => x.Properties.GUID == guid);
 
                 if (timeMachine == default)
                 {

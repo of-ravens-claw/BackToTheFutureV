@@ -69,11 +69,6 @@ namespace BackToTheFutureV
 
             if (HasFuel())
             {
-                if (ModSettings.WaybackSystem)
-                {
-                    WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle = new WaybackVehicle(TimeMachine, WaybackVehicleEvent.RefuelReactor);
-                }
-
                 SetReactorState(ReactorState.Refueling);
             }
             else
@@ -96,11 +91,6 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (ModSettings.WaybackSystem)
-            {
-                WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle = new WaybackVehicle(TimeMachine, WaybackVehicleEvent.OpenCloseReactor);
-            }
-
             SetReactorState(Properties.ReactorState == ReactorState.Closed ? ReactorState.Opened : ReactorState.Closed);
         }
 
@@ -112,6 +102,9 @@ namespace BackToTheFutureV
             }
 
             Properties.ReactorState = reactorState;
+
+            if (WaybackSystem.CurrentPlayerRecording != default && !Properties.IsWayback)
+                WaybackSystem.CurrentPlayerRecording.OverrideVehicle = Vehicle;
 
             switch (reactorState)
             {

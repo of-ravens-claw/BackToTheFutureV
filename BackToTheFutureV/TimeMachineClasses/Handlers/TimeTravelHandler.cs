@@ -43,11 +43,7 @@ namespace BackToTheFutureV
         public static void TimeChanged(DateTime time)
         {
             TimeMachineHandler.ExistenceCheck(time);
-
-            if (!ModSettings.WaybackSystem)
-            {
-                RemoteTimeMachineHandler.ExistenceCheck(time);
-            }
+            RemoteTimeMachineHandler.ExistenceCheck(time);
         }
 
         public void SetCutsceneMode(bool cutsceneOn)
@@ -60,6 +56,7 @@ namespace BackToTheFutureV
         public void StartTimeTravel(int delay = 0)
         {
             Properties.TimeTravelPhase = TimeTravelPhase.InTime;
+
             gameTimer = Game.GameTime + delay;
             _currentStep = 0;
         }
@@ -96,10 +93,6 @@ namespace BackToTheFutureV
                     {
                         Properties.TimeTravelType = TimeTravelType.RC;
                     }
-                    else if (Properties.IsWayback)
-                    {
-                        Properties.TimeTravelType = TimeTravelType.Wayback;
-                    }
                     else
                     {
                         if (Vehicle.GetPedOnSeat(VehicleSeat.Driver) != FusionUtils.PlayerPed)
@@ -108,7 +101,7 @@ namespace BackToTheFutureV
                         }
                         else
                         {
-                            if (!Properties.CutsceneMode || FusionUtils.IsCameraInFirstPerson())
+                            if ((!Properties.CutsceneMode && !Properties.HasBeenStruckByLightning) || FusionUtils.IsCameraInFirstPerson())
                             {
                                 Properties.TimeTravelType = TimeTravelType.Instant;
                             }
@@ -130,8 +123,6 @@ namespace BackToTheFutureV
                     Properties.TimeTravelDestPos = WaypointScript.WaypointPosition;
 
                     Properties.TimeTravelsCount++;
-
-                    Properties.ReplicaGUID = Guid.NewGuid();
 
                     if (Properties.TimeTravelType == TimeTravelType.Instant)
                     {
@@ -164,6 +155,8 @@ namespace BackToTheFutureV
 
                         Properties.TimeTravelDestPos = Vector3.Zero;
 
+                        Properties.NewGUID();
+
                         TimeHandler.TimeTravelTo(Properties.DestinationTime);
 
                         // Invoke delegate
@@ -184,7 +177,7 @@ namespace BackToTheFutureV
                     trails = FireTrailsHandler.SpawnForTimeMachine(TimeMachine);
 
                     // If the Vehicle is remote controlled or the player is not the one in the driver seat
-                    if (Properties.TimeTravelType == TimeTravelType.RC || Properties.TimeTravelType == TimeTravelType.Wayback)
+                    if (Properties.TimeTravelType == TimeTravelType.RC)
                     {
                         if (Mods.IsDMC12 && !Properties.IsFlying && !Properties.IsOnTracks && Mods.Plate == PlateType.Outatime)
                         {
@@ -195,7 +188,7 @@ namespace BackToTheFutureV
                         Vehicle.SetMPHSpeed(0);
 
                         // Add to time travelled list
-                        if (Properties.TimeTravelType == TimeTravelType.RC)
+                        if (Properties.TimeTravelType == TimeTravelType.RC && !Properties.IsWayback)
                         {
                             RemoteTimeMachineHandler.AddRemote(TimeMachine.Clone());
                         }
@@ -243,7 +236,7 @@ namespace BackToTheFutureV
 
                     Particles.TimeTravelEffect?.Stop();
 
-                    if (Properties.TimeTravelType == TimeTravelType.RC || Properties.TimeTravelType == TimeTravelType.Wayback)
+                    if (Properties.TimeTravelType == TimeTravelType.RC)
                     {
                         // Stop remote controlling
                         if (Properties.IsRemoteControlled)
@@ -252,8 +245,6 @@ namespace BackToTheFutureV
                         }
 
                         TimeMachineHandler.RemoveTimeMachine(TimeMachine, true, true);
-
-                        Properties.TimeTravelPhase = TimeTravelPhase.Completed;
 
                         return;
                     }
@@ -284,6 +275,8 @@ namespace BackToTheFutureV
                     FireTrailsHandler.RemoveTrail(trails);
 
                     World.RenderingCamera = null;
+
+                    Properties.NewGUID();
 
                     if (TimeHandler.RealTime)
                     {

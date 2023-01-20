@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace BackToTheFutureV
+﻿namespace BackToTheFutureV
 {
-    internal class InternalEnums
+    internal static class InternalEnums
     {
         public static string[] MeleeAttacks = new string[] { "walking_punch", "running_punch", "long_0_punch", "heavy_punch_a", "heavy_punch_b", "heavy_punch_b_var_1", "short_0_punch" };
 
@@ -24,6 +22,14 @@ namespace BackToTheFutureV
             public const string TimeCircuitsOn = "BTTFV_TCOn";
             public const string CutsceneMode = "BTTFV_TimeTravelType";
             public const string TorqueMultiplier = "BTTFV_TorqueMultiplier";
+
+            public const string AllowHoverMode = "BTTFV_AllowHoverMode";
+            public const string IsInHoverMode = "BTTFV_IsInHoverMode";
+            public const string IsHoverBoosting = "BTTFV_IsHoverBoosting";
+            public const string IsVerticalBoosting = "BTTFV_IsVerticalBoosting";
+            public const string IsHoverLanding = "BTTFV_IsHoverLanding";
+            public const string IsWaitForLanding = "BTTFV_IsWaitForLanding";
+            public const string IsAltitudeHolding = "BTTFV_IsAltitudeHolding";
         }
 
         internal enum WaybackStatus
@@ -43,18 +49,6 @@ namespace BackToTheFutureV
             Jump,
             MeleeAttack,
             Climb
-        }
-
-        [Flags]
-        internal enum WaybackVehicleEvent
-        {
-            None = 0,
-            Transform = 1,
-            OnSparksEnded = 2,
-            OpenCloseReactor = 4,
-            RefuelReactor = 8,
-            LightningStrike = 16,
-            LightningRun = 32
         }
 
         internal enum GarageStatus
@@ -110,16 +104,14 @@ namespace BackToTheFutureV
         internal enum ReenterType
         {
             Normal,
-            Spawn,
-            Forced
+            Spawn
         }
 
         internal enum TimeTravelType
         {
             Cutscene,
             Instant,
-            RC,
-            Wayback
+            RC
         }
 
         internal enum MissionType

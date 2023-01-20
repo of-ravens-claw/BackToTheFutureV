@@ -67,7 +67,7 @@ namespace BackToTheFutureV
 
         private void OnReenterEnded()
         {
-            if (ModSettings.EngineStallEvent && Mods.Reactor == ReactorType.Nuclear && !Properties.IsRemoteControlled && !Properties.IsWayback && Driver != null)
+            if (ModSettings.EngineStallEvent && Mods.Reactor == ReactorType.Nuclear && !Properties.IsRemoteControlled && Driver != null)
             {
                 IsPlaying = true;
             }
@@ -197,7 +197,7 @@ namespace BackToTheFutureV
                     if (!_isRestarting)
                     {
                         //Would be cool to loop this animation at the key-turning step...
-                        Driver?.Task?.PlayAnimation("veh@low@front_ds@base", "start_engine", 8f, -1, AnimationFlags.Loop | AnimationFlags.CancelableWithMovement);
+                        Driver?.Task?.PlayAnimation("veh@low@front_ds@base", "start_engine", 8f, -1, AnimationFlags.Loop | AnimationFlags.AbortOnPedMovement);
 
                         Sounds.EngineRestarter?.Play();
                         _restartAt = Game.GameTime + FusionUtils.Random.Next(3000, 10000);

@@ -133,7 +133,7 @@ namespace BackToTheFutureV
         private void UpdateSpringPosition()
         {
             _springBase = Hook.Position;
-            _springOrigin = _springBase - Vector3.WorldUp * _springLength;
+            _springOrigin = _springBase - (Vector3.WorldUp * _springLength);
         }
 
         private void UpdateSpringPhysics()
@@ -201,24 +201,21 @@ namespace BackToTheFutureV
 
             if (IsPlaying && TimeMachineHandler.CurrentTimeMachine.NotNullAndExists() && LeftStreetPole.NotNullAndExists() && RightStreetPole.NotNullAndExists())
             {
-                RaycastResult raycastResult = World.Raycast(LeftStreetPole.Position.GetSingleOffset(Coordinate.Z, 0.75f), RightStreetPole.Position.GetSingleOffset(Coordinate.Z, 0.75f), IntersectFlags.MissionEntities);
+                RaycastResult raycastResult = World.Raycast(LeftStreetPole.Position.GetSingleOffset(Coordinate.Z, 0.75f), RightStreetPole.Position.GetSingleOffset(Coordinate.Z, 0.75f), IntersectFlags.Vehicles);
 
                 if (raycastResult.DidHit && raycastResult.HitEntity == CurrentTimeMachine)
                 {
                     if ((CurrentTimeMachine.Mods.Hook == HookState.On /*|| (CurrentTimeMachine.Constants.DeluxoProto && CurrentTimeMachine.Vehicle.IsExtraOn(1))*/) && CurrentTimeMachine.Properties.AreTimeCircuitsOn && CurrentTimeMachine.Constants.OverTimeTravelAtSpeed && !CurrentTimeMachine.Properties.HasBeenStruckByLightning && sparkRope.ParticlePlayers.Count(x => x.IsPlaying) >= 100)
                     {
-                        if (ModSettings.WaybackSystem)
-                        {
-                            WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle.Event |= WaybackVehicleEvent.LightningRun;
-                        }
-
                         CurrentTimeMachine.Events.StartLightningStrike?.Invoke(-1);
+
                         if (!struck && sparkRope.SequenceComplete)
                         {
                             if (CurrentTimeMachine.Mods.IsDMC12)
                             {
                                 HookSetup(CurrentTimeMachine.Vehicle.Position);
                             }
+
                             struck = true;
                         }
                     }

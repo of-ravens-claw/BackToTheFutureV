@@ -25,11 +25,6 @@ namespace BackToTheFutureV
         {
             Properties.TimeTravelPhase = TimeTravelPhase.Reentering;
 
-            if (ModSettings.WaybackSystem && Driver != null && Driver != FusionUtils.PlayerPed)
-            {
-                WaybackSystem.GetFromGUID(Properties.ReplicaGUID)?.StartOn(Driver, true);
-            }
-
             if (Driver != null && Driver == FusionUtils.PlayerPed)
             {
                 Properties.PlayerUsed = true;
@@ -141,13 +136,13 @@ namespace BackToTheFutureV
 
         private void OnReenterEnded()
         {
-            if (Driver == FusionUtils.PlayerPed && ModSettings.WaybackSystem)
+            if (Driver == FusionUtils.PlayerPed)
             {
-                TimeMachine.LastDisplacementClone.Properties.IsWayback = true;
+                if (ModSettings.WaybackSystem)
+                    TimeMachine.LastDisplacementClone.Properties.IsWayback = true;
+
                 RemoteTimeMachineHandler.AddRemote(TimeMachine.LastDisplacementClone);
             }
-
-            Properties.TimeTravelPhase = TimeTravelPhase.Completed;
 
             Vehicle.SetVisible(true);
 
@@ -210,15 +205,12 @@ namespace BackToTheFutureV
             //Function.Call(Hash.SPECIAL_ABILITY_UNLOCK, CommonSettings.PlayerPed.Model);
             Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Game.Player, true);
 
-            if (!ModSettings.WaybackSystem && Driver != null && Driver != FusionUtils.PlayerPed)
+            if (Driver != null && Driver != FusionUtils.PlayerPed)
             {
                 Driver.TaskDrive().Add(DriveAction.BrakeUntilTimeEndsOrCarStops, 10000).Start();
             }
 
-            if (ModSettings.WaybackSystem && FusionUtils.PlayerVehicle == Vehicle)
-            {
-                WaybackSystem.Create(FusionUtils.PlayerPed, Properties.ReplicaGUID);
-            }
+            Properties.TimeTravelPhase = TimeTravelPhase.Completed;
         }
 
         public override void Stop()

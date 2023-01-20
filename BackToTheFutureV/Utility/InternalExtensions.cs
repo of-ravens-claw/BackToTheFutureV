@@ -4,13 +4,12 @@ using FusionLibrary.Extensions;
 using GTA;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using static BackToTheFutureV.InternalEnums;
 using static FusionLibrary.FusionEnums;
 
 namespace BackToTheFutureV
 {
-    internal class BTTFImportantDates
+    internal static class BTTFImportantDates
     {
         public static readonly List<DateTime> Dates = new List<DateTime>() { new DateTime(1985, 10, 26, 1, 21, 0), new DateTime(1885, 1, 1, 0, 0, 0), new DateTime(1955, 11, 5, 6, 15, 0), new DateTime(1985, 10, 26, 1, 24, 0), new DateTime(1985, 10, 26, 1, 24, 0), new DateTime(2015, 10, 21, 16, 29, 0), new DateTime(1955, 11, 12, 13, 40, 0), new DateTime(1985, 10, 26, 21, 0, 0), new DateTime(1955, 11, 12, 6, 0, 0), new DateTime(1885, 9, 2, 8, 0, 0), new DateTime(1985, 10, 27, 11, 0, 0) };
 
@@ -22,11 +21,14 @@ namespace BackToTheFutureV
 
     internal static class InternalExtensions
     {
-        public static PropertyInfo[] Properties = new PropertiesHandler(Guid.Empty).GetType().GetProperties();
-
         public static bool NotNullAndExists(this TimeMachine timeMachine)
         {
             return timeMachine != null && timeMachine.Vehicle.NotNullAndExists();
+        }
+
+        public static bool IsFunctioning(this HoverVehicle hoverVehicle)
+        {
+            return hoverVehicle != null && hoverVehicle.Vehicle.IsFunctioning();
         }
 
         public static bool IsFunctioning(this TimeMachine timeMachine)

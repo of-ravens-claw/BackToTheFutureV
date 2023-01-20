@@ -2,7 +2,6 @@
 using FusionLibrary.Extensions;
 using GTA;
 using GTA.Native;
-using System;
 using System.Windows.Forms;
 using static BackToTheFutureV.InternalEnums;
 
@@ -24,10 +23,14 @@ namespace BackToTheFutureV
         {
             if (delay == -1)
             {
+                Properties.StruckByLightningInstant = true;
+
                 _instant = true;
                 Strike();
                 return;
             }
+
+            Properties.StruckByLightning = true;
 
             _delay = Game.GameTime + (delay * 1000);
         }
@@ -36,11 +39,6 @@ namespace BackToTheFutureV
         {
             if (_delay > -1 && Game.GameTime > _delay)
             {
-                if (ModSettings.WaybackSystem && TimeMachineHandler.CurrentTimeMachine == TimeMachine)
-                {
-                    WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle.Event |= WaybackVehicleEvent.LightningStrike;
-                }
-
                 Strike();
             }
 
@@ -59,11 +57,6 @@ namespace BackToTheFutureV
             {
                 if (FusionUtils.Random.NextDouble() < 0.3)
                 {
-                    if (ModSettings.WaybackSystem && TimeMachineHandler.CurrentTimeMachine == TimeMachine)
-                    {
-                        WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle.Event |= WaybackVehicleEvent.LightningStrike;
-                    }
-
                     Strike();
                 }
                 else
@@ -104,25 +97,43 @@ namespace BackToTheFutureV
                 Properties.PhotoGlowingCoilsActive = true;
                 WaypointScript.LoadWaypointPosition(true);
 
-                if ((Mods.Hook == HookState.On && !Properties.IsFlying) /*|| (Constants.DeluxoProto && Vehicle.IsExtraOn(1) && !Properties.IsFlying)*/)
+                if (Mods.Hook == HookState.On && !Properties.IsFlying /*|| (Constants.DeluxoProto && Vehicle.IsExtraOn(1) && !Properties.IsFlying)*/)
                 {
                     Events.OnSparksEnded?.Invoke(_instant ? 250 : 500);
                 }
                 else
                 {
                     Events.OnSparksEnded?.Invoke(_instant ? 250 : 2000);
+
                     if (!Properties.IsWayback)
                     {
                         TimeMachineClone timeMachineClone = TimeMachine.Clone();
-                        timeMachineClone.Properties.ReplicaGUID = Guid.NewGuid();
-                        if (FusionUtils.CurrentTime.Year - timeMachineClone.Properties.DestinationTime.Year == 0)
+
+                        int _cloneYears = FusionUtils.CurrentTime.Year - timeMachineClone.Properties.DestinationTime.Year;
+
+                        if (_cloneYears == 0)
                         {
-                            timeMachineClone.Properties.DestinationTime = timeMachineClone.Properties.DestinationTime.AddYears(70);
+                            try
+                            {
+                                timeMachineClone.Properties.DestinationTime = timeMachineClone.Properties.DestinationTime.AddYears(70);
+                            }
+                            catch (System.ArgumentOutOfRangeException)
+                            {
+                                timeMachineClone.Properties.DestinationTime = timeMachineClone.Properties.DestinationTime.AddYears(-70);
+                            }
                         }
                         else
                         {
-                            timeMachineClone.Properties.DestinationTime = timeMachineClone.Properties.DestinationTime.AddYears((FusionUtils.CurrentTime.Year - timeMachineClone.Properties.DestinationTime.Year) * 2);
+                            try
+                            {
+                                timeMachineClone.Properties.DestinationTime = timeMachineClone.Properties.DestinationTime.AddYears(_cloneYears * 2);
+                            }
+                            catch (System.ArgumentOutOfRangeException)
+                            {
+                                timeMachineClone.Properties.DestinationTime = timeMachineClone.Properties.DestinationTime.AddYears(_cloneYears / 2);
+                            }
                         }
+
                         timeMachineClone.Properties.PreviousTime = FusionUtils.CurrentTime;
                         RemoteTimeMachineHandler.AddRemote(timeMachineClone);
                     }
@@ -156,6 +167,9 @@ namespace BackToTheFutureV
             {
                 return;
             }
+
+            Properties.StruckByLightning = false;
+            Properties.StruckByLightningInstant = false;
 
             Sounds.LightningStrike?.Stop();
             Sounds.Thunder?.Stop();

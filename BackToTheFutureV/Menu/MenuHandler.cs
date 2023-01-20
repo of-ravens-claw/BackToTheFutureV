@@ -6,7 +6,7 @@ using static BackToTheFutureV.InternalEnums;
 
 namespace BackToTheFutureV
 {
-    internal class MenuHandler
+    internal static class MenuHandler
     {
         public static ControlsMenu ControlsMenu { get; } = new ControlsMenu();
         public static SoundsSettingsMenu SoundsSettingsMenu { get; } = new SoundsSettingsMenu();
@@ -17,22 +17,16 @@ namespace BackToTheFutureV
         public static OverrideMenu OverrideMenu { get; } = new OverrideMenu();
         public static PhotoMenu PhotoMenu { get; } = new PhotoMenu();
         public static DoorsMenu DoorsMenu { get; } = new DoorsMenu();
-        public static CustomMenu CustomMenuMain { get; } = new CustomMenu() { ForceNew = true };
-        public static CustomMenu CustomMenuPresets { get; } = new CustomMenu() { ForceNew = true };
-        public static CustomMenu2 CustomMenuGarage { get; } = new CustomMenu2();
+        public static CustomMenu CustomMenu { get; } = new CustomMenu();
         public static GarageMenu GarageMenu { get; } = new GarageMenu();
-        public static PresetsMenu PresetsMenu { get; } = new PresetsMenu();
         public static OutatimeMenu OutatimeMenu { get; } = new OutatimeMenu();
         public static MainMenu MainMenu { get; } = new MainMenu();
         public static TimeMachineMenu TimeMachineMenu { get; } = new TimeMachineMenu();
         public static int closingTime;
 
-        public static bool UnlockPhotoMenu { get; private set; } = true;
-        public static bool UnlockSpawnMenu { get; private set; } = true;
-
         public static bool IsAnyMenuOpen()
         {
-            if (ControlsMenu.Visible || SoundsSettingsMenu.Visible || EventsSettingsMenu.Visible || TCDMenu.Visible || SettingsMenu.Visible || RCMenu.Visible || OverrideMenu.Visible || PhotoMenu.Visible || DoorsMenu.Visible || CustomMenuMain.Visible || CustomMenuPresets.Visible || CustomMenuGarage.Visible || GarageMenu.Visible || PresetsMenu.Visible || OutatimeMenu.Visible || MainMenu.Visible || TimeMachineMenu.Visible)
+            if (ControlsMenu.Visible || SoundsSettingsMenu.Visible || EventsSettingsMenu.Visible || TCDMenu.Visible || SettingsMenu.Visible || RCMenu.Visible || OverrideMenu.Visible || PhotoMenu.Visible || DoorsMenu.Visible || CustomMenu.Visible || GarageMenu.Visible || OutatimeMenu.Visible || MainMenu.Visible || TimeMachineMenu.Visible)
             {
                 return true;
             }
@@ -82,7 +76,7 @@ namespace BackToTheFutureV
                     }
                 }
 
-                if ((MainMenu.Visible || TimeMachineMenu.Visible || GarageMenu.Visible || CustomMenuMain.Visible || CustomMenuPresets.Visible || PresetsMenu.Visible || PhotoMenu.Visible) && FusionUtils.PlayerVehicle.NotNullAndExists() && (Game.IsControlJustPressed(GTA.Control.VehicleCinCam) || Game.IsControlJustPressed(GTA.Control.VehicleDuck)))
+                if ((MainMenu.Visible || TimeMachineMenu.Visible || GarageMenu.Visible || PhotoMenu.Visible) && FusionUtils.PlayerVehicle.NotNullAndExists() && (Game.IsControlJustPressed(GTA.Control.VehicleCinCam) || Game.IsControlJustPressed(GTA.Control.VehicleDuck)))
                 {
                     closingTime = Game.GameTime + 256;
                 }
@@ -114,21 +108,6 @@ namespace BackToTheFutureV
                 CustomNativeMenu.ObjectPool.HideAll();
 
                 MainMenu.Visible = true;
-            }
-
-            if (e.Alt && e.KeyCode == Keys.D1)
-            {
-                string hash = Game.GetUserInput(WindowTitle.EnterMessage20, "", 20).ToLower().GetSHA256Hash();
-
-                switch (hash)
-                {
-                    case "c3cca7029c38959a99b7aa57c37f0b05b663fd624a8f7dbc6424e44320b84206":
-                        UnlockSpawnMenu = !UnlockSpawnMenu;
-                        break;
-                    case "fbff03e5367d548c10cb18965f950df472a8dc408d003f557ce974ddc2658ade":
-                        UnlockPhotoMenu = !UnlockPhotoMenu;
-                        break;
-                }
             }
         }
     }

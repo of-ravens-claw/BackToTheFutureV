@@ -84,7 +84,7 @@
     <Compile Include="GUI\SIDScaleform.cs" />
     <Compile Include="Menu\BTTFVMenu.cs" />
     <Compile Include="Menu\DoorsMenu.cs" />
-    <Compile Include="Menu\CustomMenu2.cs" />
+    <Compile Include="Menu\CustomMenu.cs" />
     <Compile Include="Menu\GarageMenu.cs" />
     <Compile Include="Menu\OverrideMenu.cs" />
     <Compile Include="Players\EmitterSparkPlayer.cs" />
@@ -94,9 +94,12 @@
     <Compile Include="TimeMachineClasses\Handlers\ClockHandler.cs" />
     <Compile Include="TimeMachineClasses\Story\StoryTimeMachineHandler.cs" />
     <Compile Include="Utility\GarageHandler.cs" />
+    <Compile Include="Utility\HoverMode.cs" />
+    <Compile Include="Utility\HoverVehicle.cs" />
     <Compile Include="Utility\HUDProperties.cs" />
     <Compile Include="Utility\InternalEnums.cs" />
     <Compile Include="Utility\InternalInventory.cs" />
+    <Compile Include="Utility\IntroHandler.cs" />
     <Compile Include="Utility\Memory\CVehicle.cs" />
     <Compile Include="Utility\Memory\CWheel.cs" />
     <Compile Include="Utility\Memory\INativeMemory.cs" />
@@ -112,10 +115,8 @@
     <Compile Include="TimeMachineClasses\Handlers\SIDHandler.cs" />
     <Compile Include="GUI\TCD3DRowScaleform.cs" />
     <Compile Include="GUI\TCD2DScaleform.cs" />
-    <Compile Include="Menu\CustomMenu.cs" />
     <Compile Include="Menu\ControlsMenu.cs" />
     <Compile Include="Menu\OutatimeMenu.cs" />
-    <Compile Include="Menu\PresetsMenu.cs" />
     <Compile Include="Menu\TCDMenu.cs" />
     <Compile Include="Menu\MainMenu.cs" />
     <Compile Include="Menu\MenuHandler.cs" />
@@ -174,14 +175,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\ModSettings.cs" />
     <Compile Include="Settings\TCDEditer.cs" />
+    <Compile Include="Utility\Potato.cs" />
     <Compile Include="Utility\TextHandler.cs" />
-    <Compile Include="Utility\TimeText.cs" />
     <Compile Include="Utility\TrashHandler.cs" />
-    <Compile Include="Utility\Wayback\WaybackRecord.cs" />
-    <Compile Include="Utility\Wayback\WaybackMachine.cs" />
-    <Compile Include="Utility\Wayback\WaybackSystem.cs" />
-    <Compile Include="Utility\Wayback\Entities\WaybackVehicle.cs" />
     <Compile Include="Utility\Wayback\Entities\WaybackPed.cs" />
+    <Compile Include="Utility\Wayback\Entities\WaybackVehicle.cs" />
+    <Compile Include="Utility\Wayback\TimeParadox.cs" />
+    <Compile Include="Utility\Wayback\WaybackMachine.cs" />
+    <Compile Include="Utility\Wayback\WaybackRecord.cs" />
+    <Compile Include="Utility\Wayback\WaybackSystem.cs" />
     <Compile Include="Utility\WeatherHandler.cs" />
     <Compile Include="Vehicles\DMC12\ModsPrimitive.cs" />
     <Compile Include="Vehicles\DMC12\DMC12.cs" />
@@ -195,16 +197,26 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="EasyHook">
+      <Version>2.7.7097</Version>
+    </PackageReference>
     <PackageReference Include="FusionLibrary.SHVDN3">
-      <Version>1.5.7</Version>
+      <Version>1.6.3</Version>
     </PackageReference>
     <PackageReference Include="LemonUI.SHVDN3">
       <Version>1.9.1</Version>
     </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>2.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="MinHook.NET">
+      <Version>1.1.1</Version>
+    </PackageReference>
     <PackageReference Include="ScriptHookVDotNet3">
-      <Version>3.5.1</Version>
+      <Version>3.6.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF NOT "%25GTAPath%25" == "" (

@@ -9,8 +9,7 @@ namespace BackToTheFutureV
     internal class PropertiesHandler
     {
         //Persistent properties
-        public Guid GUID { get; set; }
-        public Guid ReplicaGUID { get; set; }
+        public Guid GUID { get; private set; }
         public bool AreTimeCircuitsOn { get; set; }
         public DateTime AlarmTime { get; set; }
         public bool AlarmSet { get; set; } = false;
@@ -80,8 +79,10 @@ namespace BackToTheFutureV
         public bool Story { get; set; }
         public bool BlockSparks { get; set; }
         public float Boost { get; set; }
-        public bool IsWayback { get; set; }
         public bool PlayerUsed { get; set; }
+        public bool StruckByLightning { get; set; }
+        public bool StruckByLightningInstant { get; set; }
+        public bool IsWayback { get; set; }
 
         public HUDProperties HUDProperties { get; set; } = new HUDProperties();
         public bool ForceSIDMax { get; set; }
@@ -89,51 +90,54 @@ namespace BackToTheFutureV
         public int[] NewHeight { get; set; } = new int[10];
         public int[] LedDelay { get; set; } = new int[10];
 
-        public PropertiesHandler(Guid guid)
+        public PropertiesHandler()
         {
-            GUID = guid;
-            ReplicaGUID = Guid.NewGuid();
+            GUID = Guid.NewGuid();
+        }
+
+        public void NewGUID()
+        {
+            GUID = Guid.NewGuid();
         }
 
         public PropertiesHandler Clone()
         {
-            PropertiesHandler ret = new PropertiesHandler(GUID)
-            {
-                ReplicaGUID = ReplicaGUID,
-                AreTimeCircuitsOn = AreTimeCircuitsOn,
-                AlarmSet = AlarmSet,
-                AlarmTime = AlarmTime,
-                SyncWithCurTime = SyncWithCurTime,
-                ClockTime = ClockTime,
-                DestinationTime = DestinationTime,
-                PreviousTime = PreviousTime,
-                LastVelocity = LastVelocity,
-                TimeTravelType = TimeTravelType,
-                AreTimeCircuitsBroken = AreTimeCircuitsBroken,
-                reactorCharge = reactorCharge,
-                CutsceneMode = CutsceneMode,
-                IsFreezed = IsFreezed,
-                IsDefrosting = IsDefrosting,
-                IceValue = IceValue,
-                IsFlying = IsFlying,
-                IsHoverBoosting = IsHoverBoosting,
-                IsHoverGoingUpDown = IsHoverGoingUpDown,
-                CanConvert = CanConvert,
-                AreFlyingCircuitsBroken = AreFlyingCircuitsBroken,
-                AreHoodboxCircuitsReady = AreHoodboxCircuitsReady,
-                IsOnTracks = IsOnTracks,
-                WasOnTracks = WasOnTracks,
-                HasBeenStruckByLightning = HasBeenStruckByLightning,
-                TimeTravelDestPos = TimeTravelDestPos,
-                TimeTravelsCount = TimeTravelsCount,
-                ReactorState = ReactorState,
-                OverrideTimeTravelConstants = OverrideTimeTravelConstants,
-                OverrideSet = OverrideSet,
-                OverrideSIDSpeed = OverrideSIDSpeed,
-                OverrideTTSfxSpeed = OverrideTTSfxSpeed,
-                OverrideTTSpeed = OverrideTTSpeed,
-                OverrideWormholeLengthTime = OverrideWormholeLengthTime
-            };
+            PropertiesHandler ret = new PropertiesHandler();
+
+            ret.GUID = GUID;
+            ret.AreTimeCircuitsOn = AreTimeCircuitsOn;
+            ret.AlarmSet = AlarmSet;
+            ret.AlarmTime = AlarmTime;
+            ret.SyncWithCurTime = SyncWithCurTime;
+            ret.ClockTime = ClockTime;
+            ret.DestinationTime = DestinationTime;
+            ret.PreviousTime = PreviousTime;
+            ret.LastVelocity = LastVelocity;
+            ret.TimeTravelType = TimeTravelType;
+            ret.AreTimeCircuitsBroken = AreTimeCircuitsBroken;
+            ret.ReactorCharge = ReactorCharge;
+            ret.CutsceneMode = CutsceneMode;
+            ret.IsFreezed = IsFreezed;
+            ret.IsDefrosting = IsDefrosting;
+            ret.IceValue = IceValue;
+            ret.IsFlying = IsFlying;
+            ret.IsHoverBoosting = IsHoverBoosting;
+            ret.IsHoverGoingUpDown = IsHoverGoingUpDown;
+            ret.CanConvert = CanConvert;
+            ret.AreFlyingCircuitsBroken = AreFlyingCircuitsBroken;
+            ret.AreHoodboxCircuitsReady = AreHoodboxCircuitsReady;
+            ret.IsOnTracks = IsOnTracks;
+            ret.WasOnTracks = WasOnTracks;
+            ret.HasBeenStruckByLightning = HasBeenStruckByLightning;
+            ret.TimeTravelDestPos = TimeTravelDestPos;
+            ret.TimeTravelsCount = TimeTravelsCount;
+            ret.ReactorState = ReactorState;
+            ret.OverrideTimeTravelConstants = OverrideTimeTravelConstants;
+            ret.OverrideSet = OverrideSet;
+            ret.OverrideSIDSpeed = OverrideSIDSpeed;
+            ret.OverrideTTSfxSpeed = OverrideTTSfxSpeed;
+            ret.OverrideTTSpeed = OverrideTTSpeed;
+            ret.OverrideWormholeLengthTime = OverrideWormholeLengthTime;
 
             return ret;
         }
@@ -141,7 +145,6 @@ namespace BackToTheFutureV
         public void ApplyTo(TimeMachine timeMachine)
         {
             timeMachine.Properties.GUID = GUID;
-            timeMachine.Properties.ReplicaGUID = ReplicaGUID;
             timeMachine.Properties.AreTimeCircuitsOn = AreTimeCircuitsOn;
             timeMachine.Properties.AlarmTime = AlarmTime;
             timeMachine.Properties.AlarmSet = AlarmSet;
@@ -232,6 +235,21 @@ namespace BackToTheFutureV
             if (IsHoverGoingUpDown != timeMachine.Properties.IsHoverGoingUpDown)
             {
                 timeMachine.Events.SimulateHoverGoingUpDown?.Invoke(IsHoverGoingUpDown);
+            }
+
+            if (ReactorState != timeMachine.Properties.ReactorState)
+            {
+                timeMachine.Events.SetReactorState?.Invoke(ReactorState);
+            }
+
+            if (StruckByLightning && StruckByLightning != timeMachine.Properties.StruckByLightning)
+            {
+                timeMachine.Events.StartLightningStrike?.Invoke(0);
+            }
+
+            if (StruckByLightningInstant && StruckByLightningInstant != timeMachine.Properties.StruckByLightningInstant)
+            {
+                timeMachine.Events.StartLightningStrike?.Invoke(-1);
             }
         }
     }
