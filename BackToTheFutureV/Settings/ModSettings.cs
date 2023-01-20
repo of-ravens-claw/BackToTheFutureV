@@ -74,6 +74,7 @@ namespace BackToTheFutureV
                 SaveSettings();
 
                 ModControls.LoadControls(settings);
+                DebugSettings.LoadDebug(settings);
 
                 return;
             }
@@ -120,7 +121,16 @@ namespace BackToTheFutureV
             TerroristsEvent = settings.GetValue("Events", "Terrorists", TerroristsEvent);
             TrainEvent = settings.GetValue("Events", "Train", TrainEvent);
 
+<<<<<<< Updated upstream
+=======
+            if (PersistenceSystem && WaybackSystem)
+            {
+                PersistenceSystem = false;
+            }
+            
+>>>>>>> Stashed changes
             ModControls.LoadControls(settings);
+            DebugSettings.LoadDebug(settings);
 
             SaveSettings();
 
@@ -173,6 +183,7 @@ namespace BackToTheFutureV
             settings.Save();
 
             ModControls.SaveControls(settings);
+            DebugSettings.SaveDebug(settings);
         }
     }
 }

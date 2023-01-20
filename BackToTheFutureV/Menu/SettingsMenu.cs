@@ -104,6 +104,11 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
+<<<<<<< Updated upstream
+=======
+            //PersistenceSystem.Enabled = !WaybackSystem.Checked;
+            WaybackSystem.Enabled = !ModSettings.PersistenceSystem;
+>>>>>>> Stashed changes
             TimeParadox.Enabled = WaybackSystem.Checked;
         }
 

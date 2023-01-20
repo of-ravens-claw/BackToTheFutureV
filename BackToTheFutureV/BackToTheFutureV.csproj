@@ -59,6 +59,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FusionLibrary">
+      <HintPath>D:\Games\Grand Theft Auto V\scripts\FusionLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="irrKlang.NET4, Version=1.0.6617.18847, Culture=neutral, PublicKeyToken=a854741bd80517c7, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(GTAPath)\scripts\irrKlang.NET4.dll</HintPath>
@@ -83,11 +86,13 @@
     <Compile Include="GUI\RCGUIScaleform.cs" />
     <Compile Include="GUI\SIDScaleform.cs" />
     <Compile Include="Menu\BTTFVMenu.cs" />
+    <Compile Include="Menu\DebugMenu.cs" />
     <Compile Include="Menu\DoorsMenu.cs" />
     <Compile Include="Menu\CustomMenu2.cs" />
     <Compile Include="Menu\GarageMenu.cs" />
     <Compile Include="Menu\OverrideMenu.cs" />
     <Compile Include="Players\EmitterSparkPlayer.cs" />
+    <Compile Include="Settings\DebugSettings.cs" />
     <Compile Include="Story\Missions\LightningRun.cs" />
     <Compile Include="TimeMachineClasses\Handlers\BaseHandlers\DecoratorsHandler.cs" />
     <Compile Include="TimeMachineClasses\Handlers\TCD3DRowHandler.cs" />
@@ -195,9 +200,12 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
     <PackageReference Include="FusionLibrary.SHVDN3">
       <Version>1.5.7</Version>
     </PackageReference>
+=======
+>>>>>>> Stashed changes
     <PackageReference Include="LemonUI.SHVDN3">
       <Version>1.9.1</Version>
     </PackageReference>

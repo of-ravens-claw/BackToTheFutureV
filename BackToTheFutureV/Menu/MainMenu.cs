@@ -35,7 +35,7 @@ namespace BackToTheFutureV
 
             convertIntoTimeMachine = NewItem("Convert");
 
-            customMenu = NewSubmenu(MenuHandler.CustomMenuMain);
+            customMenu = NewSubmenu(MenuHandler.CustomMenuPresets);
 
             rcMenu = NewSubmenu(MenuHandler.RCMenu);
             outatimeMenu = NewSubmenu(MenuHandler.OutatimeMenu);
@@ -54,8 +54,8 @@ namespace BackToTheFutureV
                 case 0:
                     spawnBTTF.Description = GetItemValueDescription(sender, "DMC12");
                     break;
-                case 1:
-                case 2:
+                case 1: //BTTF1
+                case 2: //BTTF1H
                     spawnBTTF.Description = GetItemValueDescription(sender, "BTTF1");
                     break;
                 case 3:
@@ -103,8 +103,8 @@ namespace BackToTheFutureV
                     case 3:
                         wormholeType = WormholeType.BTTF2;
                         break;
-                    case 4:
-                    case 5:
+                    case 4: //BTTF3
+                    case 5: //BTTF3RR
                         wormholeType = WormholeType.BTTF3;
                         break;
                 }

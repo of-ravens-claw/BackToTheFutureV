@@ -190,7 +190,7 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (Properties.IsOnTracks && ((customTrain == null) || (FusionUtils.PlayerVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle == Vehicle && !Vehicle.IsOnAllWheels)))
+            if (Properties.IsOnTracks && (customTrain == null || (FusionUtils.PlayerVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.TowedVehicle == Vehicle && !Vehicle.IsOnAllWheels)))
             {
                 Stop();
             }
@@ -216,12 +216,9 @@ namespace BackToTheFutureV
                     return;
                 }
 
-                if (Properties.MissionType == MissionType.Train)
-                {
-                    return;
-                }
+                if (Properties.MissionType == MissionType.Train) return;
 
-                Vehicle _train = World.GetClosestVehicle(Vehicle.Position, 25, ModelHandler.FreightModel, ModelHandler.FreightCarModel, ModelHandler.TankerCarModel);
+                    Vehicle _train = World.GetClosestVehicle(Vehicle.Position, 25, ModelHandler.FreightModel, ModelHandler.FreightCarModel, ModelHandler.TankerCarModel);
 
                 if (Vehicle.IsVisible && _train != null && Vehicle.IsTouching(_train))
                 {

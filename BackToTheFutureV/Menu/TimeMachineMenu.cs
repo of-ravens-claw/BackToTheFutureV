@@ -16,6 +16,7 @@ namespace BackToTheFutureV
         public NativeCheckboxItem AltitudeHold { get; }
         public NativeCheckboxItem RemoteControl { get; }
         public NativeSubmenuItem PhotoMenu { get; }
+        public NativeSubmenuItem DebugMenu { get; }
 
         public TimeMachineMenu() : base("TimeMachine")
         {
@@ -26,6 +27,8 @@ namespace BackToTheFutureV
             RemoteControl = NewCheckboxItem("RC");
 
             PhotoMenu = NewSubmenu(MenuHandler.PhotoMenu);
+
+            DebugMenu = NewSubmenu(MenuHandler.DebugMenu);
 
             NewSubmenu(MenuHandler.MainMenu);
         }
@@ -56,7 +59,14 @@ namespace BackToTheFutureV
             else if (!Items.Contains(PhotoMenu))
             {
                 Add(5, PhotoMenu);
+<<<<<<< Updated upstream
             }
+=======
+            if (!MenuHandler.UnlockDebugMenu)
+                Remove(DebugMenu);
+            else if (!Items.Contains(DebugMenu))
+                Add(6, DebugMenu);
+>>>>>>> Stashed changes
         }
 
         public override void Menu_OnItemCheckboxChanged(NativeCheckboxItem sender, EventArgs e, bool Checked)
@@ -98,7 +108,16 @@ namespace BackToTheFutureV
             if (MenuHandler.UnlockPhotoMenu && !Game.IsMissionActive)
             {
                 PhotoMenu.Enabled = !CurrentTimeMachine.Constants.FullDamaged && !CurrentTimeMachine.Properties.IsRemoteControlled;
+<<<<<<< Updated upstream
             }
+=======
+
+            if (MenuHandler.UnlockDebugMenu)
+                DebugMenu.Enabled = !CurrentTimeMachine.Constants.FullDamaged && !CurrentTimeMachine.Properties.IsRemoteControlled;
+
+            //EscapeMission.Enabled = !CurrentTimeMachine.Properties.IsFlying;
+            //EscapeMission.Checked = MissionHandler.Escape.IsPlaying;
+>>>>>>> Stashed changes
         }
 
         public override void Menu_OnItemValueChanged(NativeSliderItem sender, EventArgs e)

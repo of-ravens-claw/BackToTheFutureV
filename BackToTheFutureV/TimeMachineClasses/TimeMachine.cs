@@ -228,10 +228,7 @@ namespace BackToTheFutureV
 
         public void Tick()
         {
-            if (!IsReady)
-            {
-                return;
-            }
+            if (!IsReady) return;
 
             if (!Vehicle.IsFunctioning())
             {
@@ -396,6 +393,16 @@ namespace BackToTheFutureV
                 Properties.Boost = 0;
             }
 
+            if (DebugSettings.DebugFuel && Properties.ReactorCharge < 1) // Because it's pointless to run it on a loop if it's already fueled.
+            {
+                 Properties.ReactorCharge = 1;
+            }
+
+            if (DebugSettings.DebugWarmBox && Mods.Hoodbox == ModState.On && !Properties.AreHoodboxCircuitsReady) // Could probably be simplified, but this works. Similar case to above.
+            {
+                Events.SetHoodboxWarmedUp?.Invoke();
+            }
+
             PhotoMode();
         }
 
@@ -449,10 +456,7 @@ namespace BackToTheFutureV
 
         public void Break()
         {
-            if (!Mods.IsDMC12)
-            {
-                return;
-            }
+            if (!Mods.IsDMC12) return;
 
             Mods.HoverUnderbody = ModState.Off;
 
@@ -550,7 +554,7 @@ namespace BackToTheFutureV
             }
 
             if (Properties.PhotoFluxCapacitorActive && !(Properties.IsFluxDoingBlueAnim || Properties.IsFluxDoingOrangeAnim))
-            {
+            {    
                 Events.OnWormholeStarted?.Invoke();
             }
 
@@ -565,7 +569,7 @@ namespace BackToTheFutureV
             }
 
             if (!Properties.PhotoEngineStallActive && Properties.IsEngineStalling && Properties.IsPhotoModeOn)
-            {
+            {    
                 Events.SetEngineStall?.Invoke(false);
             }
 
@@ -575,9 +579,10 @@ namespace BackToTheFutureV
             }
 
             if (!Properties.PhotoSIDMaxActive && Properties.ForceSIDMax)
-            {
+            {   
                 Properties.ForceSIDMax = false;
             }
+<<<<<<< Updated upstream
 
             /*if (Constants.DeluxoProto)
             {
@@ -592,6 +597,9 @@ namespace BackToTheFutureV
                 }
             }*/
 
+=======
+            
+>>>>>>> Stashed changes
             Properties.IsPhotoModeOn = Properties.PhotoWormholeActive | Properties.PhotoGlowingCoilsActive | Properties.PhotoFluxCapacitorActive | Properties.IsEngineStalling | Properties.PhotoSIDMaxActive;
         }
 
@@ -630,10 +638,7 @@ namespace BackToTheFutureV
             GC.SuppressFinalize(this);
         }
 
-        public override string ToString()
-        {
-            return TimeMachineHandler.TimeMachines.IndexOf(this).ToString();
-        }
+        public override string ToString() => TimeMachineHandler.TimeMachines.IndexOf(this).ToString();
 
         public static implicit operator Vehicle(TimeMachine timeMachine)
         {

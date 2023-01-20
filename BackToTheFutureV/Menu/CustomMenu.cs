@@ -196,7 +196,16 @@ namespace BackToTheFutureV
                 MenuHandler.TimeMachineMenu.Visible = false;
             }
 
+<<<<<<< Updated upstream
             if (ForceNew || FusionUtils.PlayerVehicle == null || !FusionUtils.PlayerVehicle.IsTimeMachine())
+=======
+            if (MenuHandler.DebugMenu.Visible)
+            {
+                MenuHandler.DebugMenu.Visible = false;
+            }
+            
+            if (ForceNew || (FusionUtils.PlayerVehicle == null || !FusionUtils.PlayerVehicle.IsTimeMachine()))
+>>>>>>> Stashed changes
             {
                 if (ForceNew || FusionUtils.PlayerVehicle == null)
                 {
