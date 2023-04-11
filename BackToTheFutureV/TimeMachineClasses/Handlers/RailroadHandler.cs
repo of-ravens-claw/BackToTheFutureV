@@ -2,7 +2,6 @@
 using FusionLibrary.Extensions;
 using GTA;
 using GTA.Math;
-using GTA.Native;
 using System;
 using System.Windows.Forms;
 using static BackToTheFutureV.InternalEnums;
@@ -197,6 +196,9 @@ namespace BackToTheFutureV
 
             if (Properties.IsOnTracks)
             {
+                if (Mods.Wheels.Burst != false)
+                    Mods.Wheels.Burst = false;
+
                 customTrain.IsAccelerationOn = Vehicle.IsPlayerDriving() && Vehicle.IsVisible && Vehicle.IsEngineRunning;
 
                 if (FusionUtils.PlayerVehicle == Vehicle)
@@ -216,12 +218,8 @@ namespace BackToTheFutureV
                     return;
                 }
 
-                if (Properties.MissionType == MissionType.Train)
-                {
-                    return;
-                }
-
-                Vehicle _train = World.GetClosestVehicle(Vehicle.Position, 25, ModelHandler.FreightModel, ModelHandler.FreightCarModel, ModelHandler.TankerCarModel);
+                Vehicle _train = World.GetClosestVehicle(Vehicle.Position, 25, ModelHandler.FreightModel, ModelHandler.FreightCarModel, ModelHandler.FreightContModel1, 
+                    ModelHandler.FreightContModel2, ModelHandler.GrainCarModel, ModelHandler.TankerCarModel);
 
                 if (Vehicle.IsVisible && _train != null && Vehicle.IsTouching(_train))
                 {
@@ -229,7 +227,17 @@ namespace BackToTheFutureV
 
                     if (Math.Abs(_train.GetMPHSpeed() - Vehicle.GetMPHSpeed()) > 33 && !_exploded)
                     {
-                        if (TimeMachine.Properties.IsRemoteControlled)
+                        if (TimeMachine.Properties.IsRemoteControlled && !TimeMachine.Properties.IsWayback)
+                        {
+                            RemoteTimeMachineHandler.StopRemoteControl();
+                        }
+                        Vehicle.Explode();
+                        _exploded = true;
+                    }
+                    // TODO: SameDirection only accounts for the model rotation; doesn't account for the velocity vector direction
+                    else if (!Vehicle.SameDirection(_train, 90f) && _train.GetMPHSpeed() + Vehicle.GetMPHSpeed() > 33 && !_exploded)
+                    {
+                        if (TimeMachine.Properties.IsRemoteControlled && !TimeMachine.Properties.IsWayback)
                         {
                             RemoteTimeMachineHandler.StopRemoteControl();
                         }
@@ -263,7 +271,7 @@ namespace BackToTheFutureV
             _isReentryOn = false;
             Properties.IsOnTracks = false;
 
-            if (Mods.Wheel == WheelType.RailroadInvisible)
+            if (Mods.Wheel == WheelType.RailroadInvisible && Vehicle.IsVisible && Mods.Wheels.Burst != true)
             {
                 Mods.Wheels.Burst = true;
             }

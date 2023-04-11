@@ -68,7 +68,7 @@ namespace BackToTheFutureV
 
         private void RcHandbrake_OnControlJustPressed()
         {
-            if (!Properties.IsRemoteControlled || Properties.IsFlying || !Vehicle.IsAutomobile)
+            if (!Properties.IsRemoteControlled || Properties.IsFlying || !Vehicle.IsAutomobile || Properties.IsWayback)
             {
                 return;
             }
@@ -112,10 +112,20 @@ namespace BackToTheFutureV
                 _handleBoost = true;
 
                 SetSimulateSpeed(64.5f, 8);
+
+                if (ModSettings.WaybackSystem && TimeMachineHandler.CurrentTimeMachine == TimeMachine && WaybackSystem.CurrentPlayerRecording != default)
+                {
+                    WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle.Event = WaybackVehicleEvent.RcHandbrakeOn;
+                }
             }
             else
             {
                 SetSimulateSpeed(0, 0);
+
+                if (ModSettings.WaybackSystem && TimeMachineHandler.CurrentTimeMachine == TimeMachine && WaybackSystem.CurrentPlayerRecording != default)
+                {
+                    WaybackSystem.CurrentPlayerRecording.LastRecord.Vehicle.Event = WaybackVehicleEvent.RcHandbrakeOff;
+                }
             }
         }
 
@@ -196,8 +206,6 @@ namespace BackToTheFutureV
         {
             if (Properties.IsRemoteControlled)
             {
-                Properties.IsRemoteControlled = false;
-
                 if (TimeMachine.OriginalPed == null)
                 {
                     return;
@@ -239,6 +247,7 @@ namespace BackToTheFutureV
                     Function.Call(Hash.SET_FOLLOW_PED_CAM_VIEW_MODE, 4);
                 }
 
+                Properties.IsRemoteControlled = false;
                 //RCProp?.Dispose();
             }
         }
@@ -285,6 +294,9 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
+            if (Properties.IsWayback)
+                return;
+
             if (!Properties.IsRemoteControlled)
             {
                 if (_handleBoost)
@@ -335,11 +347,6 @@ namespace BackToTheFutureV
             {
                 RemoteTimeMachineHandler.StopRemoteControl();
             }
-
-            //// When u go too far from clone ped, game removes collision under him and 
-            ////  he falls through the ground, so if player is 50 we freeze clone
-            //var isCloneFreezed = CommonSettings.PlayerPed.Position.DistanceToSquared(OriginalPed.Position) >= 50*50;
-            //Function.Call(Hash.FREEZE_ENTITY_POSITION, OriginalPed, isCloneFreezed);
 
             Vector3 origPos = TimeMachine.OriginalPed.Position;
             Vector3 carPos = Vehicle.Position;
@@ -400,7 +407,7 @@ namespace BackToTheFutureV
 
         public override void Dispose()
         {
-            if (Properties.IsRemoteControlled)
+            if (Properties.IsRemoteControlled && !Properties.IsWayback)
             {
                 RemoteTimeMachineHandler.StopRemoteControl(true);
             }

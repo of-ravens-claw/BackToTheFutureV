@@ -53,12 +53,12 @@ namespace BackToTheFutureV
         public TimeMachine(Vehicle vehicle, WormholeType wormholeType)
         {
             Vehicle = vehicle;
-            HoverVehicle = HoverVehicle.GetFromVehicle(vehicle);
-
-            HoverVehicle.SoftLock = true;
+            HoverVehicle = HoverVehicle.GetFromVehicle(vehicle);            
 
             if (vehicle.Model == ModelHandler.DMC12)
             {
+                HoverVehicle.SoftLock = true;
+
                 DMC12 = DMC12Handler.GetDeloreanFromVehicle(vehicle);
 
                 if (DMC12 == null)
@@ -96,11 +96,13 @@ namespace BackToTheFutureV
             registeredHandlers.Add("SparksHandler", new SparksHandler(this));
 
             registeredHandlers.Add("RailroadHandler", new RailroadHandler(this));
+            registeredHandlers.Add("LightningStrikeHandler", new LightningStrikeHandler(this));
+
+            if (Mods.IsDMC12 || Vehicle.Model == ModelHandler.Deluxo /*|| Vehicle.Model == "dproto"*/)
+                registeredHandlers.Add("FlyingHandler", new FlyingHandler(this));
 
             if (Mods.IsDMC12)
             {
-                registeredHandlers.Add("FlyingHandler", new FlyingHandler(this));
-                registeredHandlers.Add("LightningStrikeHandler", new LightningStrikeHandler(this));
                 registeredHandlers.Add("FuelHandler", new FuelHandler(this));
                 registeredHandlers.Add("SIDHandler", new SIDHandler(this));
                 registeredHandlers.Add("FluxCapacitorHandler", new FluxCapacitorHandler(this));
@@ -126,7 +128,7 @@ namespace BackToTheFutureV
 
             Events.OnWormholeTypeChanged += UpdateBlip;
 
-            if (Vehicle.Model == ModelHandler.Deluxo /*|| (Main.DeluxoProtoSupport && vehicle.Model == "dproto")*/)
+            if (Vehicle.Model == ModelHandler.Deluxo /*|| Main.DeluxoProtoSupport && Vehicle.Model == "dproto"*/)
             {
                 Mods.HoverUnderbody = ModState.On;
             }
@@ -241,7 +243,9 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (TimeMachineHandler.CurrentTimeMachine == this && Properties.IsWayback)
+            // TODO: Figure out how to iterate WaybackMachines to find the one using this and stop it/time paradox it
+            // If we don't, then the ApplyToWayback check will just override this and we'll end up in a huge loop
+            if (TimeMachineHandler.CurrentTimeMachine == this && FusionUtils.PlayerPed.SeatIndex == VehicleSeat.Driver && Properties.IsWayback)
                 Properties.IsWayback = false;
 
             //After reentry, story time machines spawn in an odd state. This code fixes the inability for player to enter the time machine from the mineshaft
@@ -272,7 +276,7 @@ namespace BackToTheFutureV
                 VehicleControl.SetDeluxoTransformation(Vehicle, 0f);
             }
 
-            if (Properties.TimeTravelPhase > TimeTravelPhase.OpeningWormhole | Properties.IsRemoteControlled)
+            if (Properties.TimeTravelPhase > TimeTravelPhase.OpeningWormhole || Properties.IsRemoteControlled)
             {
                 Vehicle.LockStatus = VehicleLockStatus.PlayerCannotLeaveCanBeBrokenIntoPersist;
             }
@@ -281,27 +285,18 @@ namespace BackToTheFutureV
                 Vehicle.LockStatus = VehicleLockStatus.None;
             }
 
+            if (Mods.Wheel == WheelType.RailroadInvisible && Props != null && !Props.RRWheels.IsSpawned)
+            {
+                if (Mods.Wheels.Burst != true && !Properties.IsOnTracks)
+                    Mods.Wheels.Burst = true;
+
+                if (Vehicle.IsVisible)
+                    Props?.RRWheels?.SpawnProp();
+            }
+
             if (Mods.IsDMC12)
             {
                 Vehicle.IsRadioEnabled = false;
-
-                //In certain situations car can't be entered after hover transformation, here is forced enter task.
-                if (FusionUtils.PlayerVehicle == null && Game.IsControlJustPressed(GTA.Control.Enter) && TimeMachineHandler.ClosestTimeMachine == this && TimeMachineHandler.SquareDistToClosestTimeMachine <= 15 && World.GetClosestVehicle(FusionUtils.PlayerPed.Position, TimeMachineHandler.SquareDistToClosestTimeMachine) == this)
-                {
-                    if (Function.Call<Vehicle>(Hash.GET_VEHICLE_PED_IS_ENTERING, FusionUtils.PlayerPed) != Vehicle || Vehicle.Driver != null)
-                    {
-                        if (Vehicle.Driver != null)
-                        {
-                            TaskSequence taskSequence = new TaskSequence();
-                            taskSequence.AddTask.LeaveVehicle(LeaveVehicleFlags.WarpOut);
-                            taskSequence.AddTask.WanderAround();
-
-                            Vehicle.Driver.Task.PerformSequence(taskSequence);
-                        }
-
-                        FusionUtils.PlayerPed.Task.EnterVehicle(Vehicle, VehicleSeat.Driver);
-                    }
-                }
 
                 VehicleWindowCollection windows = Vehicle.Windows;
                 windows[VehicleWindowIndex.BackLeftWindow].Remove();
@@ -370,13 +365,7 @@ namespace BackToTheFutureV
             foreach (KeyValuePair<string, HandlerPrimitive> entry in registeredHandlers)
             {
                 entry.Value.Tick();
-
-                //if (TimeMachineHandler.CurrentTimeMachine == this)
-                //    Main.CustomStopwatch.WriteAndReset(entry.Key);
             }
-
-            //if (TimeMachineHandler.CurrentTimeMachine == this)
-            //    Main.CustomStopwatch.Stop();
 
             if (Properties.Boost != 0)
             {
@@ -580,7 +569,7 @@ namespace BackToTheFutureV
                 }
             }*/
 
-            Properties.IsPhotoModeOn = Properties.PhotoWormholeActive | Properties.PhotoGlowingCoilsActive | Properties.PhotoFluxCapacitorActive | Properties.IsEngineStalling | Properties.PhotoSIDMaxActive;
+            Properties.IsPhotoModeOn = Properties.PhotoWormholeActive || Properties.PhotoGlowingCoilsActive || Properties.PhotoFluxCapacitorActive || Properties.PhotoEngineStallActive || Properties.PhotoSIDMaxActive;
         }
 
         public void KeyDown(KeyEventArgs e)

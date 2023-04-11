@@ -20,7 +20,6 @@ namespace BackToTheFutureV
         public TimeTravelHandler(TimeMachine timeMachine) : base(timeMachine)
         {
             Events.StartTimeTravel += StartTimeTravel;
-            Events.SetCutsceneMode += SetCutsceneMode;
 
             if (Mods.IsDMC12)
             {
@@ -42,21 +41,13 @@ namespace BackToTheFutureV
 
         public static void TimeChanged(DateTime time)
         {
+            RemoteTimeMachineHandler.RemoteTimeMachines.ForEach(x => x.WasSpawned = false);
             TimeMachineHandler.ExistenceCheck(time);
             RemoteTimeMachineHandler.ExistenceCheck(time);
         }
 
-        public void SetCutsceneMode(bool cutsceneOn)
-        {
-            Properties.CutsceneMode = cutsceneOn;
-
-            TextHandler.Me.ShowHelp("TimeTravelModeChange", true, Properties.CutsceneMode ? TextHandler.Me.GetLocalizedText("Cutscene") : TextHandler.Me.GetLocalizedText("Instant"));
-        }
-
         public void StartTimeTravel(int delay = 0)
         {
-            Properties.TimeTravelPhase = TimeTravelPhase.InTime;
-
             gameTimer = Game.GameTime + delay;
             _currentStep = 0;
         }
@@ -101,7 +92,7 @@ namespace BackToTheFutureV
                         }
                         else
                         {
-                            if ((!Properties.CutsceneMode && !Properties.HasBeenStruckByLightning) || FusionUtils.IsCameraInFirstPerson())
+                            if ((!ModSettings.CutsceneMode && !Properties.HasBeenStruckByLightning) || FusionUtils.IsCameraInFirstPerson())
                             {
                                 Properties.TimeTravelType = TimeTravelType.Instant;
                             }
@@ -126,6 +117,7 @@ namespace BackToTheFutureV
 
                     if (Properties.TimeTravelType == TimeTravelType.Instant)
                     {
+                        RemoteTimeMachineHandler.RemoteTimeMachines.FindAll(x => x.TimeMachineClone.Properties.GUID == Properties.GUID).ForEach(x => x.TimeMachineClone.Properties.PlayerUsed = true);
                         // Create a copy of the current status of the time machine
                         TimeMachine.LastDisplacementClone = TimeMachine.Clone();
 
@@ -155,7 +147,8 @@ namespace BackToTheFutureV
 
                         Properties.TimeTravelDestPos = Vector3.Zero;
 
-                        Properties.NewGUID();
+                        if (!Properties.IsWayback)
+                            Properties.NewGUID();
 
                         TimeHandler.TimeTravelTo(Properties.DestinationTime);
 
@@ -179,6 +172,11 @@ namespace BackToTheFutureV
                     // If the Vehicle is remote controlled or the player is not the one in the driver seat
                     if (Properties.TimeTravelType == TimeTravelType.RC)
                     {
+                        if (!Properties.IsRemoteControlled)
+                            RemoteTimeMachineHandler.RemoteTimeMachines.FindAll(x => x.TimeMachineClone.Properties.GUID == Properties.GUID).FindLast(x => x.TimeMachineClone.Properties.PlayerUsed = true);
+                        else
+                            RemoteTimeMachineHandler.RemoteTimeMachines.FindAll(x => x.TimeMachineClone.Properties.GUID == Properties.GUID).FindLast(x => x.TimeMachineClone.Properties.PlayerUsed = false);
+
                         if (Mods.IsDMC12 && !Properties.IsFlying && !Properties.IsOnTracks && Mods.Plate == PlateType.Outatime)
                         {
                             Sounds.Plate?.Play();
@@ -204,6 +202,7 @@ namespace BackToTheFutureV
                         return;
                     }
 
+                    RemoteTimeMachineHandler.RemoteTimeMachines.FindAll(x => x.TimeMachineClone.Properties.GUID == Properties.GUID).ForEach(x => x.TimeMachineClone.Properties.PlayerUsed = true);
                     // Create a copy of the current status of the time machine
                     TimeMachine.LastDisplacementClone = TimeMachine.Clone();
 
@@ -239,7 +238,7 @@ namespace BackToTheFutureV
                     if (Properties.TimeTravelType == TimeTravelType.RC)
                     {
                         // Stop remote controlling
-                        if (Properties.IsRemoteControlled)
+                        if (Properties.IsRemoteControlled && !Properties.IsWayback)
                         {
                             RemoteTimeMachineHandler.StopRemoteControl();
                         }
@@ -276,7 +275,8 @@ namespace BackToTheFutureV
 
                     World.RenderingCamera = null;
 
-                    Properties.NewGUID();
+                    if (!Properties.IsWayback)
+                        Properties.NewGUID();
 
                     if (TimeHandler.RealTime)
                     {
@@ -337,7 +337,8 @@ namespace BackToTheFutureV
         {
             if (e.KeyCode == ModControls.CutsceneToggle)
             {
-                Events.SetCutsceneMode?.Invoke(!Properties.CutsceneMode);
+                ModSettings.CutsceneMode = !ModSettings.CutsceneMode;
+                TextHandler.Me.ShowHelp("TimeTravelModeChange", true, ModSettings.CutsceneMode ? TextHandler.Me.GetLocalizedText("Cutscene") : TextHandler.Me.GetLocalizedText("Instant"));
             }
         }
     }

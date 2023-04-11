@@ -57,7 +57,8 @@ namespace BackToTheFutureV
 
         public void OnReenterEnded()
         {
-            StartFreezeHandling();
+            if ((FusionUtils.CurrentTime.AddSeconds(-FusionUtils.CurrentTime.Second) - Properties.DestinationTime).TotalMinutes <= 1)
+                StartFreezeHandling();
         }
 
         public void StartFreezeHandling(bool fuelNotify = true, bool resume = false)
@@ -225,6 +226,7 @@ namespace BackToTheFutureV
             _gameTimer = 0;
             _smokeIndex = 0;
             _doingFreezingSequence = false;
+            Properties.IsDefrosting = false;
             Properties.IsFreezed = false;
 
             Sounds.Ice?.Stop(!Vehicle.IsVisible);

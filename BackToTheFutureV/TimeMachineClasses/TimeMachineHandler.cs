@@ -131,7 +131,6 @@ namespace BackToTheFutureV
                 _timeMachinesToRemove.Add(vehicle, deleteVeh);
                 Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Game.Player, true);
                 PlayerSwitch.Disable = false;
-                Function.Call(Hash.SET_PLAYER_CAN_DO_DRIVE_BY, Game.Player, true);
             }
         }
 
@@ -159,7 +158,6 @@ namespace BackToTheFutureV
                 RemoveTimeMachine(veh);
                 Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Game.Player, true);
                 PlayerSwitch.Disable = false;
-                Function.Call(Hash.SET_PLAYER_CAN_DO_DRIVE_BY, Game.Player, true);
             }
         }
 
@@ -217,7 +215,13 @@ namespace BackToTheFutureV
 
             if (spawnFlags.HasFlag(SpawnFlags.ForceReentry))
             {
-                spawnPos = ped.GetOffsetPosition(new Vector3(0, 25, 0));
+                // First check to see if player is underground and spawn at same height if so
+                // If not we check an offset in the sky then set to ground height to get proper ground to spawn on
+                if (ped.Position.Z < ped.GetOffsetPosition(new Vector3(0, 0, 1000)).SetToGroundHeight().Z + 1)
+                    spawnPos = ped.GetOffsetPosition(new Vector3(0, 25, 0));
+                else
+                    spawnPos = ped.GetOffsetPosition(new Vector3(0, 25, 1000)).SetToGroundHeight();
+
                 heading = ped.Heading + 180;
             }
 
@@ -234,6 +238,16 @@ namespace BackToTheFutureV
             if (timeMachineClone != default && timeMachineClone.Properties.TimeTravelType == TimeTravelType.RC)
             {
                 spawnFlags |= SpawnFlags.NoDriver;
+            }
+
+            if (timeMachineClone != default && timeMachineClone.Properties.HasBeenStruckByLightning)
+            {
+                spawnFlags |= SpawnFlags.NoOccupants;
+            }
+
+            if (timeMachineClone != default && timeMachineClone.Vehicle.Model == ModelHandler.DMC12)
+            {
+                spawnFlags |= SpawnFlags.NoMods;
             }
 
             if (veh == null)
@@ -284,32 +298,35 @@ namespace BackToTheFutureV
             {
                 timeMachine.Vehicle.SetVisible(false);
 
-                timeMachine.Properties.DestinationTime = FusionUtils.CurrentTime.AddSeconds(-FusionUtils.CurrentTime.Second);
-
-                if (timeMachine.Mods.WormholeType == WormholeType.BTTF2 && spawnFlags.HasFlag(SpawnFlags.ForceReentry | SpawnFlags.New))
+                if (spawnFlags.HasFlag(SpawnFlags.New))
                 {
-                    timeMachine.Properties.PreviousTime = new DateTime(2015, 10, 22, 19, 45, 0);
-                }
+                    if (!ModSettings.WaybackSystem)
+                    {
+                        timeMachine.Properties.DestinationTime = FusionUtils.CurrentTime.AddSeconds(-FusionUtils.CurrentTime.Second);
+                    }
+                    else
+                    {
+                        timeMachine.Properties.DestinationTime = FusionUtils.CurrentTime;
+                    }
 
-                if (timeMachine.Mods.WormholeType == WormholeType.BTTF3 && spawnFlags.HasFlag(SpawnFlags.ForceReentry | SpawnFlags.New))
-                {
-                    timeMachine.Properties.AreHoodboxCircuitsReady = true;
-                    timeMachine.Properties.PreviousTime = new DateTime(1955, 11, 16, 10, 20, 0);
+                    if (timeMachine.Mods.WormholeType == WormholeType.BTTF2)
+                    {
+                        timeMachine.Properties.PreviousTime = new DateTime(2015, 10, 22, 19, 45, 0);
+                    }
+
+                    if (timeMachine.Mods.WormholeType == WormholeType.BTTF3)
+                    {
+                        timeMachine.Properties.AreHoodboxCircuitsReady = true;
+                        timeMachine.Properties.PreviousTime = new DateTime(1955, 11, 16, 10, 20, 0);
+                    }
                 }
 
                 timeMachine.Events.SetTimeCircuits?.Invoke(true);
 
-                if (ModSettings.WaybackSystem && spawnFlags.HasFlag(SpawnFlags.ForceReentry | SpawnFlags.New))
-                {
-                    TimeMachineClone _new = timeMachine.Clone();
-                    _new.Properties.IsWayback = true;
-                    RemoteTimeMachineHandler.AddRemote(_new);
-                }
-
                 timeMachine.Events.OnReenterStarted?.Invoke();
             }
 
-            if (timeMachine.Vehicle.Occupants.Length == 0 && timeMachine.Properties.IsFlying)
+            if (timeMachine.Vehicle.IsSeatFree(VehicleSeat.Driver) && timeMachine.Properties.IsFlying)
             {
                 timeMachine.Events.SetFlyMode.Invoke(false);
             }
@@ -464,7 +481,6 @@ namespace BackToTheFutureV
 
             if (CurrentTimeMachine != null && !FusionUtils.PlayerVehicle.IsFunctioning())
             {
-                Function.Call(Hash.SET_PLAYER_CAN_DO_DRIVE_BY, Game.Player, true);
                 Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Game.Player, true);
                 PlayerSwitch.Disable = false;
                 CurrentTimeMachine = null;
@@ -495,11 +511,6 @@ namespace BackToTheFutureV
                     if (!CurrentTimeMachine.Properties.HUDProperties.IsHUDVisible)
                     {
                         CurrentTimeMachine.Properties.HUDProperties.IsHUDVisible = true;
-                    }
-
-                    if (CurrentTimeMachine.Mods.HoverUnderbody == ModState.On)
-                    {
-                        Function.Call(Hash.SET_PLAYER_CAN_DO_DRIVE_BY, Game.Player, false);
                     }
 
                     return;

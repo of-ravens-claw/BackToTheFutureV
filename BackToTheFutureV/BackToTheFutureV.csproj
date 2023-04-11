@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProjectGuid>{7BE2F39B-E0F1-4F7D-B674-BC595E4AF50D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -197,20 +197,14 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EasyHook">
-      <Version>2.7.7097</Version>
-    </PackageReference>
     <PackageReference Include="FusionLibrary.SHVDN3">
-      <Version>1.6.3</Version>
+      <Version>1.6.5</Version>
     </PackageReference>
     <PackageReference Include="LemonUI.SHVDN3">
-      <Version>1.9.1</Version>
+      <Version>1.9.4</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
       <Version>2.2.2</Version>
-    </PackageReference>
-    <PackageReference Include="MinHook.NET">
-      <Version>1.1.1</Version>
     </PackageReference>
     <PackageReference Include="ScriptHookVDotNet3">
       <Version>3.6.0</Version>

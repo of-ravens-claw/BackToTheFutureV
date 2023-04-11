@@ -26,6 +26,8 @@ namespace BackToTheFutureV
         private readonly AnimateProp oilNeedle;
         private readonly AnimateProp voltNeedle;
         private readonly AnimateProp doorIndicator;
+        private readonly AnimateProp domeLightOff;
+        private readonly AnimateProp domeLightOn;
         private readonly AnimateProp leftFan;
         private readonly AnimateProp rightFan;
 
@@ -96,6 +98,8 @@ namespace BackToTheFutureV
             oilNeedle = new AnimateProp(ModelHandler.OilNeedle, Vehicle, "oil_needle");
             voltNeedle = new AnimateProp(ModelHandler.VoltageNeedle, Vehicle, "voltage_needle");
             doorIndicator = new AnimateProp(ModelHandler.DoorIndicator, Vehicle, Vector3.Zero, Vector3.Zero);
+            domeLightOff = new AnimateProp(ModelHandler.DomeLightOff, Vehicle, "chassis");
+            domeLightOn = new AnimateProp(ModelHandler.DomeLightOn, Vehicle, "chassis");
             leftFan = new AnimateProp(ModelHandler.RadiatorFan, Vehicle, "radiator_fan_l");
             rightFan = new AnimateProp(ModelHandler.RadiatorFan, Vehicle, "radiator_fan_r");
 
@@ -111,6 +115,7 @@ namespace BackToTheFutureV
             oilNeedle.SpawnProp();
             voltNeedle.SpawnProp();
             doorIndicator.SpawnProp();
+            domeLightOff.SpawnProp();
             leftFan.SpawnProp();
             rightFan.SpawnProp();
 
@@ -144,11 +149,11 @@ namespace BackToTheFutureV
             Then, we check to see if the DMC-12 is a time machine, is not null and exists, and make sure it doesn't have hover since hover conversion also uses the duck key.
             Finally, we make sure that no ingame menus are open since the duck key on controller is also the select button in menus.
             We also check to see if the player is in first-person since the required animations are completely different.*/
-            if (MenuHandler.closingTime < Game.GameTime && ClockHandler.finishTime < Game.GameTime && Vehicle.Driver != null && Vehicle.Driver.IsVisible)
+            if (ClockHandler.finishTime < Game.GameTime && Vehicle.Driver != null && Vehicle.Driver.IsVisible)
             {
                 if ((Game.IsControlPressed(Control.VehicleDuck) || forcedDucking) && FusionUtils.PlayerPed.IsFullyInVehicle() && ((_isTimeMachine && TimeMachineHandler.CurrentTimeMachine.NotNullAndExists() && TimeMachineHandler.CurrentTimeMachine.Mods.HoverUnderbody == InternalEnums.ModState.Off) || !_isTimeMachine) && GarageHandler.Status != InternalEnums.GarageStatus.Busy && !MenuHandler.IsAnyMenuOpen() && !isDucking && !FusionUtils.IsCameraInFirstPerson())
                 {
-                    FusionUtils.PlayerPed.Task?.PlayAnimation("veh@low@front_ds@idle_duck", "sit", -3.5f, 3.5f, -1, AnimationFlags.Secondary, 1f);
+                    FusionUtils.PlayerPed.Task?.PlayAnimation("veh@low@front_ds@idle_duck", "sit", 3.5f, 3.5f, -1, AnimationFlags.Secondary, 1f);
                     isDucking = true;
                     duckEnded = false;
                 }
@@ -164,7 +169,7 @@ namespace BackToTheFutureV
                     duckEnded = true;
                 }
 
-                if ((Game.IsControlPressed(Control.VehicleDuck) || forcedDucking) && FusionUtils.PlayerPed.IsFullyInVehicle() && ((_isTimeMachine && TimeMachineHandler.CurrentTimeMachine.NotNullAndExists() && TimeMachineHandler.CurrentTimeMachine.Mods.HoverUnderbody == InternalEnums.ModState.Off) || !_isTimeMachine) && GarageHandler.Status != InternalEnums.GarageStatus.Busy && !MenuHandler.IsAnyMenuOpen() && !isDucking && FusionUtils.IsCameraInFirstPerson())
+                if (forcedDucking && FusionUtils.PlayerPed.IsFullyInVehicle() && ((_isTimeMachine && TimeMachineHandler.CurrentTimeMachine.NotNullAndExists() && TimeMachineHandler.CurrentTimeMachine.Mods.HoverUnderbody == InternalEnums.ModState.Off) || !_isTimeMachine) && GarageHandler.Status != InternalEnums.GarageStatus.Busy && !MenuHandler.IsAnyMenuOpen() && !isDucking && FusionUtils.IsCameraInFirstPerson())
                 {
                     if (!fpsSetup)
                     {
@@ -178,7 +183,7 @@ namespace BackToTheFutureV
                         fpsSetup = true;
                     }
                 }
-                else if (isDucking && !(Game.IsControlPressed(Control.VehicleDuck) || forcedDucking) && FusionUtils.IsCameraInFirstPerson())
+                else if (isDucking && !forcedDucking && FusionUtils.IsCameraInFirstPerson())
                 {
                     if (!fpsEnded)
                     {
@@ -212,14 +217,26 @@ namespace BackToTheFutureV
             if (!Vehicle.Doors[VehicleDoorIndex.FrontLeftDoor].IsOpen && !Vehicle.Doors[VehicleDoorIndex.FrontRightDoor].IsOpen && Vehicle.Bones["interiorlight"].Pose != InteriorLightOffPose)
             {
                 Vehicle.Bones["interiorlight"].Pose = InteriorLightOffPose;
+                if (!domeLightOff.IsSpawned)
+                {
+                    domeLightOn.Delete();
+                    domeLightOff.SpawnProp();
+                }
             }
             else if ((Vehicle.Doors[VehicleDoorIndex.FrontLeftDoor].IsOpen || Vehicle.Doors[VehicleDoorIndex.FrontRightDoor].IsOpen) && Vehicle.Bones["interiorlight"].Pose != InteriorLightOnPose)
             {
                 Vehicle.Bones["interiorlight"].Pose = InteriorLightOnPose;
+                if (!domeLightOn.IsSpawned)
+                {
+                    domeLightOff.Delete();
+                    domeLightOn.SpawnProp();
+                }
             }
 
             if (FusionUtils.PlayerVehicle == Vehicle)
             {
+                Game.DisableControlThisFrame(Control.VehicleSpecial);
+                Game.DisableControlThisFrame(Control.VehicleRoof);
                 Game.DisableControlThisFrame(Control.VehicleHydraulicsControlToggle);
                 Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, Vehicle, false);
                 HandleDucking();

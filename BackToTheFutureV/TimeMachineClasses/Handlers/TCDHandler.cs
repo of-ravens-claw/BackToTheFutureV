@@ -273,7 +273,7 @@ namespace BackToTheFutureV
 
         public override void KeyDown(KeyEventArgs e)
         {
-            if (e.KeyCode == ModControls.TCToggle && !Properties.IsRemoteControlled && !Game.IsMissionActive)
+            if ((e.KeyCode == ModControls.TCToggle || e.KeyCode == Keys.Oemplus && ModControls.TCToggle == Keys.Add) && !Properties.IsRemoteControlled && !Game.IsMissionActive && Properties.TimeTravelPhase <= TimeTravelPhase.OpeningWormhole)
             {
                 SetTimeCircuitsOn(!Properties.AreTimeCircuitsOn);
             }
@@ -373,7 +373,7 @@ namespace BackToTheFutureV
                     return;
                 }
 
-                if (Properties.AreTimeCircuitsOn == true)
+                if (Properties.AreTimeCircuitsOn == true && !Properties.IsRemoteControlled)
                 {
                     if (Vehicle.Health < 991)
                     {
@@ -400,7 +400,7 @@ namespace BackToTheFutureV
                 return;
             }
 
-            ScaleformsHandler.GUI.SetSpeedoBackground(ConvertFromModState(Mods.Speedo));
+            ScaleformsHandler.GUI.SetSpeedoBackground(ConvertFromModState(Mods.Speedo) || Properties.ThreeDigit2D);
             ScaleformsHandler.GUI.SetBackground(ModSettings.TCDBackground);
             ScaleformsHandler.GUI.SetEmpty(Properties.HUDProperties.Empty);
             ScaleformsHandler.GUI.Draw2D();
@@ -435,7 +435,7 @@ namespace BackToTheFutureV
 
         public void SetTimeCircuitsOn(bool on)
         {
-            if (Properties.TimeTravelPhase > TimeTravelPhase.OpeningWormhole | TcdEditer.IsEditing | RCGUIEditer.IsEditing)
+            if (TcdEditer.IsEditing || RCGUIEditer.IsEditing)
             {
                 return;
             }

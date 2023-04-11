@@ -24,11 +24,6 @@ namespace BackToTheFutureV
         public void OnReenterStarted()
         {
             Properties.TimeTravelPhase = TimeTravelPhase.Reentering;
-
-            if (Driver != null && Driver == FusionUtils.PlayerPed)
-            {
-                Properties.PlayerUsed = true;
-            }
         }
 
         public override void Tick()
@@ -58,6 +53,12 @@ namespace BackToTheFutureV
             switch (_currentStep)
             {
                 case 0:
+
+                    if ((FusionUtils.CurrentTime.AddSeconds(-FusionUtils.CurrentTime.Second) - Properties.DestinationTime).TotalMinutes > 0)
+                    {
+                        _currentStep = 3;
+                        break;
+                    }
 
                     Sounds.Reenter?.Play();
 
@@ -136,11 +137,11 @@ namespace BackToTheFutureV
 
         private void OnReenterEnded()
         {
-            if (Driver == FusionUtils.PlayerPed)
+            if (Driver == FusionUtils.PlayerPed && ModSettings.WaybackSystem)
             {
-                if (ModSettings.WaybackSystem)
-                    TimeMachine.LastDisplacementClone.Properties.IsWayback = true;
-
+                // Remake the clone so it has the proper GUID for Wayback
+                TimeMachine.LastDisplacementClone = TimeMachine.Clone();
+                TimeMachine.LastDisplacementClone.Properties.IsWayback = true;
                 RemoteTimeMachineHandler.AddRemote(TimeMachine.LastDisplacementClone);
             }
 
@@ -148,13 +149,13 @@ namespace BackToTheFutureV
 
             DMC12?.SetVoltValue?.Invoke(50);
 
-            FusionUtils.HideGUI = false;
-
-            PlayerSwitch.Disable = false;
-
-            Game.Player.IgnoredByPolice = false;
-
-            Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, 0);
+            if (Driver == FusionUtils.PlayerPed)
+            {
+                FusionUtils.HideGUI = false;
+                PlayerSwitch.Disable = false;
+                Game.Player.IgnoredByPolice = false;
+                Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, 0);
+            }
 
             if (!Properties.WasOnTracks)
             {
@@ -172,14 +173,12 @@ namespace BackToTheFutureV
 
                 Properties.PhotoFluxCapacitorActive = false;
 
+                if (Mods.Hook != HookState.On && Mods.Hoodbox != ModState.On)
+                    Events.SetTimeCircuitsBroken?.Invoke();
+
                 if (Properties.IsFlying)
                 {
                     Properties.AreFlyingCircuitsBroken = true;
-
-                    if (!Mods.IsDMC12 || Mods.Hoodbox == ModState.Off)
-                    {
-                        Events.SetTimeCircuitsBroken?.Invoke();
-                    }
                 }
                 else
                 {
@@ -197,13 +196,13 @@ namespace BackToTheFutureV
                 Vehicle.IsHandbrakeForcedOn = true;
                 Vehicle.Speed /= 2;
 
-                VehicleControl.SetBrake(Vehicle, 1f);
+                Vehicle.BrakePower = 1f;
 
                 _handbrakeTimer = 0;
             }
 
-            //Function.Call(Hash.SPECIAL_ABILITY_UNLOCK, CommonSettings.PlayerPed.Model);
-            Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Game.Player, true);
+            if (Driver == FusionUtils.PlayerPed)
+                Function.Call(Hash.ENABLE_SPECIAL_ABILITY, Game.Player, true);
 
             if (Driver != null && Driver != FusionUtils.PlayerPed)
             {

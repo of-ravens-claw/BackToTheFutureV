@@ -1,6 +1,8 @@
 ﻿using FusionLibrary;
 using FusionLibrary.Extensions;
 using GTA;
+using GTA.Native;
+using static BackToTheFutureV.InternalEnums;
 using static FusionLibrary.FusionEnums;
 
 namespace BackToTheFutureV
@@ -9,13 +11,19 @@ namespace BackToTheFutureV
     {
         public VehicleReplica Replica { get; }
 
+        public WaybackVehicleEvent Event { get; set; } = WaybackVehicleEvent.None;
+
+        public int TimeTravelDelay { get; set; }
+
         public bool IsTimeMachine { get; }
 
         public PropertiesHandler Properties { get; }
 
+        public ModsPrimitive Mods { get; }
+
         public WaybackVehicle(Vehicle vehicle)
         {
-            Replica = new VehicleReplica(vehicle, SpawnFlags.NoDriver);
+            Replica = new VehicleReplica(vehicle);
 
             TimeMachine timeMachine = TimeMachineHandler.GetTimeMachineFromVehicle(vehicle);
 
@@ -27,11 +35,17 @@ namespace BackToTheFutureV
             IsTimeMachine = true;
 
             Properties = timeMachine.Properties.Clone();
+            Mods = timeMachine.Mods.Clone();
         }
 
         private Vehicle Spawn()
         {
-            Vehicle vehicle = Replica.Spawn(SpawnFlags.Default);
+            SpawnFlags _spawnFlag = SpawnFlags.Default;
+
+            if (Replica.Model == ModelHandler.DMC12)
+                _spawnFlag = SpawnFlags.NoMods;
+
+            Vehicle vehicle = Replica.Spawn(_spawnFlag);
 
             vehicle.SetPlayerLights(true);
 
@@ -43,6 +57,7 @@ namespace BackToTheFutureV
             TimeMachine timeMachine = TimeMachineHandler.Create(vehicle);
 
             Properties.ApplyTo(timeMachine);
+            Mods.ApplyTo(timeMachine);
 
             return vehicle;
         }
@@ -89,14 +104,28 @@ namespace BackToTheFutureV
                 return null;
             }
 
-            SpawnFlags spawnFlags = SpawnFlags.Default;
-
-            if (ped.NotNullAndExists() && (ped.IsEnteringVehicle() || ped.IsLeavingVehicle()))
+            if (FusionUtils.PlayerPed.NotNullAndExists() && FusionUtils.PlayerPed.DistanceToSquared2D(vehicle.Position) > 25000)
             {
-                spawnFlags |= SpawnFlags.NoPosition;
+                Function.Call(Hash.REQUEST_COLLISION_AT_COORD, vehicle.Position.X, vehicle.Position.Y, vehicle.Position.Z);
+            }
+
+            SpawnFlags spawnFlags = SpawnFlags.NoPosition | SpawnFlags.SetRotation | SpawnFlags.NoWheels;
+
+            if (nextReplica == null || vehicle.Driver == null || vehicle.Position.DistanceToSquared2D(nextReplica.Position) > 5)
+            {
+                spawnFlags = SpawnFlags.Default;
+
+                if ((ped.NotNullAndExists() && (ped.IsEnteringVehicle() || ped.IsLeavingVehicle())) || (vehicle.IsTimeMachine() &&
+                    TimeMachineHandler.GetTimeMachineFromVehicle(vehicle).Properties.IsRemoteControlled))
+                {
+                    spawnFlags = SpawnFlags.NoPosition | SpawnFlags.SetRotation | SpawnFlags.NoWheels;
+                }
             }
 
             TimeMachine timeMachine = TimeMachineHandler.GetTimeMachineFromVehicle(vehicle);
+
+            if (IsTimeMachine && timeMachine.NotNullAndExists())
+                spawnFlags |= SpawnFlags.NoMods;
 
             if (IsTimeMachine && timeMachine.NotNullAndExists() && Properties.IsOnTracks)
             {
@@ -124,9 +153,27 @@ namespace BackToTheFutureV
                 timeMachine = TimeMachineHandler.Create(vehicle);
 
                 Properties.ApplyTo(timeMachine);
+                Mods.ApplyTo(timeMachine);
             }
 
             Properties.ApplyToWayback(timeMachine);
+
+            if (Event == WaybackVehicleEvent.RcHandbrakeOn)
+            {
+                vehicle.IsBurnoutForced = true;
+                vehicle.CanTiresBurst = false;
+            }
+            
+            if (Event == WaybackVehicleEvent.RcHandbrakeOff)
+            {
+                vehicle.IsBurnoutForced = false;
+                vehicle.CanTiresBurst = true;
+            }
+
+            if (Event == WaybackVehicleEvent.TimeTravel)
+            {
+                timeMachine.Events.OnSparksEnded?.Invoke(TimeTravelDelay);
+            }
 
             return vehicle;
         }

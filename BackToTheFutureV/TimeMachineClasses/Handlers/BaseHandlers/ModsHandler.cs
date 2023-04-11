@@ -88,12 +88,6 @@ namespace BackToTheFutureV
                 Wheel = wheelType;
             }
 
-            if (Wheel == WheelType.RailroadInvisible && Vehicle.IsVisible && TimeMachine.Props != null && !TimeMachine.Props.RRWheels.IsSpawned)
-            {
-                TimeMachine.Mods.Wheels.Burst = true;
-                TimeMachine.Props?.RRWheels?.SpawnProp();
-            }
-
             if (reactorType != Reactor)
             {
                 Reactor = reactorType;
@@ -201,6 +195,7 @@ namespace BackToTheFutureV
 
             if (Wheel == WheelType.Red && VehicleControl.GetWheelSize(Vehicle) != 1.1f)
             {
+                VehicleControl.SetWheelWidth(Vehicle, 0.976f);
                 VehicleControl.SetWheelSize(Vehicle, 1.1f);
                 Vehicle.Velocity += Vector3.UnitY * 0.3f;
             }
@@ -390,10 +385,10 @@ namespace BackToTheFutureV
                         Wheel = WheelType.Stock;
                     }
 
-                    if (TimeMachine.Vehicle.Model == ModelHandler.Deluxo /*|| TimeMachine.Vehicle.Model == "dproto"*/ && Wheel != WheelType.DMC && Wheel != WheelType.Red)
+                    /*if (TimeMachine.Vehicle.Model == "dproto" && Wheel != WheelType.DMC && Wheel != WheelType.Red)
                     {
                         Wheel = WheelType.DMC;
-                    }
+                    }*/
 
                     reload = SuspensionsType != SuspensionsType.Stock;
 

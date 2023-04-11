@@ -5,6 +5,7 @@ using GTA;
 using LemonUI.Menus;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using static BackToTheFutureV.InternalEnums;
 using static FusionLibrary.FusionEnums;
 
@@ -127,6 +128,13 @@ namespace BackToTheFutureV
                 {
                     timeMachine.Mods.Wheel = WheelType.RailroadInvisible;
                 }
+
+                if (ModSettings.WaybackSystem)
+                {
+                    TimeMachineClone _new = timeMachine.Clone();
+                    _new.Properties.IsWayback = true;
+                    RemoteTimeMachineHandler.AddRemote(_new).WasSpawned = true;
+                }
             }
 
             if (sender == convertIntoTimeMachine)
@@ -142,6 +150,14 @@ namespace BackToTheFutureV
                 {
                     TextHandler.Me.ShowNotification("NotSeated");
                     return;
+                }
+
+                foreach (RemoteTimeMachine del in RemoteTimeMachineHandler.RemoteTimeMachines.ToList())
+                {
+                    if (del.TimeMachineClone.Properties.GUID == timeMachine.Properties.GUID)
+                    {
+                        RemoteTimeMachineHandler.RemoteTimeMachines.Remove(del);
+                    }
                 }
 
                 TimeMachineHandler.RemoveTimeMachine(timeMachine);

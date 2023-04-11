@@ -1,8 +1,10 @@
 ﻿using FusionLibrary;
 using FusionLibrary.Extensions;
 using GTA;
+using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static BackToTheFutureV.InternalEnums;
 
 namespace BackToTheFutureV
@@ -40,6 +42,19 @@ namespace BackToTheFutureV
                 }
 
                 return Records[LastRecordedIndex];
+            }
+        }
+
+        public WaybackRecord PreviousRecording
+        {
+            get
+            {
+                if (LastRecordedIndex <= 0)
+                {
+                    return Records[0];
+                }
+
+                return Records[LastRecordedIndex - 1];
             }
         }
 
@@ -104,6 +119,26 @@ namespace BackToTheFutureV
             }
         }
 
+        private bool ArraysEqual(int[,] a1, int[,] a2, int size, bool comp)
+        {
+            for (int i = 0; i < size; i++)
+            {
+                if (a1[i, 0] != a2[i, 0])
+                {
+                    return false;
+                }
+                else if (a1[i, 1] != a2[i, 1])
+                {
+                    return false;
+                }
+                else if (comp && a1[i, 2] != a2[i, 2])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void Tick()
         {
             switch (Status)
@@ -125,7 +160,7 @@ namespace BackToTheFutureV
 
                         Status = WaybackStatus.Playing;
 
-                        if (!Ped.NotNullAndExists())
+                        if (!Ped.NotNullAndExists() && CurrentRecord?.Vehicle?.Event != WaybackVehicleEvent.TimeTravel)
                         {
                             Ped = CurrentRecord.Spawn(NextRecord);
                         }
@@ -144,7 +179,7 @@ namespace BackToTheFutureV
 
         private void Record()
         {
-            if ((IsPlayer && !FusionUtils.PlayerPed.IsAlive) || (!IsPlayer && !Ped.ExistsAndAlive()) || FusionUtils.CurrentTime < StartTime)
+            if ((IsPlayer && !FusionUtils.PlayerPed.IsAlive) || (!IsPlayer && !Ped.ExistsAndAlive()) || FusionUtils.CurrentTime < StartTime || Game.IsMissionActive)
             {
                 Stop();
                 return;
@@ -165,8 +200,41 @@ namespace BackToTheFutureV
 
             if (IsPlayer && PedHandle != FusionUtils.PlayerPed.Handle)
             {
-                waybackRecord.Ped.SwitchPed = true;
-                PedHandle = FusionUtils.PlayerPed.Handle;
+                if (FusionUtils.PlayerVehicle.NotNullAndExists() && FusionUtils.PlayerVehicle.IsTimeMachine() &&
+                    TimeMachineHandler.GetTimeMachineFromVehicle(FusionUtils.PlayerVehicle).Properties.IsRemoteControlled)
+                {
+                    // Do nothing if RC is active since we want Wayback to keep controlling the original ped
+                }
+                else
+                {
+                    PedHandle = FusionUtils.PlayerPed.Handle;
+                    waybackRecord.Ped.SwitchPed = true;
+                }
+            }
+
+            // We need to make sure any WaybackPed is removed from the WaybackVehicle since Wayback should control it
+            if (IsPlayer && FusionUtils.PlayerVehicle.NotNullAndExists())
+            {
+                foreach (PedReplica occupant in waybackRecord.Vehicle.Replica.Occupants.ToList())
+                {
+                    if (occupant.Model == waybackRecord.Ped.Replica.Model)
+                    {
+                        waybackRecord.Vehicle.Replica.Occupants.Remove(occupant);
+                    }
+                }
+            }
+
+            if (LastRecordedIndex > 0)
+            {
+                bool _sameComps = ArraysEqual(PreviousRecording.Ped.Replica.Components, waybackRecord.Ped.Replica.Components, 12, true);
+
+                bool _sameProps = ArraysEqual(PreviousRecording.Ped.Replica.Props, waybackRecord.Ped.Replica.Props, 5, false);
+
+                if (IsPlayer && (!_sameComps || !_sameProps))
+                    waybackRecord.Ped.SwitchedClothes = true;
+
+                if (IsPlayer && PreviousRecording.Ped.Replica.Weapons.Count != waybackRecord.Ped.Replica.Weapons.Count)
+                    waybackRecord.Ped.SwitchedWeapons = true;
             }
 
             Records.Add(waybackRecord);
@@ -199,6 +267,34 @@ namespace BackToTheFutureV
                 Ped = CurrentRecord.Spawn(NextRecord);
             }
 
+            if (CurrentRecord.Ped.SwitchedWeapons)
+            {
+                foreach (WeaponReplica x in CurrentRecord.Ped.Replica.Weapons)
+                {
+                    x.Give(Ped);
+                }
+            }
+
+            if (CurrentRecord.Ped.SwitchedClothes)
+            {
+                for (int x = 0; x < 12; x++)
+                {
+                    Function.Call(Hash.SET_PED_COMPONENT_VARIATION, Ped, x, CurrentRecord.Ped.Replica.Components[x, 0], CurrentRecord.Ped.Replica.Components[x, 1], CurrentRecord.Ped.Replica.Components[x, 2]);
+                }
+
+                for (int x = 0; x < 5; x++)
+                {
+                    if (x <= 2)
+                    {
+                        Function.Call(Hash.SET_PED_PROP_INDEX, Ped, x, CurrentRecord.Ped.Replica.Props[x, 0], CurrentRecord.Ped.Replica.Props[x, 1], true);
+                    }
+                    else
+                    {
+                        Function.Call(Hash.SET_PED_PROP_INDEX, Ped, x + 3, CurrentRecord.Ped.Replica.Props[x, 0], CurrentRecord.Ped.Replica.Props[x, 1], true);
+                    }
+                }
+            }
+
             CurrentRecord.Apply(Ped, NextRecord);
 
             if (CurrentIndex >= LastRecordedIndex)
@@ -216,7 +312,10 @@ namespace BackToTheFutureV
             if (Status == WaybackStatus.Recording && Records.Count > 0)
             {
                 StartTime = Records[0].Time;
-                EndTime = LastRecord.Time;
+                if (ModSettings.RealTime)
+                    EndTime = LastRecord.Time.AddSeconds(-2);
+                else
+                    EndTime = LastRecord.Time.AddMinutes(-1);
             }
 
             CurrentIndex = 0;

@@ -1,6 +1,7 @@
 ﻿using FusionLibrary;
 using GTA;
 using GTA.Native;
+using GTA.UI;
 using KlangRageAudioLibrary;
 using System;
 using System.Windows.Forms;
@@ -98,11 +99,15 @@ namespace BackToTheFutureV
 
             if (Game.IsLoading || FusionUtils.FirstTick)
             {
+                LoadingPrompt.Show("Loading BTTFV");
+                Screen.FadeOut(0);
                 return;
             }
 
             if (FirstTick && FusionUtils.CurrentTime == NewGameTime && Game.IsMissionActive)
             {
+                LoadingPrompt.Hide();
+                Screen.FadeIn(0);
                 FirstMission = true;
             }
 
@@ -117,13 +122,17 @@ namespace BackToTheFutureV
 
             if (FirstTick)
             {
-                ModelHandler.RequestModels();
+                while (!ModelHandler.RequestModels())
+                {
+                    LoadingPrompt.Show("Loading BTTFV");
+                }
 
                 //Disable fake shake of the cars.
                 Function.Call(Hash.SET_CAR_HIGH_SPEED_BUMP_SEVERITY_MULTIPLIER, 0);
 
                 FusionUtils.RandomTrains = ModSettings.RandomTrains;
                 TimeHandler.RealTime = ModSettings.RealTime;
+                TimeHandler.TrafficVolumeYearBased = ModSettings.YearTraffic;
 
                 DecoratorsHandler.Register();
                 WeatherHandler.Register();
@@ -141,8 +150,6 @@ namespace BackToTheFutureV
                     MaxSpawned = 3,
                     WaitBetweenSpawns = 10000
                 });
-
-                FirstTick = false;
             }
 
             CustomTrainHandler.Tick();
@@ -160,6 +167,13 @@ namespace BackToTheFutureV
             WeatherHandler.Tick();
 
             WaybackSystem.Tick();
+
+            if (FirstTick)
+            {
+                LoadingPrompt.Hide();
+                IntroHandler.Me.Start(true);
+                FirstTick = false;
+            }
         }
     }
 }

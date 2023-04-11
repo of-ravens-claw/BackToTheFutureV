@@ -21,7 +21,6 @@ namespace BackToTheFutureV
         public TimeTravelType TimeTravelType { get; set; } = TimeTravelType.Cutscene;
         public bool AreTimeCircuitsBroken { get; set; }
         private int reactorCharge = 1;
-        public bool CutsceneMode { get; set; } = true;
         public bool IsFreezed { get; set; }
         public bool IsDefrosting { get; set; }
         public float IceValue { get; set; }
@@ -40,6 +39,7 @@ namespace BackToTheFutureV
         public int OverrideTTSfxSpeed { get; set; }
         public int OverrideTTSpeed { get; set; }
         public int OverrideWormholeLengthTime { get; set; }
+        public bool ThreeDigit2D { get; set; }
 
 
         //Temporary properties
@@ -116,7 +116,6 @@ namespace BackToTheFutureV
             ret.TimeTravelType = TimeTravelType;
             ret.AreTimeCircuitsBroken = AreTimeCircuitsBroken;
             ret.ReactorCharge = ReactorCharge;
-            ret.CutsceneMode = CutsceneMode;
             ret.IsFreezed = IsFreezed;
             ret.IsDefrosting = IsDefrosting;
             ret.IceValue = IceValue;
@@ -126,6 +125,8 @@ namespace BackToTheFutureV
             ret.CanConvert = CanConvert;
             ret.AreFlyingCircuitsBroken = AreFlyingCircuitsBroken;
             ret.AreHoodboxCircuitsReady = AreHoodboxCircuitsReady;
+            ret.IsRemoteControlled = IsRemoteControlled;
+            ret.Boost = Boost;
             ret.IsOnTracks = IsOnTracks;
             ret.WasOnTracks = WasOnTracks;
             ret.HasBeenStruckByLightning = HasBeenStruckByLightning;
@@ -138,6 +139,7 @@ namespace BackToTheFutureV
             ret.OverrideTTSfxSpeed = OverrideTTSfxSpeed;
             ret.OverrideTTSpeed = OverrideTTSpeed;
             ret.OverrideWormholeLengthTime = OverrideWormholeLengthTime;
+            ret.ThreeDigit2D = ThreeDigit2D;
 
             return ret;
         }
@@ -156,7 +158,6 @@ namespace BackToTheFutureV
             timeMachine.Properties.TimeTravelType = TimeTravelType;
             timeMachine.Properties.AreTimeCircuitsBroken = AreTimeCircuitsBroken;
             timeMachine.Properties.reactorCharge = reactorCharge;
-            timeMachine.Properties.CutsceneMode = CutsceneMode;
             timeMachine.Properties.IsFreezed = IsFreezed;
             timeMachine.Properties.IsDefrosting = IsDefrosting;
             timeMachine.Properties.IceValue = IceValue;
@@ -174,6 +175,7 @@ namespace BackToTheFutureV
             timeMachine.Properties.OverrideTTSfxSpeed = OverrideTTSfxSpeed;
             timeMachine.Properties.OverrideTTSpeed = OverrideTTSpeed;
             timeMachine.Properties.OverrideWormholeLengthTime = OverrideWormholeLengthTime;
+            timeMachine.Properties.ThreeDigit2D = ThreeDigit2D;
 
             if (IsFlying)
             {
@@ -195,7 +197,10 @@ namespace BackToTheFutureV
 
         public void ApplyToWayback(TimeMachine timeMachine)
         {
-            timeMachine.Properties.IsWayback = true;
+            if (!timeMachine.Properties.IsWayback)
+            {
+                timeMachine.Properties.IsWayback = true;
+            }
 
             if (ReactorCharge != timeMachine.Properties.ReactorCharge)
             {
@@ -210,6 +215,16 @@ namespace BackToTheFutureV
             if (AreHoodboxCircuitsReady != timeMachine.Properties.AreHoodboxCircuitsReady)
             {
                 timeMachine.Properties.AreHoodboxCircuitsReady = AreHoodboxCircuitsReady;
+            }
+
+            if (IsRemoteControlled != timeMachine.Properties.IsRemoteControlled)
+            {
+                timeMachine.Properties.IsRemoteControlled = IsRemoteControlled;
+            }
+
+            if (Boost != timeMachine.Properties.Boost)
+            {
+                timeMachine.Properties.Boost = Boost;
             }
 
             if (AreTimeCircuitsOn != timeMachine.Properties.AreTimeCircuitsOn)

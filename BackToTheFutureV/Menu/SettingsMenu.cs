@@ -8,8 +8,8 @@ namespace BackToTheFutureV
     internal class SettingsMenu : BTTFVMenu
     {
         private readonly NativeCheckboxItem cinematicSpawn;
+        private readonly NativeCheckboxItem cutsceneMode;
         private readonly NativeCheckboxItem useInputToggle;
-        private readonly NativeCheckboxItem LandingSystem;
         private readonly NativeCheckboxItem InfiniteFuel;
         private readonly NativeCheckboxItem WaybackSystem;
         private readonly NativeCheckboxItem TimeParadox;
@@ -22,8 +22,8 @@ namespace BackToTheFutureV
         public SettingsMenu() : base("Settings")
         {
             cinematicSpawn = NewCheckboxItem("CinematicSpawn", ModSettings.CinematicSpawn);
+            cutsceneMode = NewCheckboxItem("Cutscene", ModSettings.CutsceneMode);
             useInputToggle = NewCheckboxItem("InputToggle", ModSettings.UseInputToggle);
-            LandingSystem = NewCheckboxItem("LandingSystem", ModSettings.LandingSystem);
             InfiniteFuel = NewCheckboxItem("InfinityReactor", ModSettings.InfiniteFuel);
             WaybackSystem = NewCheckboxItem("Wayback", ModSettings.WaybackSystem);
             TimeParadox = NewCheckboxItem("TimeParadox", ModSettings.TimeParadox);
@@ -60,11 +60,11 @@ namespace BackToTheFutureV
                 case NativeCheckboxItem _ when sender == cinematicSpawn:
                     ModSettings.CinematicSpawn = Checked;
                     break;
+                case NativeCheckboxItem _ when sender == cutsceneMode:
+                    ModSettings.CutsceneMode = Checked;
+                    break;
                 case NativeCheckboxItem _ when sender == useInputToggle:
                     ModSettings.UseInputToggle = Checked;
-                    break;
-                case NativeCheckboxItem _ when sender == LandingSystem:
-                    ModSettings.LandingSystem = Checked;
                     break;
                 case NativeCheckboxItem _ when sender == RandomTrains:
                     ModSettings.RandomTrains = Checked;
@@ -104,7 +104,7 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
-            TimeParadox.Enabled = WaybackSystem.Checked;
+            cutsceneMode.Checked = ModSettings.CutsceneMode;
         }
 
         public override void Menu_OnItemValueChanged(NativeSliderItem sender, EventArgs e)

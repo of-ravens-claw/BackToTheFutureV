@@ -13,6 +13,8 @@ namespace BackToTheFutureV
         public static CustomModel OilNeedle = new CustomModel("dmc12_oil_needle");
         public static CustomModel VoltageNeedle = new CustomModel("dmc12_voltage_needle");
         public static CustomModel DoorIndicator = new CustomModel("dmc12_door_indicator");
+        public static CustomModel DomeLightOff = new CustomModel("dmc12_intlight_off");
+        public static CustomModel DomeLightOn = new CustomModel("dmc12_intlight_on");
         public static CustomModel RadiatorFan = new CustomModel("dmc12_radiator_fan");
         public static CustomModel SuspensionFront = new CustomModel("suspension_lf_prop");
         public static CustomModel SuspensionRear = new CustomModel("suspension_lr_prop");
@@ -93,6 +95,9 @@ namespace BackToTheFutureV
         public static CustomModel DMCDebugModel = new CustomModel("dmc_debug");
         public static CustomModel FreightModel = new CustomModel("freight");
         public static CustomModel FreightCarModel = new CustomModel("freightcar");
+        public static CustomModel FreightContModel1 = new CustomModel("freightcont1");
+        public static CustomModel FreightContModel2 = new CustomModel("freightcont2");
+        public static CustomModel GrainCarModel = new CustomModel("freightgrain");
         public static CustomModel TankerCarModel = new CustomModel("tankercar");
 
         public static CustomModel Deluxo = new CustomModel("deluxo");

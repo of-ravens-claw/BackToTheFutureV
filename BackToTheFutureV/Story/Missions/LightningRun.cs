@@ -64,7 +64,7 @@ namespace BackToTheFutureV
         private Vector3 checkPos = new Vector3(-143.6626f, 6390.0047f, 30.7007f);
 
         public static DateTime StartTime { get; } = new DateTime(1955, 11, 12, 20, 0, 0);
-        public static DateTime EndTime { get; } = new DateTime(1955, 11, 12, 22, 4, 30);
+        public static DateTime EndTime { get; } = new DateTime(1955, 11, 13, 6, 0, 0);
         public static DateTime StrikeTime { get; } = new DateTime(1955, 11, 12, 22, 4, 0);
 
         private bool setup;
@@ -89,17 +89,17 @@ namespace BackToTheFutureV
 
         public override void KeyDown(KeyEventArgs key)
         {
-            if (key.KeyCode == Keys.U && !struck)
+            /*if (key.KeyCode == Keys.U && !struck)
             {
-                /*HookSetup(CurrentTimeMachine.Vehicle.Position);
-                struck = true;*/
+                HookSetup(TimeMachineHandler.ClosestTimeMachine.Vehicle.Position);
+                struck = true;
             }
             else if (key.KeyCode == Keys.U && struck)
             {
-                /*Hook?.Delete();
+                Hook?.Delete();
                 _firstTick = true;
-                struck = false;*/
-            }
+                struck = false;
+            }*/
 
             /*if (key.KeyCode == Keys.O)
             {
@@ -167,7 +167,7 @@ namespace BackToTheFutureV
                 return;
             }
 
-            if (!setup || (FusionUtils.CurrentTime >= StartTime && FusionUtils.CurrentTime <= EndTime && Thunder == null))
+            if (!setup || (FusionUtils.CurrentTime >= StartTime && FusionUtils.CurrentTime <= EndTime && Thunder == null) || (FusionUtils.CurrentTime < StartTime || FusionUtils.CurrentTime > EndTime) && Thunder != null)
             {
                 OnEnd();
                 Setup();
@@ -175,7 +175,6 @@ namespace BackToTheFutureV
 
             if (Hook != null && Hook.IsVisible && IsPlaying)
             {
-
                 UpdateSpringPosition();
                 if (_firstTick)
                 {
@@ -192,6 +191,9 @@ namespace BackToTheFutureV
                 springForward = Vector3.Cross(springForward, springUp);
                 Hook.Position = _springBase;
                 Hook.Quaternion = Quaternion.LookRotation(springForward, -springUp);
+
+                Vector3 _lightPos = new Vector3(Hook.Position.X, Hook.Position.Y, Hook.Position.Z + 0.50f);
+                World.DrawSpotLight(_lightPos, springUp, System.Drawing.Color.Yellow, 3.05f, 5f, 0f, 10f, 0f);
             }
 
             if (FusionUtils.CurrentTime == StrikeTime && !IsPlaying)
@@ -415,9 +417,8 @@ namespace BackToTheFutureV
             sparkRope?.Stop();
             fireRope?.Stop();
 
-            if (!FusionUtils.IsTrafficAlive)
+            if (TimeHandler.MissionTraffic)
             {
-                FusionUtils.IsTrafficAlive = true;
                 TimeHandler.MissionTraffic = false;
                 Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, -800.0f, 5500.0f, -1000.0f, 500.0f, 7000.0f, 1000.0f);
                 Function.Call(Hash.SET_PED_POPULATION_BUDGET, 3);

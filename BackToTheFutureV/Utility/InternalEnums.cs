@@ -43,12 +43,22 @@
         {
             None,
             Walking,
+            Running,
             EnteringVehicle,
+            ShufflingVehicle,
             LeavingVehicle,
             DrivingVehicle,
             Jump,
             MeleeAttack,
             Climb
+        }
+
+        internal enum WaybackVehicleEvent
+        {
+            None,
+            RcHandbrakeOn,
+            RcHandbrakeOff,
+            TimeTravel
         }
 
         internal enum GarageStatus
@@ -117,8 +127,7 @@
         internal enum MissionType
         {
             None,
-            Escape,
-            Train
+            Escape
         }
 
         internal enum TimeMachineCamera

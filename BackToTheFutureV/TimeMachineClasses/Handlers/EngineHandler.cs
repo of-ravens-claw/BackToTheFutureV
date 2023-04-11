@@ -9,11 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using AudioPlayer = KlangRageAudioLibrary.AudioPlayer;
-using Control = GTA.Control;
 using Screen = GTA.UI.Screen;
 
 // TODO: Improve acceleration sound handling (first sound plays only when u burst tires)
-// TODO: Fix reverse prediction
 // TODO: Reverse based on real acceleration
 
 namespace BackToTheFutureV
@@ -223,6 +221,9 @@ namespace BackToTheFutureV
 
         public override void Tick()
         {
+            // Show engine information on screen
+            //Debug(-1);
+
             if (_engineSounds.Any(x => x == null))
             {
                 return;
@@ -300,9 +301,6 @@ namespace BackToTheFutureV
 
             HandleAccelerationSound();
 
-            // Show engine information on screen
-            Debug(-1);
-
             // Re-check acceleration and reset timer
             if (Game.GameTime <= _check)
             {
@@ -368,7 +366,7 @@ namespace BackToTheFutureV
             }
 
             // Play deceleration sound
-            if (IsBraking && Speed > 30 && !Mods.Wheels.AnyBurst && !Game.IsControlPressed(Control.VehicleAccelerate) &&
+            if (IsBraking && Speed > 30 && !Mods.Wheels.AnyBurst && Vehicle.ThrottlePower == 0 &&
                 !Vehicle.IsInWater)
             {
                 if (!_engineDecelSound.IsAnyInstancePlaying || _engineDecelSound.Last?.PlayPosition > 1000)
@@ -424,7 +422,7 @@ namespace BackToTheFutureV
             }
 
             // Play deceleration sound
-            if (Game.IsControlPressed(Control.VehicleBrake) && Speed > 15 && Vehicle.RelativeVelocity().Y > 0)
+            if (Vehicle.BrakePower > 0 && Speed > 15 && Vehicle.RelativeVelocity().Y > 0)
             {
                 if (!_engineDecelSound.IsAnyInstancePlaying || _engineDecelSound.Last?.PlayPosition > 1000)
                 {
@@ -445,8 +443,7 @@ namespace BackToTheFutureV
             }
 
             //Stop acceleration sounds if car is braking / driving neutral
-            if (Acceleration < -10f || !Game.IsControlPressed(Control.VehicleAccelerate) ||
-                Game.IsControlPressed(Control.VehicleBrake) || Mods.Wheels.AnyBurst || Vehicle.IsInWater)
+            if (Acceleration < -10f || Vehicle.ThrottlePower == 0 || Vehicle.BrakePower > 0 || Mods.Wheels.AnyBurst || Vehicle.IsInWater)
             {
                 _accelSounds.ForEach(x => x.Stop());
                 return;
@@ -589,7 +586,7 @@ namespace BackToTheFutureV
 
         private void CheckReverse()
         {
-            if (Vehicle.RelativeVelocity().Y < 0 && WheelSpeed < 0 && Game.IsControlPressed(Control.VehicleBrake))
+            if (Vehicle.CurrentGear == 0 && WheelSpeed < 0 && Vehicle.ThrottlePower < 0)
             {
                 IsReversing = true;
             }
@@ -611,30 +608,19 @@ namespace BackToTheFutureV
 
         #region UTILS
 
-        private static bool IsPlayerBraking(Vehicle vehicle, bool accountHandbrake = true)
+        private static bool IsPlayerBraking(Vehicle vehicle, bool handbrakeValid = true)
         {
-            if (FusionUtils.PlayerVehicle != vehicle)
+            if (handbrakeValid)
             {
-                return false;
+                return vehicle.BrakePower > 0 || VehicleControl.GetHandbrake(vehicle) == true;
             }
 
-            if (accountHandbrake)
-            {
-                return Game.IsControlPressed(Control.VehicleBrake) || Game.IsControlPressed(Control.VehicleHandbrake);
-            }
-
-            return Game.IsControlPressed(Control.VehicleBrake) && !Game.IsControlPressed(Control.VehicleAccelerate);
+            return vehicle.BrakePower > 0 && vehicle.ThrottlePower == 0;
         }
 
         private static bool IsPlayerRevving(Vehicle vehicle)
         {
-            if (FusionUtils.PlayerVehicle != vehicle)
-            {
-                return false;
-            }
-
-            return Game.IsControlPressed(Control.VehicleAccelerate) && Game.IsControlPressed(Control.VehicleHandbrake)
-                && !Game.IsControlPressed(Control.VehicleBrake);
+            return VehicleControl.GetHandbrake(vehicle) == true && vehicle.ThrottlePower != 0;
         }
 
         private float VehicleAcceleration()
@@ -722,6 +708,9 @@ namespace BackToTheFutureV
             }
         }
 
+		// Debug code adds a whopping 3kB to script even when unused,
+		// so it's a nullsub when compiling in Release mode.
+#if DEBUG
         private void Debug(int id)
         {
             switch (id)
@@ -729,8 +718,8 @@ namespace BackToTheFutureV
                 case 0:
                     Screen.ShowSubtitle($"WSpeed: {Math.Round(WheelSpeed)} " +
                                         $"RPM: {Math.Round(EngineRpm, 2)} " +
-                                        $"Breaking: {IsBraking} " +
-                                        $"Idle: {IsIdle} " +
+                                        $"Braking: {IsBraking} " +
+                                        $"Idle: {IsIdle}\n" +
                                         $"Neutral: {IsNeutral} " +
                                         $"Accel: {IsAccelerating} " +
                                         $"Revers: {IsReversing} " +
@@ -739,20 +728,44 @@ namespace BackToTheFutureV
                 case 1:
                     Screen.ShowSubtitle($"Accel: {_engineAccel1Sound.IsAnyInstancePlaying} {_engineAccel1Sound.InstancesNumber}  " +
                                         $"Decel: {_engineDecelSound.IsAnyInstancePlaying} {_engineDecelSound.InstancesNumber}  " +
-                                        $"Neutral: {_engineNeutralSound.IsAnyInstancePlaying} {_engineNeutralSound.InstancesNumber}  " +
+                                        $"Neutral: {_engineNeutralSound.IsAnyInstancePlaying} {_engineNeutralSound.InstancesNumber}\n" +
                                         $"Reverse: {_engineReverseSound.IsAnyInstancePlaying} {_engineReverseSound.InstancesNumber}  " +
                                         $"Idle: {_engineIdleSound.IsAnyInstancePlaying} {_engineIdleSound.InstancesNumber}  " +
-                                        $"Rev: {_engineRevvingSound.IsAnyInstancePlaying} {_engineRevvingSound.InstancesNumber} ");
+                                        $"Revving: {_engineRevvingSound.IsAnyInstancePlaying} {_engineRevvingSound.InstancesNumber}");
                     break;
                 case 2:
-                    Screen.ShowSubtitle($"WSpeed: {Math.Round(WheelSpeed, 2)} Accel: {Math.Round(Acceleration, 2)} IsAccel: {IsAccelerating} " +
-                                        $"RPM: {Math.Round(EngineRpm, 2)} ");
+                    Screen.ShowSubtitle($"WSpeed: {Math.Round(WheelSpeed, 2)} " +
+                                        $"Accel: {Math.Round(Acceleration, 2)} " +
+                                        $"IsAccel: {IsAccelerating} " +
+                                        $"RPM: {Math.Round(EngineRpm, 2)} " +
+                                        $"Gear: {CurrentGear} " +
+                                        $"MPH: {Math.Round(Speed, 2)}");
+                    break;
+                case 3:
+                    if (WaybackSystem.CurrentPlayerRecording?.CurrentRecord?.Vehicle?.Replica == null)
+                        break;
+                    Screen.ShowSubtitle($"Player RPM: {Math.Round(EngineRpm, 2)} " +
+                                        $"Player Gear: {CurrentGear}\n" +
+                                        $"Wayback RPM: {Math.Round(WaybackSystem.CurrentPlayerRecording.CurrentRecord.Vehicle.Replica.RPM, 2)} " +
+                                        $"Wayback Gear: {WaybackSystem.CurrentPlayerRecording.CurrentRecord.Vehicle.Replica.Gear}");
+                    break;
+                case 4:
+                    if (WaybackSystem.CurrentReplaying?.FirstOrDefault(x => x.CurrentRecord?.Vehicle?.Replica != null) != null)
+                    {
+                        Screen.ShowSubtitle($"Actual RPM: {Math.Round(EngineRpm, 2)} " +
+                                        $"Actual Gear: {CurrentGear}\n" +
+                                        $"Wayback RPM: {Math.Round(WaybackSystem.CurrentReplaying.FirstOrDefault(x => x.CurrentRecord.Vehicle.Replica != null).CurrentRecord.Vehicle.Replica.RPM, 2)} " +
+                                        $"Wayback Gear: {WaybackSystem.CurrentReplaying.FirstOrDefault(x => x.CurrentRecord.Vehicle.Replica != null).CurrentRecord.Vehicle.Replica.Gear}");
+                    }
                     break;
             }
         }
+#else
+		private void Debug(int id) { } // shim for Release
+#endif
 
-        #endregion
+		#endregion
 
-        #endregion
-    }
+		#endregion
+	}
 }
