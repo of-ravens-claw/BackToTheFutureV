@@ -708,8 +708,10 @@ namespace BackToTheFutureV
             }
         }
 
-        // Debug code adds a whopping 3kB to script even when unused, so comment out when not using
-        /*private void Debug(int id)
+		// Debug code adds a whopping 3kB to script even when unused,
+		// so it's a nullsub when compiling in Release mode.
+#if DEBUG
+        private void Debug(int id)
         {
             switch (id)
             {
@@ -717,42 +719,53 @@ namespace BackToTheFutureV
                     Screen.ShowSubtitle($"WSpeed: {Math.Round(WheelSpeed)} " +
                                         $"RPM: {Math.Round(EngineRpm, 2)} " +
                                         $"Braking: {IsBraking} " +
-                                        $"Idle: {IsIdle} " +
+                                        $"Idle: {IsIdle}\n" +
                                         $"Neutral: {IsNeutral} " +
                                         $"Accel: {IsAccelerating} " +
-                                        $"Reverse: {IsReversing} " +
+                                        $"Revers: {IsReversing} " +
                                         $"Revving: {IsRevving}");
                     break;
                 case 1:
                     Screen.ShowSubtitle($"Accel: {_engineAccel1Sound.IsAnyInstancePlaying} {_engineAccel1Sound.InstancesNumber}  " +
                                         $"Decel: {_engineDecelSound.IsAnyInstancePlaying} {_engineDecelSound.InstancesNumber}  " +
-                                        $"Neutral: {_engineNeutralSound.IsAnyInstancePlaying} {_engineNeutralSound.InstancesNumber}  " +
+                                        $"Neutral: {_engineNeutralSound.IsAnyInstancePlaying} {_engineNeutralSound.InstancesNumber}\n" +
                                         $"Reverse: {_engineReverseSound.IsAnyInstancePlaying} {_engineReverseSound.InstancesNumber}  " +
                                         $"Idle: {_engineIdleSound.IsAnyInstancePlaying} {_engineIdleSound.InstancesNumber}  " +
-                                        $"Rev: {_engineRevvingSound.IsAnyInstancePlaying} {_engineRevvingSound.InstancesNumber} ");
+                                        $"Revving: {_engineRevvingSound.IsAnyInstancePlaying} {_engineRevvingSound.InstancesNumber}");
                     break;
                 case 2:
-                    Screen.ShowSubtitle($"WSpeed: {Math.Round(WheelSpeed, 2)} Accel: {Math.Round(Acceleration, 2)} IsAccel: {IsAccelerating} " +
-                                        $"RPM: {Math.Round(EngineRpm, 2)} Gear: {CurrentGear} MPH: {Speed}");
+                    Screen.ShowSubtitle($"WSpeed: {Math.Round(WheelSpeed, 2)} " +
+                                        $"Accel: {Math.Round(Acceleration, 2)} " +
+                                        $"IsAccel: {IsAccelerating} " +
+                                        $"RPM: {Math.Round(EngineRpm, 2)} " +
+                                        $"Gear: {CurrentGear} " +
+                                        $"MPH: {Math.Round(Speed, 2)}");
                     break;
                 case 3:
                     if (WaybackSystem.CurrentPlayerRecording?.CurrentRecord?.Vehicle?.Replica == null)
                         break;
-                    Screen.ShowSubtitle($"Player RPM: {Math.Round(EngineRpm, 2)} Player Gear: {CurrentGear}" + Environment.NewLine +
-                        $"Wayback RPM: {Math.Round(WaybackSystem.CurrentPlayerRecording.CurrentRecord.Vehicle.Replica.RPM, 2)} Wayback Gear: {WaybackSystem.CurrentPlayerRecording.CurrentRecord.Vehicle.Replica.Gear}");
+                    Screen.ShowSubtitle($"Player RPM: {Math.Round(EngineRpm, 2)} " +
+                                        $"Player Gear: {CurrentGear}\n" +
+                                        $"Wayback RPM: {Math.Round(WaybackSystem.CurrentPlayerRecording.CurrentRecord.Vehicle.Replica.RPM, 2)} " +
+                                        $"Wayback Gear: {WaybackSystem.CurrentPlayerRecording.CurrentRecord.Vehicle.Replica.Gear}");
                     break;
                 case 4:
                     if (WaybackSystem.CurrentReplaying?.FirstOrDefault(x => x.CurrentRecord?.Vehicle?.Replica != null) != null)
                     {
-                        Screen.ShowSubtitle($"Actual RPM: {Math.Round(EngineRpm, 2)} Actual Gear: {CurrentGear}" + Environment.NewLine +
-                        $"Wayback RPM: {Math.Round(WaybackSystem.CurrentReplaying.FirstOrDefault(x => x.CurrentRecord.Vehicle.Replica != null).CurrentRecord.Vehicle.Replica.RPM, 2)} Wayback Gear: {WaybackSystem.CurrentReplaying.FirstOrDefault(x => x.CurrentRecord.Vehicle.Replica != null).CurrentRecord.Vehicle.Replica.Gear}");
+                        Screen.ShowSubtitle($"Actual RPM: {Math.Round(EngineRpm, 2)} " +
+                                        $"Actual Gear: {CurrentGear}\n" +
+                                        $"Wayback RPM: {Math.Round(WaybackSystem.CurrentReplaying.FirstOrDefault(x => x.CurrentRecord.Vehicle.Replica != null).CurrentRecord.Vehicle.Replica.RPM, 2)} " +
+                                        $"Wayback Gear: {WaybackSystem.CurrentReplaying.FirstOrDefault(x => x.CurrentRecord.Vehicle.Replica != null).CurrentRecord.Vehicle.Replica.Gear}");
                     }
                     break;
             }
-        }*/
+        }
+#else
+		private void Debug(int id) { } // shim for Release
+#endif
 
-        #endregion
+		#endregion
 
-        #endregion
-    }
+		#endregion
+	}
 }
