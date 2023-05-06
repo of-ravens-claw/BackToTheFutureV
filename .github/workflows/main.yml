@@ -12,7 +12,10 @@ env:
   # I'll do this properly later....
   GTAPath: D:/a/bttfv-actions-data/
   # This is the worst hack *ever...*
-  APPVEYOR_BUILD_FOLDER: D:/a/BackToTheFutureV/
+  # Also seriously wtf? Why is it such a stupid fucking path??
+  # It's like, projectName/nameOfYourSolutionThingy
+  # It's very fucking annoying, is what.
+  APPVEYOR_BUILD_FOLDER: D:/a/BackToTheFutureV/BackToTheFutureV/
 
 jobs:
   build:
@@ -20,7 +23,7 @@ jobs:
 
     steps:
     # This is an awful hack but C'est la vie...
-    - name: Clone required libaries and set GTAPath for build. *THIS IS A HACK!*
+    - name: Clone required libraries and set GTAPath for build. *THIS IS A HACK!*
       run: |
         cd "D:/a/"
         git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
@@ -47,6 +50,7 @@ jobs:
         cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
         ls
         ls bin
+        ls x64
         cd "D:/a/"
         tree
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
