@@ -50,14 +50,16 @@ jobs:
         name: BackToTheFutureV-release.zip
         path: BackToTheFutureV-release.zip
 
-    - name: Notify Discord on success
-      if: success()
+    - name: Send Webhook Notification
+      if: always()
+      env:
+        JOB_STATUS: ${{ job.status }}
+        # WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        # FIX: Commenting out in favour of our hack, for now!!
+        HOOK_OS_NAME: ${{ runner.os }}
+        WORKFLOW_NAME: ${{ github.workflow }}
       run: |
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -OutFile send.ps1
-        ./send.ps1 success $env:WEBHOOK_URL
-
-    - name: Notify Discord on failure
-      if: failure()
-      run: |
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -OutFile send.ps1
-        ./send.ps1 failure $env:WEBHOOK_URL
+        cd "D:\a\"
+        git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git webhook
+        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
