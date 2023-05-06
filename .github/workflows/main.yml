@@ -50,7 +50,7 @@ jobs:
         name: BackToTheFutureV - Release
         path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
 
-    - name: Upload build artifact - Release
+    - name: Upload build artifact - Debug
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - Debug
