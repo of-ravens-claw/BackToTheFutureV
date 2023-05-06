@@ -37,6 +37,8 @@ jobs:
     # Debug being x64 and Release being Any CPU is a mystery to me...
     # So we're forcing MSBuild to build in x64;
     # I don't really see why to use Any CPU, it gives warnings, and GTA 5 is 64-bit.
+    # Also apparently Release|x64 was still gonna build in Any CPU, for some reason...
+    # I Fixed that, next is webhook.
 
     - name: Build solution - Release
       run: msbuild BackToTheFutureV.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
