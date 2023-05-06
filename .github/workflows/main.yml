@@ -7,6 +7,8 @@ on:
 
 env:
   CONFIGURATION: Release
+  WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
+  GTAPath: D:/a/bttfv-actions-data/
 
 jobs:
   build:
@@ -20,17 +22,15 @@ jobs:
 
     - name: Clone repo and set GTAPath
       run: |
-        cd "D:\a"
+        cd "D:/a/"
         git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
-        mkdir GTAPathVar
-        cp "D:\a\bttfv-actions-data/scripts/irrKlang.NET4.dll" GTAPathVar
-        cp "D:\a\bttfv-actions-data/scripts/KlangRageAudioLibrary.dll" GTAPathVar
-        echo "GTAPath=$(pwd)/GTAPathVar" >> $GITHUB_ENV
+        echo "GTAPath=D:/a/bttfv-actions-data/" >> $GITHUB_ENV
         echo "For debugging: "
         echo "GTAPath: $GTAPath"
-        cd GTAPathVar
+        echo "Again: $GITHUB_ENV"
         ls
         cd "D:\a\BackToTheFutureV\BackToTheFutureV"
+        ls
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.3
