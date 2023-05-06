@@ -8,7 +8,7 @@ on:
 
 env:
   # Hack, but it works.
-  GTAPath: D:/a/bttfv-actions-data/
+  GTAPath: D:/a/BackToTheFutureV/bttfv-actions-data/
 
 jobs:
   build:
@@ -18,10 +18,10 @@ jobs:
     # This is a hack, but I don't see any other choice.
     - name: Clone required libraries and set GTAPath for build. *THIS IS A HACK!*
       run: |
-        cd "D:/a/"
+        cd "D:/a/BackToTheFutureV/"
         git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
-        echo "GTAPath=D:/a/bttfv-actions-data/" >> $GITHUB_ENV
-        cd "D:\a\BackToTheFutureV\BackToTheFutureV"
+        echo "GTAPath=D:/a/BackToTheFutureV/bttfv-actions-data/" >> $GITHUB_ENV
+        cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
 
     - name: Checkout code
       uses: actions/checkout@v2
