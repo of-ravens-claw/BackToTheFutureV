@@ -44,10 +44,10 @@ jobs:
 
     - name: Build solution
       run: msbuild BackToTheFutureV.sln /p:Configuration=$env:CONFIGURATION /verbosity:minimal
-
+        # cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
     - name: Archive artifact
       run: |
-        # cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
+
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
         pwd
         ls
@@ -58,4 +58,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV.zip
-        path: "D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release/BackToTheFutureV.zip"
+        path: "D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV.zip"
