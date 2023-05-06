@@ -1,0 +1,49 @@
++name: Build
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+
+env:
+  CONFIGURATION: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.3
+
+    - name: Restore NuGet packages
+      run: nuget restore BackToTheFutureV.sln
+
+    - name: Build solution
+      run: msbuild BackToTheFutureV.sln /p:Configuration=$env:CONFIGURATION /verbosity:minimal
+
+    - name: Archive artifact
+      run: 7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.dll' -Recurse -File | Select-Object -ExpandProperty FullName)
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: BackToTheFutureV.zip
+        path: BackToTheFutureV.zip
+
+    - name: Notify Discord on success
+      if: success()
+      run: |
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -OutFile send.ps1
+        ./send.ps1 success $env:WEBHOOK_URL
+
+    - name: Notify Discord on failure
+      if: failure()
+      run: |
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -OutFile send.ps1
+        ./send.ps1 failure $env:WEBHOOK_URL
