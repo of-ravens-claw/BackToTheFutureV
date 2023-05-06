@@ -15,6 +15,11 @@ env:
   # Also seriously wtf? Why is it such a stupid fucking path??
   # It's like, projectName/nameOfYourSolutionThingy
   # It's very fucking annoying, is what.
+  #
+  # From the logs™
+  # Initialized empty Git repository in D:/a/BackToTheFutureV/BackToTheFutureV/.git/
+  # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  # OH MY GOD IT STILL WON'T FUKCING WORK WHAT >:(
   APPVEYOR_BUILD_FOLDER: D:/a/BackToTheFutureV/BackToTheFutureV/
 
 jobs:
@@ -49,8 +54,10 @@ jobs:
       run: |
         cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
         ls
-        ls bin
-        ls x64
+        ls BackToTheFutureV
+        ls BackToTheFutureV/bin
+        ls BackToTheFutureV/x64
+        ls BackToTheFutureV/BackToTheFutureV
         cd "D:/a/"
         tree
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
