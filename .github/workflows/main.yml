@@ -19,11 +19,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
-
     # This is an awful hack but C'est la vie...
     - name: Clone required libaries and set GTAPath for build. *THIS IS A HACK!*
       run: |
@@ -31,6 +26,12 @@ jobs:
         git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
         echo "GTAPath=D:/a/bttfv-actions-data/" >> $GITHUB_ENV
         cd "D:\a\BackToTheFutureV\BackToTheFutureV"
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.3
@@ -42,20 +43,18 @@ jobs:
       run: msbuild BackToTheFutureV.sln /p:Configuration=$env:CONFIGURATION /verbosity:minimal
 
     - name: Archive artifact
-      run: 7z a BackToTheFutureV-release.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
+      run: 7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: BackToTheFutureV-release.zip
-        path: BackToTheFutureV-release.zip
+        name: BackToTheFutureV.zip
+        path: BackToTheFutureV.zip
 
     - name: Send Webhook Notification
       if: always()
       env:
         JOB_STATUS: ${{ job.status }}
-        # WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-        # FIX: Commenting out in favour of our hack, for now!!
         HOOK_OS_NAME: ${{ runner.os }}
         WORKFLOW_NAME: ${{ github.workflow }}
       run: |
