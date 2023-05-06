@@ -11,7 +11,8 @@ env:
   # For compatibility sake.
   # I'll do this properly later....
   GTAPath: D:/a/bttfv-actions-data/
-  APPVEYOR_BUILD_FOLDER: D:/a/
+  # This is the worst hack *ever...*
+  APPVEYOR_BUILD_FOLDER: D:/a/BackToTheFutureV/
 
 jobs:
   build:
@@ -23,17 +24,13 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Clone repo and set GTAPath
+    # This is an awful hack but C'est la vie...
+    - name: Clone required libaries and set GTAPath for build. *THIS IS A HACK!*
       run: |
         cd "D:/a/"
         git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
         echo "GTAPath=D:/a/bttfv-actions-data/" >> $GITHUB_ENV
-        echo "For debugging: "
-        echo "GTAPath: $GTAPath"
-        echo "Again: $GITHUB_ENV"
-        ls
         cd "D:\a\BackToTheFutureV\BackToTheFutureV"
-        ls
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.3
@@ -45,13 +42,13 @@ jobs:
       run: msbuild BackToTheFutureV.sln /p:Configuration=$env:CONFIGURATION /verbosity:minimal
 
     - name: Archive artifact
-      run: 7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.dll' -Recurse -File | Select-Object -ExpandProperty FullName)
+      run: 7z a BackToTheFutureV-release.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: BackToTheFutureV.zip
-        path: BackToTheFutureV.zip
+        name: BackToTheFutureV-release.zip
+        path: BackToTheFutureV-release.zip
 
     - name: Notify Discord on success
       if: success()
