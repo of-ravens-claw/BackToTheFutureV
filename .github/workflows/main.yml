@@ -1,4 +1,5 @@
 name: BTTFV-WIP
+# Hardcoded mess, but it works, okay?
 
 on:
   push:
@@ -6,16 +7,10 @@ on:
   pull_request:
 
 env:
-  CONFIGURATION: Release
   WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
   # For compatibility sake.
   # I'll do this properly later....
   GTAPath: D:/a/bttfv-actions-data/
-  # This is the worst hack *ever...*
-  # Also seriously wtf? Why is it such a stupid fucking path??
-  # It's like, projectName/gitRepoName/nameOfYourSolutionThingy (last one isn't here)
-  # It's very fucking annoying, is what.
-  APPVEYOR_BUILD_FOLDER: D:/a/BackToTheFutureV/BackToTheFutureV/
 
 jobs:
   build:
@@ -36,6 +31,7 @@ jobs:
       with:
         submodules: recursive
 
+    # try v1.1.3 to resolve warning, if it doesn't work, revert to v1.0.3
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.3
 
@@ -43,17 +39,11 @@ jobs:
       run: nuget restore BackToTheFutureV.sln
 
     - name: Build solution
-      run: msbuild BackToTheFutureV.sln /p:Configuration=$env:CONFIGURATION /verbosity:minimal
-        # cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
+      run: msbuild BackToTheFutureV.sln /p:Configuration=Release /verbosity:minimal
+
     - name: Archive artifact
-      run: |
+      run: 7z a BackToTheFutureV.zip $(Get-ChildItem -Path "D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
-        7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
-        pwd
-        ls
-        echo "where the fuck are you saving this file at???"
-
-    # Hardcoded mess but welp...
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
