@@ -41,10 +41,7 @@ jobs:
     - name: Build solution
       run: msbuild BackToTheFutureV.sln /p:Configuration=Release /verbosity:minimal
 
-    - name: Archive artifact
-      run: 7z a BackToTheFutureV.zip D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
-
-    - name: Upload artifact
+    - name: Upload build artifact
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - release
