@@ -58,7 +58,8 @@ jobs:
         ls BackToTheFutureV
         ls BackToTheFutureV/bin
         cd "D:/a/"
-        tree
+        ls
+        pwd
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
     - name: Upload artifact
