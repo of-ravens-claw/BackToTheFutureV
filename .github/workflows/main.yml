@@ -39,16 +39,16 @@ jobs:
       run: nuget restore BackToTheFutureV.sln
 
     - name: Build solution - Release
-      run: msbuild BackToTheFutureV.sln /p:Configuration=Release /verbosity:minimal
+      run: msbuild BackToTheFutureV.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
 
     - name: Build solution - Debug
-      run: msbuild BackToTheFutureV.sln /p:Configuration=Debug /verbosity:minimal
+      run: msbuild BackToTheFutureV.sln /p:Configuration=Debug /p:Platform=x64 /verbosity:minimal
 
     - name: Upload build artifact - Release
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - Release
-        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
+        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/x64/bin/Release
 
     # Trust me, Debug being x64 and Release being Any CPU is a mystery to me...
     # Force MSBuild to build in x64, I guess?
