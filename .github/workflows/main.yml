@@ -46,8 +46,8 @@ jobs:
       run: |
         cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
         ls
-        ls x64
         ls bin
+        cd "D:/a/"
         tree
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
