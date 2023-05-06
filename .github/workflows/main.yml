@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
+  # WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
   # For compatibility sake.
   # I'll do this properly later....
   GTAPath: D:/a/bttfv-actions-data/
@@ -24,7 +24,6 @@ jobs:
         git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
         echo "GTAPath=D:/a/bttfv-actions-data/" >> $GITHUB_ENV
         cd "D:\a\BackToTheFutureV\BackToTheFutureV"
-        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
 
     - name: Checkout code
       uses: actions/checkout@v2
@@ -48,4 +47,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - release
-        path: "D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV.zip"
+        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
