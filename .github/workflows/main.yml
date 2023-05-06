@@ -44,20 +44,18 @@ jobs:
     - name: Build solution - Debug
       run: msbuild BackToTheFutureV.sln /p:Configuration=Debug /verbosity:minimal
 
-    - name: inbetween - need to find debug path...
-      run: |
-        ls D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/
-        ls D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/
-
     - name: Upload build artifact - Release
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - Release
         path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
 
+    # Trust me, Debug being x64 and Release being Any CPU is a mystery to me...
+    # Force MSBuild to build in x64, I guess?
+    # I don't really see why to use Any CPU, it gives warnings, and GTA 5 is 64-bit.
     - name: Upload build artifact - Debug
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - Debug
-        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Debug
+        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/x64/bin/Debug
 
