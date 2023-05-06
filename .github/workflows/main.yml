@@ -7,7 +7,7 @@ on:
 
 env:
   CONFIGURATION: Release
-  WEBHOOK_URL: https://www.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
+  WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
   # For compatibility sake.
   # I'll do this properly later....
   GTAPath: D:/a/bttfv-actions-data/
@@ -43,7 +43,12 @@ jobs:
       run: msbuild BackToTheFutureV.sln /p:Configuration=$env:CONFIGURATION /verbosity:minimal
 
     - name: Archive artifact
-      run: 7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
+      run: |
+        cd "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\"
+        ls
+        ls x64
+        ls bin
+        7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
