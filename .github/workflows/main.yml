@@ -7,8 +7,11 @@ on:
 
 env:
   CONFIGURATION: Release
-  WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
+  WEBHOOK_URL: https://www.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
+  # For compatibility sake.
+  # I'll do this properly later....
   GTAPath: D:/a/bttfv-actions-data/
+  APPVEYOR_BUILD_FOLDER: D:/a/
 
 jobs:
   build:
