@@ -47,5 +47,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: BackToTheFutureV.zip
+        name: BackToTheFutureV - release
         path: "D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV.zip"
