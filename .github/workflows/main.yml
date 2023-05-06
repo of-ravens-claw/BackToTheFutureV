@@ -18,6 +18,14 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Clone repo and set GTAPath
+      run: |
+        git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
+        mkdir GTAPathVar
+        cp bttfv-actions-data/scripts/irrKlang.NET4.dll GTAPathVar
+        cp bttfv-actions-data/scripts/KlangRageAudioLibrary.dll GTAPathVar
+        echo "GTAPath=$(pwd)/GTAPathVar" >> $GITHUB_ENV
+
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.3
 
