@@ -38,11 +38,21 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore BackToTheFutureV.sln
 
-    - name: Build solution
+    - name: Build solution - Release
       run: msbuild BackToTheFutureV.sln /p:Configuration=Release /verbosity:minimal
 
-    - name: Upload build artifact
+    - name: Build solution - Debug
+      run: msbuild BackToTheFutureV.sln /p:Configuration=Debug /verbosity:minimal
+
+    - name: Upload build artifact - Release
       uses: actions/upload-artifact@v2
       with:
-        name: BackToTheFutureV - release
+        name: BackToTheFutureV - Release
         path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
+
+    - name: Upload build artifact - Release
+      uses: actions/upload-artifact@v2
+      with:
+        name: BackToTheFutureV - Debug
+        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Debug
+
