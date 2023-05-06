@@ -42,7 +42,7 @@ jobs:
         submodules: recursive
 
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.3
+      uses: microsoft/setup-msbuild@v1.3.1
 
     - name: Restore NuGet packages
       run: nuget restore BackToTheFutureV.sln
@@ -53,11 +53,10 @@ jobs:
     - name: Archive artifact
       run: |
         cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
+        ls ..
         ls
         ls BackToTheFutureV
         ls BackToTheFutureV/bin
-        ls BackToTheFutureV/x64
-        ls BackToTheFutureV/BackToTheFutureV
         cd "D:/a/"
         tree
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
