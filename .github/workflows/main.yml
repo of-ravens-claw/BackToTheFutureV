@@ -44,10 +44,11 @@ jobs:
 
     - name: Archive artifact
       run: |
-        cd "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\"
+        cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
         ls
         ls x64
         ls bin
+        tree
         7z a BackToTheFutureV.zip $(Get-ChildItem -Path "$($env:APPVEYOR_BUILD_FOLDER)\BackToTheFutureV\bin\$($env:CONFIGURATION)" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
 
     - name: Upload artifact
@@ -55,15 +56,3 @@ jobs:
       with:
         name: BackToTheFutureV.zip
         path: BackToTheFutureV.zip
-
-    - name: Send Webhook Notification
-      if: always()
-      env:
-        JOB_STATUS: ${{ job.status }}
-        HOOK_OS_NAME: ${{ runner.os }}
-        WORKFLOW_NAME: ${{ github.workflow }}
-      run: |
-        cd "D:\a\"
-        git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git webhook
-        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
-      shell: bash
