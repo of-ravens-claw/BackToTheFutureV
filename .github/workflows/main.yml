@@ -48,7 +48,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - Release
-        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/x64/bin/Release
+        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/x64/Release
 
     # Trust me, Debug being x64 and Release being Any CPU is a mystery to me...
     # Force MSBuild to build in x64, I guess?
@@ -57,5 +57,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: BackToTheFutureV - Debug
-        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/x64/bin/Debug
+        path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/x64/Debug
 
