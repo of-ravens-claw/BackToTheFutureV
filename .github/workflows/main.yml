@@ -1,4 +1,4 @@
-name: BTTFV-WIP
+name: build
 # Hardcoded mess, but it works, okay?
 
 on:
@@ -7,9 +7,7 @@ on:
   pull_request:
 
 env:
-  # WEBHOOK_URL: https://canary.discord.com/api/webhooks/1104236974761586808/l0eXPqDzX4O9FSaQp_UKgdYdKdPVTCoTFrx8B1utSX79Lr3cGUdER2TG1IHqJBxC24FV
-  # For compatibility sake.
-  # I'll do this properly later....
+  # Hack, but it works.
   GTAPath: D:/a/bttfv-actions-data/
 
 jobs:
@@ -17,7 +15,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    # This is an awful hack but C'est la vie...
+    # This is a hack, but I don't see any other choice.
     - name: Clone required libraries and set GTAPath for build. *THIS IS A HACK!*
       run: |
         cd "D:/a/"
@@ -30,13 +28,15 @@ jobs:
       with:
         submodules: recursive
 
-    # wdym sometimes it works???? fucking nuget is awful i swear...
-    # just make an empty commit called 'rebuild' if that happens.
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.3.1
 
     - name: Restore NuGet packages
       run: nuget restore BackToTheFutureV.sln
+
+    # Debug being x64 and Release being Any CPU is a mystery to me...
+    # So we're forcing MSBuild to build in x64;
+    # I don't really see why to use Any CPU, it gives warnings, and GTA 5 is 64-bit.
 
     - name: Build solution - Release
       run: msbuild BackToTheFutureV.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
@@ -50,9 +50,6 @@ jobs:
         name: BackToTheFutureV - Release
         path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/x64/Release
 
-    # Trust me, Debug being x64 and Release being Any CPU is a mystery to me...
-    # Force MSBuild to build in x64, I guess?
-    # I don't really see why to use Any CPU, it gives warnings, and GTA 5 is 64-bit.
     - name: Upload build artifact - Debug
       uses: actions/upload-artifact@v2
       with:
