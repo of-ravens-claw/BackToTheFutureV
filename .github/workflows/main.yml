@@ -42,7 +42,7 @@ jobs:
       run: msbuild BackToTheFutureV.sln /p:Configuration=Release /verbosity:minimal
 
     - name: Archive artifact
-      run: 7z a BackToTheFutureV.zip $(Get-ChildItem -Path "D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release" -Filter '*.{dll,pdb}' -Recurse -File | Select-Object -ExpandProperty FullName)
+      run: 7z a BackToTheFutureV.zip D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/Release
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
