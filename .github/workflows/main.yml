@@ -19,9 +19,12 @@ jobs:
     - name: Clone required libraries and set GTAPath for build. *THIS IS A HACK!*
       run: |
         cd "D:/a/BackToTheFutureV/"
-        git clone https://github.com/audiorobscrackshack/bttfv-actions-data.git
+        git clone --depth 1 https://github.com/audiorobscrackshack/bttfv-actions-data.git
         echo "GTAPath=D:/a/BackToTheFutureV/bttfv-actions-data/" >> $GITHUB_ENV
+        ls "D:/a/BackToTheFutureV/"
+        ls "D:/a/BackToTheFutureV/BackToTheFutureV/"
         cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
+        
 
     - name: Checkout code
       uses: actions/checkout@v2
@@ -38,7 +41,8 @@ jobs:
     # So we're forcing MSBuild to build in x64;
     # I don't really see why to use Any CPU, it gives warnings, and GTA 5 is 64-bit.
     # Also apparently Release|x64 was still gonna build in Any CPU, for some reason...
-    # I Fixed that, next is webhook.
+    # I fixed that.
+    # TODO: Add webhook.
 
     - name: Build solution - Release
       run: msbuild BackToTheFutureV.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
