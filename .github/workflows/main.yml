@@ -21,13 +21,11 @@ jobs:
         cd "D:/a/BackToTheFutureV/"
         git clone --depth 1 https://github.com/audiorobscrackshack/bttfv-actions-data.git
         echo "GTAPath=D:/a/BackToTheFutureV/bttfv-actions-data/" >> $GITHUB_ENV
-        ls "D:/a/BackToTheFutureV/"
-        ls "D:/a/BackToTheFutureV/BackToTheFutureV/"
         cd "D:/a/BackToTheFutureV/BackToTheFutureV/"
         
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.5.2
       with:
         submodules: recursive
 
@@ -51,13 +49,13 @@ jobs:
       run: msbuild BackToTheFutureV.sln /p:Configuration=Debug /p:Platform=x64 /verbosity:minimal
 
     - name: Upload build artifact - Release
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: BackToTheFutureV - Release
         path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/x64/Release
 
     - name: Upload build artifact - Debug
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3.1.2
       with:
         name: BackToTheFutureV - Debug
         path: D:/a/BackToTheFutureV/BackToTheFutureV/BackToTheFutureV/bin/x64/Debug
